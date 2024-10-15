@@ -24,15 +24,15 @@ const Signup = () => {
   const [date, setDate] = React.useState();
 
   return (
-    <div className="ml-24 w-fit  border-black-2">
-      <section className="px-8 py-20 container mx-auto">
+    <div className="flex justify-center w-full border-black-2">
+      <section className="py-20 max-w-lg w-full">
         <Typography variant="h5" color="blue-gray">
           Basic Information
         </Typography>
         <Typography variant="small" className="text-gray-600 font-normal mt-1">
           Enter your profile information below.
         </Typography>
-        <div className="flex flex-col mt-8">
+        <div className="flex flex-col w-fit mt-8">
           <div className="mb-6 flex flex-col items-end gap-4 md:flex-row">
             <div className="w-full">
               <Typography
@@ -379,10 +379,13 @@ const Signup = () => {
               />
             </div>
           </div>
-          <div className="mb-6 flex flex-col items-end gap-4 md:flex-row">
+          <div className="mb-6 flex flex-row gap-4 md:flex-row">
             <input type="checkbox" name="terms" required />
             <label>
-              I agree to the <a href="#">Terms and Conditions</a>
+              I agree to the{" "}
+              <a className="underline" href="#">
+                Terms and Conditions
+              </a>
             </label>
           </div>
 
