@@ -8,9 +8,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
-import Modal from "../../components/Modal";
-import Signup from "./Signup";
-import Logo from "../../assets/images/logo.png";
+import Logo from "../../../assets/images/logo.png";
 
 const Login = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -18,10 +16,6 @@ const Login = () => {
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
-  // const handleSignUp = () => {
-  //   console.log("Sign Up clicked");
-  //   handleCloseModal();
-  // };
   return (
     <div className="flex justify-center items-center min-h-screen bg-green-200">
       <Card
@@ -87,15 +81,6 @@ const Login = () => {
             <Button size="lg" className="bg-primary1">
               sign in
             </Button>
-            {/* <Button
-              onClick={() => handleOpenModal("xxl")}
-              variant="outlined"
-              size="lg"
-              className="flex h-12 border-blue-gray-200 items-center justify-center gap-2"
-              fullWidth
-            >
-              create a new account{" "}
-            </Button> */}
 
             <Typography
               variant="small"
@@ -113,17 +98,6 @@ const Login = () => {
           </form>
         </CardBody>
       </Card>{" "}
-      {/* Modal for Sign Up */}
-      {/* <Modal
-        open={openModal}
-        onClose={handleCloseModal}
-        title="Create a New Account"
-        confirmText="Sign Up"
-        onConfirm={() => console.log("Sign Up Confirmed")}
-      >
-        {/* Render Signup Component as modal body */}
-      {/* <Signup /> */}
-      {/* </Modal> */}
     </div>
   );
 };
