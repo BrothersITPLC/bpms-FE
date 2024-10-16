@@ -11,6 +11,8 @@ import {
   ListItemPrefix,
   AccordionHeader,
 } from "@material-tailwind/react";
+import { Link } from "react-router-dom";
+
 import {
   TicketIcon,
   UserGroupIcon,
@@ -36,8 +38,8 @@ const Sidebar = () => {
     "select-none hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 hover:text-gray-900 focus:text-gray-900 active:text-gray-900 data-[selected=true]:text-gray-900";
 
   return (
-    <div className="w-fit grid grid-cols-1">
-      <Card className="h-[calc(100vh-2rem)] w-[20rem] mx-auto p-6 shadow-md">
+    <div className="w-fit grid grid-cols-1 h-screen">
+      <Card className="h-full w-[20rem] mx-auto p-6 shadow-md overflow-auto sidebar">
         <div className="mb-2 flex items-center gap-4 p-4">
           <img src={Logo} alt="brand" className="w-20 h-auto" />
           <Typography color="blue-gray" className="uppercase text-xl font-bold">
@@ -74,9 +76,11 @@ const Sidebar = () => {
                 <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
                   My Profile
                 </ListItem>
-                <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
-                  Settings
-                </ListItem>
+                <Link to="/Settings">
+                  <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
+                    Settings
+                  </ListItem>
+                </Link>
               </List>
             </AccordionBody>
           </Accordion>
@@ -112,18 +116,22 @@ const Sidebar = () => {
               </List>
             </AccordionBody>
           </Accordion>
-          <ListItem className={LIST_ITEM_STYLES}>
-            <ListItemPrefix>
-              <UserGroupIcon className="text-primary1 h-5 w-5" />
-            </ListItemPrefix>
-            User Management
-          </ListItem>
-          <ListItem className={LIST_ITEM_STYLES}>
-            <ListItemPrefix>
-              <Square2StackIcon className="text-primary1 h-5 w-5" />
-            </ListItemPrefix>
-            Products
-          </ListItem>
+          <Link to="/UserManagement">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              User Management
+            </ListItem>
+          </Link>
+          <Link to="/Products">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <Square2StackIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Products
+            </ListItem>
+          </Link>
           <ListItem className={LIST_ITEM_STYLES}>
             <ListItemPrefix>
               <TicketIcon className="text-primary1 h-5 w-5" />

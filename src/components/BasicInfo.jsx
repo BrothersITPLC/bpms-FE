@@ -1,20 +1,15 @@
-import React from "react";
-
-// @material-tailwind/react
 import {
-  Input,
   Typography,
+  Input,
   Select,
   Option,
   DialogFooter,
   Button,
 } from "@material-tailwind/react";
-const Signup = () => {
-  const [date, setDate] = React.useState();
-
+const BasicInfo = () => {
   return (
-    <div className="flex justify-center w-full border-black-2">
-      <section className="py-20 max-w-lg w-full">
+    <div className="flex justify-center w-fit border-black-2">
+      <section className=" max-w-lg w-full">
         <Typography variant="h5" color="blue-gray">
           Basic Information
         </Typography>
@@ -146,46 +141,6 @@ const Signup = () => {
               />
             </div>
           </div>
-          <div className="mb-6 flex flex-col items-end gap-4 md:flex-row">
-            <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 font-medium"
-              >
-                Password{" "}
-              </Typography>
-              <Input
-                type="password"
-                size="lg"
-                labelProps={
-                  {
-                    //   className: "hidden",
-                  }
-                }
-                className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
-              />
-            </div>
-            <div className="w-full">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 font-medium"
-              >
-                Confirm password{" "}
-              </Typography>
-              <Input
-                type="password"
-                size="lg"
-                labelProps={
-                  {
-                    //   className: "hidden",
-                  }
-                }
-                className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
-              />
-            </div>
-          </div>
 
           <div className="mb-6 flex flex-col items-end gap-4 md:flex-row">
             <div className="w-full">
@@ -208,23 +163,11 @@ const Signup = () => {
               />
             </div>
           </div>
-          <div className="mb-6 flex flex-row gap-4 md:flex-row">
-            <input type="checkbox" name="terms" required />
-            <label>
-              I agree to the{" "}
-              <a className="underline" href="#">
-                Terms and Conditions
-              </a>
-            </label>
-          </div>
         </div>{" "}
         <div className="flex justify-start">
           <DialogFooter>
-            {/* <Button variant="text" color="black" className="mr-1">
-              <span>Cancel</span>
-            </Button> */}
             <Button size="lg" variant="gradient" color="purple">
-              <span>{"Signup"}</span>
+              <span>{"Save"}</span>
             </Button>
           </DialogFooter>
         </div>
@@ -232,5 +175,4 @@ const Signup = () => {
     </div>
   );
 };
-
-export default Signup;
+export default BasicInfo;

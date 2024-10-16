@@ -9,7 +9,10 @@ import {
   Input,
 } from "@material-tailwind/react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import Logo from "../../assets/images/logo.png";
 const OTP = () => {
+  const navigate = useNavigate();
   const inputRefs = React.useRef([]);
   const [otp, setOtp] = React.useState(Array(6).fill(""));
 
@@ -22,17 +25,24 @@ const OTP = () => {
       inputRefs.current[index + 1].focus();
     }
   };
+  const handleConfirm = () => {
+    // Perform any OTP verification logic here
+    navigate("/signup");
+  };
   return (
     <section className="grid h-screen place-items-center p-4">
       <Card className="w-auto max-w-[24rem]">
-        <Chip
-          size="lg"
-          className="justify-center"
-          variant="outlined"
-          value="otp verification"
-        />
-
         <CardHeader floated={false} shadow={false} className="rounded-none">
+          <div className="w-full flex justify-center">
+            {" "}
+            <img className="w-1/2 items-center" src={Logo} alt="card-image" />
+          </div>
+          <Chip
+            size="lg"
+            className="justify-center"
+            variant="outlined"
+            value="otp verification"
+          />
           <Typography
             color="blue-gray"
             className="mt-1 mb-2 text-[20px] font-bold"
@@ -80,7 +90,9 @@ const OTP = () => {
           </Typography>
         </CardBody>
         <CardFooter className="flex justify-center pt-0 px-4">
-          <Button className="mx-auto bg-primary1">Confirm</Button>
+          <Button className="mx-auto bg-primary1" onClick={handleConfirm}>
+            Confirm
+          </Button>
         </CardFooter>
       </Card>
     </section>
