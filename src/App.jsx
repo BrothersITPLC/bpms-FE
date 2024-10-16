@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./features/Auth/Login";
-import Signup from "./features/Auth/Signup";
+import Login from "./features/Auth/components/Login";
+import Signup from "./features/Auth/components/Signup";
 import Sidebar from "./components/Sidebar";
-import UserManagement from "./features/UserManagement/UserManagement";
-import OTP from "./features/Auth/OTP";
+import UserManagement from "./features/UserManagement/components/UserManagement";
+import OTP from "./features/Auth/components/OTP";
 const App = () => {
   return (
     <Router>
