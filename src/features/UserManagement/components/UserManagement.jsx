@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../../../components/Sidebar";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import {
@@ -18,9 +18,9 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-import Modal from "../../components/Modal";
+import Modal from "../../../components/Modal";
 import { useState } from "react";
-
+import { useRegisterEmployeeMutation } from "../apiSlice";
 const TABS = [
   {
     label: "All",
@@ -89,6 +89,13 @@ const TABLE_ROWS = [
 
 const UserManagement = () => {
   const [modalOpen, setModalOpen] = useState(false);
+
+  const [registerEmployee, { isLoading }] = useRegisterEmployeeMutation();
+  const [formData, setFormData] = useState({
+    department: "",
+    email: "",
+  });
+
   const handleOpenModal = () => {
     setModalOpen(true);
   };
@@ -97,9 +104,20 @@ const UserManagement = () => {
     setModalOpen(false);
   };
 
-  const handleConfirm = () => {
-    console.log("Form submitted");
-    handleCloseModal(); // Close the modal after submission
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleConfirm = async () => {
+    try {
+      const result = await registerEmployee(formData).unwrap();
+      handleCloseModal();
+    } catch (error) {
+      console.log("error:", error);
+    }
   };
 
   return (
@@ -273,16 +291,23 @@ const UserManagement = () => {
         open={modalOpen}
         onClose={handleCloseModal}
         title="Add Member"
-        confirmText="Add"
+        confirmText={isLoading ? "Adding..." : "Add"}
         onConfirm={handleConfirm}
+        disabled={isLoading}
       >
-        {/* Form fields for adding a member */}
         <div className="flex flex-col gap-4">
-          <Input label="Department" />
-          <Input label="Email" />
-          <Input type="email" label="Job Position" />
-          {/* <Input label="Organization" /> */}
-          {/* Add any other fields you need */}
+          <Input
+            label="Department"
+            name="department"
+            value={formData.department}
+            onChange={handleChange}
+          />
+          <Input
+            label="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
         </div>
       </Modal>
     </div>

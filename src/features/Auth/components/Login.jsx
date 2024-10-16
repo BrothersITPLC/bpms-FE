@@ -8,8 +8,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
-import Logo from "../../assets/images/logo.png";
-import LoginSVG from "../../assets/svgs/LoginSVG.svg";
+import Logo from "../../../assets/images/logo.png";
 
 const Login = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -83,6 +82,7 @@ const Login = () => {
             <Button size="lg" className="bg-primary1">
               sign in
             </Button>
+
             <Typography
               variant="small"
               className="text-center mx-auto max-w-[19rem] !font-medium !text-gray-600"
@@ -99,17 +99,6 @@ const Login = () => {
           </form>
         </CardBody>
       </Card>{" "}
-      {/* Modal for Sign Up */}
-      {/* <Modal
-        open={openModal}
-        onClose={handleCloseModal}
-        title="Create a New Account"
-        confirmText="Sign Up"
-        onConfirm={() => console.log("Sign Up Confirmed")}
-      >
-        {/* Render Signup Component as modal body */}
-      {/* <Signup /> */}
-      {/* </Modal> */}
     </div>
   );
 };

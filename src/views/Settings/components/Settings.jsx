@@ -6,8 +6,8 @@ import {
   TabPanel,
   Typography,
 } from "@material-tailwind/react";
-import Sidebar from "../../components/Sidebar";
-import UserInfo from "../../components/UserInfo";
+import Sidebar from "../../../components/Sidebar";
+import BasicInfo from "../../../components/BasicInfo";
 const Settings = () => {
   const data = [
     {
@@ -18,7 +18,7 @@ const Settings = () => {
     {
       label: "PROFILE",
       value: "profile",
-      desc: <UserInfo />,
+      desc: <BasicInfo />,
     },
   ];
 
