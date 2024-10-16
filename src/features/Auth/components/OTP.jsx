@@ -10,7 +10,7 @@ import {
 } from "@material-tailwind/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/images/logo.png";
+import Logo from "../../../assets/images/logo.png";
 const OTP = () => {
   const navigate = useNavigate();
   const inputRefs = React.useRef([]);

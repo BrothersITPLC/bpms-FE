@@ -6,8 +6,8 @@ import {
   TabPanel,
   Typography,
 } from "@material-tailwind/react";
-import Sidebar from "../../components/Sidebar";
-import BasicInfo from "../../components/BasicInfo";
+import Sidebar from "../../../components/Sidebar";
+import BasicInfo from "../../../components/BasicInfo";
 const Settings = () => {
   const data = [
     {
