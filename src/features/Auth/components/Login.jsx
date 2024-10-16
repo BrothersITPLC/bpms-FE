@@ -17,7 +17,8 @@ const Login = () => {
   const handleCloseModal = () => setOpenModal(false);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-green-200">
+    <div className="flex justify-center items-center min-h-screen">
+      {/* <img src={LoginSVG} /> */}
       <Card
         shadow={false}
         className="md:px-24 md:py-14 py-8 border border-gray-300"
