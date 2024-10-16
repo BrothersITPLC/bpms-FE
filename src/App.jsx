@@ -11,13 +11,13 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="Signup" element={<Signup />} />
-        <Route path="UserManagement" element={<UserManagement />} />
-        <Route path="Products" element={<Products />} />
-        <Route path="Settings" element={<Settings />} />
+        <Route path="signup" element={<Signup />} />
+        <Route path="user-management" element={<UserManagement />} />
+        <Route path="sroducts" element={<Products />} />
+        <Route path="settings" element={<Settings />} />
 
-        <Route path="Sidebar" element={<Sidebar />} />
-        <Route path="OTP" element={<OTP />} />
+        <Route path="sidebar" element={<Sidebar />} />
+        <Route path="validate" element={<OTP />} />
       </Routes>
     </Router>
   );
