@@ -9,7 +9,7 @@ import {
   DialogFooter,
   Button,
 } from "@material-tailwind/react";
-import UserInfo from "../../components/UserInfo";
+import UserInfo from "../../../components/UserInfo";
 const Signup = () => {
   const [date, setDate] = React.useState();
 
