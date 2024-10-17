@@ -26,15 +26,6 @@ const Bids = () => {
     {
       label: "Floated Bids",
       value: "floated_bids",
-      bid: {
-        companyName: "Company ABC",
-        bidTitle: "Bid for Office Supplies",
-        rfqNo: "RFQ-12345",
-        submissionDate: "2024-11-05",
-        openingDate: "2024-11-10",
-        bidSecurityAmount: "$10,000",
-        bidSecurityValidity: "30 days",
-      },
       content: "FLOATED",
       cardTitle: "Floated Bids",
       cardDescription: "Please propose a floating bid for purchase.",
