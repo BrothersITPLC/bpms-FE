@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "../../../components/Card";
-import Typography from "@material-tailwind/react/";
+import { Typography, Button } from "@material-tailwind/react";
 
 const BidsCard = ({
   companyName,
@@ -11,48 +11,41 @@ const BidsCard = ({
   bidSecurityAmount,
   bidSecurityValidity,
 }) => {
-  const description = (
-    <div>
-      <div className="mb-2">
-        <Typography variant="small" color="blue-gray">
-          <strong>Company Name:</strong> {companyName}
-        </Typography>
-      </div>
-      <div className="mb-2">
-        <Typography variant="small" color="blue-gray">
-          <strong>Bid Title:</strong> {bidTitle}
-        </Typography>
-      </div>
-      <div className="mb-2">
-        <Typography variant="small" color="blue-gray">
-          <strong>RFQ No.:</strong> {rfqNo}
-        </Typography>
-      </div>
-      <div className="mb-2">
-        <Typography variant="small" color="blue-gray">
-          <strong>Submission Date:</strong> {submissionDate}
-        </Typography>
-      </div>
-      <div className="mb-2">
-        <Typography variant="small" color="blue-gray">
-          <strong>Opening Date:</strong> {openingDate}
-        </Typography>
-      </div>
-      <div className="mb-2">
-        <Typography variant="small" color="blue-gray">
-          <strong>Bid Security Amount:</strong> {bidSecurityAmount}
-        </Typography>
-      </div>
-      <div className="mb-2">
-        <Typography variant="small" color="blue-gray">
-          <strong>Bid Security Validity Period:</strong> {bidSecurityValidity}
-        </Typography>
-      </div>
-    </div>
-  );
+  const handleDetailsClick = () => {
+    console.log("Details for:", bidTitle);
+  };
 
   return (
-    <Card title={bidTitle || "Bid Information"} description={description} />
+    <Card
+      title={bidTitle}
+      description={
+        <div>
+          <Typography color="gray" className="mb-1">
+            Company Name: {companyName}
+          </Typography>
+          <Typography color="gray" className="mb-1">
+            RFQ No: {rfqNo}
+          </Typography>
+          <Typography color="gray" className="mb-1">
+            Submission Date: {submissionDate}
+          </Typography>
+          <Typography color="gray" className="mb-1">
+            Opening Date: {openingDate}
+          </Typography>
+          <Typography color="gray" className="mb-1">
+            Bid Security Amount: {bidSecurityAmount}
+          </Typography>
+          <Typography color="gray" className="mb-1">
+            Bid Security Validity: {bidSecurityValidity}
+          </Typography>
+        </div>
+      }
+      customButton={
+        <Button onClick={handleDetailsClick} size="lg" className="w-full">
+          View Details
+        </Button>
+      }
+    />
   );
 };
 

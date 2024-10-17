@@ -5,14 +5,19 @@ import {
   CardFooter,
   Typography,
   Button,
-  Tooltip,
   IconButton,
 } from "@material-tailwind/react";
 
-const Card = ({ imageUrl, title, description, button, ...rest }) => {
+const Card = ({
+  imageUrl,
+  title,
+  description,
+  button,
+  customButton,
+  ...rest
+}) => {
   return (
-    <MTCard className="w-full max-w-[26rem] shadow-lg" {...rest}>
-      {/* Conditionally render CardHeader if imageUrl is provided */}
+    <MTCard className="w-fit max-w-[26rem] shadow-lg" {...rest}>
       {imageUrl && (
         <CardHeader floated={false} color="blue-gray">
           <img src={imageUrl} alt={title || "Card Image"} />
@@ -29,7 +34,6 @@ const Card = ({ imageUrl, title, description, button, ...rest }) => {
       )}
 
       <CardBody>
-        {/* Conditionally render title if provided */}
         {title && (
           <div className="mb-3 flex items-center justify-between">
             <Typography variant="h5" color="blue-gray" className="font-medium">
@@ -37,19 +41,17 @@ const Card = ({ imageUrl, title, description, button, ...rest }) => {
             </Typography>
           </div>
         )}
-
-        {/* Conditionally render description if provided */}
         {description && <Typography color="gray">{description}</Typography>}
       </CardBody>
 
-      {/* Conditionally render footer with button */}
-      {button && (
-        <CardFooter className="pt-3">
+      <CardFooter className="pt-3">
+        {button && (
           <Button size="lg" fullWidth={true}>
             {button}
           </Button>
-        </CardFooter>
-      )}
+        )}
+        {customButton}
+      </CardFooter>
     </MTCard>
   );
 };
@@ -58,7 +60,6 @@ const Card = ({ imageUrl, title, description, button, ...rest }) => {
 Card.defaultProps = {
   title: "Default Title",
   description: "This is the default description.",
-  button: "Button",
 };
 
 export default Card;
