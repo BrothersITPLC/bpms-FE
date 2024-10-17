@@ -297,15 +297,21 @@ const UserManagement = () => {
       >
         <div className="flex flex-col gap-4">
           <Input
+            label="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <Input
             label="Department"
             name="department"
             value={formData.department}
             onChange={handleChange}
           />
           <Input
-            label="Email"
-            name="email"
-            value={formData.email}
+            label="Job Position"
+            name="job-position"
+            value={formData.job_position}
             onChange={handleChange}
           />
         </div>
