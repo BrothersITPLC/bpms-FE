@@ -7,10 +7,10 @@ export const apiSlice = createApi({
   tagTypes: ["User"],
   endpoints: (builder) => ({
     validateOTP: builder.mutation({
-      query: (otpData) => ({
+      query: ({ otp, token }) => ({
         url: "users/validate/",
         method: "POST",
-        body: otpData,
+        body: { otp, token },
       }),
     }),
     loginUser: builder.mutation({
@@ -27,15 +27,11 @@ export const apiSlice = createApi({
       }),
     }),
     completeProfile: builder.mutation({
-      query: (profileData) => ({
+      query: (data) => ({
         url: "users/complete-profile/",
         method: "PUT",
-        body: profileData,
+        body: data,
       }),
-    }),
-    getUserStatus: builder.query({
-      query: () => "users/status/",
-      providesTags: ["User"],
     }),
   }),
 });
@@ -45,5 +41,4 @@ export const {
   useLoginUserMutation,
   useLogoutUserMutation,
   useCompleteProfileMutation,
-  useGetUserStatusQuery,
 } = apiSlice;
