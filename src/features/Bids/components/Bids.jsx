@@ -38,6 +38,11 @@ const Bids = () => {
           placeholder: "Enter company name",
         },
         {
+          name: "company_address",
+          label: "Company Address",
+          placeholder: "Enter company address",
+        },
+        {
           name: "bid_title",
           label: "Bid Title",
           placeholder: "Enter bid title",
