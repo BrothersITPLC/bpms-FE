@@ -6,44 +6,34 @@ export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    validateOTP: builder.mutation({
-      query: (otpData) => ({
-        url: "users/validate/",
-        method: "POST",
-        body: otpData,
-      }),
-    }),
     loginUser: builder.mutation({
       query: (credentials) => ({
-        url: "users/login/",
+        url: "token/",
         method: "POST",
         body: credentials,
       }),
     }),
     logoutUser: builder.mutation({
       query: () => ({
-        url: "users/logout/",
+        url: "/logout/",
         method: "POST",
       }),
+      async onQueryStarted(arg, { dispatch }) {
+        dispatch(clearUser());
+      },
     }),
     completeProfile: builder.mutation({
-      query: (profileData) => ({
+      query: (data) => ({
         url: "users/complete-profile/",
         method: "PUT",
-        body: profileData,
+        body: data,
       }),
-    }),
-    getUserStatus: builder.query({
-      query: () => "users/status/",
-      providesTags: ["User"],
     }),
   }),
 });
 
 export const {
-  useValidateOTPMutation,
   useLoginUserMutation,
   useLogoutUserMutation,
   useCompleteProfileMutation,
-  useGetUserStatusQuery,
 } = apiSlice;
