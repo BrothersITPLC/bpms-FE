@@ -10,6 +10,7 @@ import Sidebar from "./components/Sidebar";
 import UserManagement from "./features/UserManagement/components/UserManagement";
 import Products from "./features/Products/components/Products";
 import Settings from "./views/Settings/components/Settings";
+import BidPurchaseOrders from "./features/BidPurchaseOrders/components/BidPurchaseOrders";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";
 
