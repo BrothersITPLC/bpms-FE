@@ -41,7 +41,7 @@ const BidsCard = ({
         </div>
       }
       customButton={
-        <Button onClick={handleDetailsClick} size="lg" className="w-full">
+        <Button onClick={handleDetailsClick} size="sm" className="w-24">
           View Details
         </Button>
       }
