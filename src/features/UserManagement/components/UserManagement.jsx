@@ -89,11 +89,12 @@ const TABLE_ROWS = [
 
 const UserManagement = () => {
   const [modalOpen, setModalOpen] = useState(false);
-
+  const [selectedTab, setSelectedTab] = useState("all");
   const [registerEmployee, { isLoading }] = useRegisterEmployeeMutation();
   const [formData, setFormData] = useState({
     department: "",
     email: "",
+    job_position: "",
   });
 
   const handleOpenModal = () => {
@@ -119,6 +120,11 @@ const UserManagement = () => {
       console.log("error:", error);
     }
   };
+  const filteredRows = TABLE_ROWS.filter((row) => {
+    if (selectedTab === "active") return row.active === true;
+    if (selectedTab === "inactive") return row.active === false;
+    return true;
+  });
 
   return (
     <div className="flex">
@@ -149,10 +155,18 @@ const UserManagement = () => {
               </div>
             </div>
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-              <Tabs value="all" className="w-full md:w-max">
+              <Tabs
+                value={selectedTab}
+                className="w-full md:w-max"
+                onChange={setSelectedTab}
+              >
                 <TabsHeader>
                   {TABS.map(({ label, value }) => (
-                    <Tab key={value} value={value}>
+                    <Tab
+                      key={value}
+                      value={value}
+                      onClick={() => setSelectedTab(value)}
+                    >
                       &nbsp;&nbsp;{label}&nbsp;&nbsp;
                     </Tab>
                   ))}
@@ -187,7 +201,7 @@ const UserManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                {TABLE_ROWS.map(
+                {filteredRows.map(
                   ({ img, name, email, job, org, active, date }, index) => {
                     const isLast = index === TABLE_ROWS.length - 1;
                     const classes = isLast
@@ -310,7 +324,7 @@ const UserManagement = () => {
           />
           <Input
             label="Job Position"
-            name="job-position"
+            name="job_position"
             value={formData.job_position}
             onChange={handleChange}
           />
