@@ -7,7 +7,8 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import Sidebar from "../../../components/Sidebar";
-import BasicInfo from "../../../components/BasicInfo";
+import UserInfo from "../../../components/UserInfo";
+
 const Settings = () => {
   const data = [
     {
@@ -18,7 +19,7 @@ const Settings = () => {
     {
       label: "PROFILE",
       value: "profile",
-      desc: <BasicInfo />,
+      desc: <UserInfo />,
     },
   ];
 

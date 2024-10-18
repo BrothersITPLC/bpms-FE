@@ -9,7 +9,7 @@ import Signup from "./features/Auth/components/Signup";
 import Sidebar from "./components/Sidebar";
 import UserManagement from "./features/UserManagement/components/UserManagement";
 import OTP from "./features/Auth/components/OTP";
-import Products from "./features/Products/components/Products";
+import Bids from "./features/Bids/components/Bids";
 import Settings from "./views/Settings/components/Settings";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";

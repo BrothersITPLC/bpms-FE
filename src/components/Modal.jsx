@@ -11,7 +11,9 @@ const Modal = ({ open, onClose, title, children, confirmText, onConfirm }) => {
   return (
     <Dialog open={open} size="sm" handler={onClose}>
       <DialogHeader>{title}</DialogHeader>
-      <DialogBody>{children}</DialogBody>
+      <DialogBody className="overflow-y-auto max-h-[60vh]">
+        {children}
+      </DialogBody>
       <DialogFooter>
         <Button variant="text" color="black" onClick={onClose} className="mr-1">
           <span>Cancel</span>

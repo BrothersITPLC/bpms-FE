@@ -73,9 +73,6 @@ const Sidebar = () => {
             </ListItem>
             <AccordionBody className="py-1">
               <List className="p-0">
-                <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
-                  My Profile
-                </ListItem>
                 <Link to="/Settings">
                   <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
                     Settings
@@ -116,7 +113,7 @@ const Sidebar = () => {
               </List>
             </AccordionBody>
           </Accordion>
-          <Link to="/UserManagement">
+          <Link to="/user-management">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
                 <UserGroupIcon className="text-primary1 h-5 w-5" />
@@ -124,12 +121,12 @@ const Sidebar = () => {
               User Management
             </ListItem>
           </Link>
-          <Link to="/Products">
+          <Link to="/Bids">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
                 <Square2StackIcon className="text-primary1 h-5 w-5" />
               </ListItemPrefix>
-              Products
+              Bids
             </ListItem>
           </Link>
           <ListItem className={LIST_ITEM_STYLES}>
