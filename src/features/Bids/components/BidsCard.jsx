@@ -19,7 +19,7 @@ const BidsCard = ({
     <Card
       title={bidTitle}
       description={
-        <div>
+        <div className="overflow-wrap break-words w-72">
           <Typography color="gray" className="mb-1">
             Company Name: {companyName}
           </Typography>
