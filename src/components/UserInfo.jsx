@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Typography,
   Input,
@@ -6,7 +7,15 @@ import {
   DialogFooter,
   Button,
 } from "@material-tailwind/react";
+import ProfileImageUploader from "./ProfileImageUploader"; // Import the component
+
 const UserInfo = ({ isSignup }) => {
+  const [profileImage, setProfileImage] = useState(null); // State for profile image
+
+  const handleImageChange = (image) => {
+    setProfileImage(image);
+  };
+
   return (
     <div className="flex justify-center w-fit border-black-2">
       <section className="max-w-lg w-full">
@@ -20,6 +29,12 @@ const UserInfo = ({ isSignup }) => {
         </Typography>
 
         <div className="flex flex-col w-fit mt-8">
+          {/* Profile Image Uploader */}
+          <ProfileImageUploader
+            onImageChange={handleImageChange}
+            isSignup={isSignup}
+          />
+
           {/* Name Inputs */}
           <div className="mb-6 flex flex-col items-end gap-4 md:flex-row">
             <div className="w-full">
@@ -132,11 +147,7 @@ const UserInfo = ({ isSignup }) => {
                 <Input
                   type="password"
                   size="lg"
-                  labelProps={
-                    {
-                      //   className: "hidden",
-                    }
-                  }
+                  labelProps={{}}
                   className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
                 />
               </div>
@@ -151,11 +162,7 @@ const UserInfo = ({ isSignup }) => {
                 <Input
                   type="password"
                   size="lg"
-                  labelProps={
-                    {
-                      //   className: "hidden",
-                    }
-                  }
+                  labelProps={{}}
                   className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
                 />
               </div>
@@ -178,8 +185,6 @@ const UserInfo = ({ isSignup }) => {
             </div>
           </div>
 
-          {/* Password Fields - only for signup */}
-
           {/* Footer Button */}
           <div className="flex justify-start">
             <DialogFooter>
@@ -193,4 +198,5 @@ const UserInfo = ({ isSignup }) => {
     </div>
   );
 };
+
 export default UserInfo;
