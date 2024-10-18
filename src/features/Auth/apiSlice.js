@@ -6,25 +6,21 @@ export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    validateOTP: builder.mutation({
-      query: ({ otp, token }) => ({
-        url: "users/validate/",
-        method: "POST",
-        body: { otp, token },
-      }),
-    }),
     loginUser: builder.mutation({
       query: (credentials) => ({
-        url: "users/login/",
+        url: "token/",
         method: "POST",
         body: credentials,
       }),
     }),
     logoutUser: builder.mutation({
       query: () => ({
-        url: "users/logout/",
+        url: "/logout/",
         method: "POST",
       }),
+      async onQueryStarted(arg, { dispatch }) {
+        dispatch(clearUser());
+      },
     }),
     completeProfile: builder.mutation({
       query: (data) => ({
@@ -37,7 +33,6 @@ export const apiSlice = createApi({
 });
 
 export const {
-  useValidateOTPMutation,
   useLoginUserMutation,
   useLogoutUserMutation,
   useCompleteProfileMutation,

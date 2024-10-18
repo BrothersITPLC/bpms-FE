@@ -9,8 +9,16 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { useCompleteProfileMutation } from "../apiSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 const Signup = () => {
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [completeProfile, { isLoading, error }] = useCompleteProfileMutation();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const query = new URLSearchParams(location.search);
+  const token = query.get("token");
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -21,10 +29,9 @@ const Signup = () => {
     phone_number: "",
     email: "",
     vicinity: "",
+    otp: "",
+    token: token,
   });
-  const [agreeTerms, setAgreeTerms] = useState(false);
-  const [completeProfile, { isLoading, error }] = useCompleteProfileMutation();
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,6 +62,8 @@ const Signup = () => {
         phone_number: formData.phone_number,
         email: formData.email,
         vicinity: formData.vicinity,
+        otp: formData.otp,
+        token: formData.token,
       }).unwrap();
 
       console.log("Profile completed successfully.");
@@ -278,6 +287,31 @@ const Signup = () => {
                 }
                 name="vicinity"
                 value={formData.vicinity}
+                onChange={handleChange}
+                className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
+              />
+            </div>
+          </div>
+
+          <div className="mb-6 flex flex-col items-end gap-4 md:flex-row">
+            <div className="w-full">
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="mb-2 font-medium"
+              >
+                OTP
+              </Typography>
+              <Input
+                size="lg"
+                placeholder="6-kilo, Gerji, Bole, etc... "
+                labelProps={
+                  {
+                    //   className: "hidden",
+                  }
+                }
+                name="otp"
+                value={formData.otp}
                 onChange={handleChange}
                 className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
               />
