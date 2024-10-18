@@ -129,12 +129,14 @@ const Sidebar = () => {
               Bids
             </ListItem>
           </Link>
-          <ListItem className={LIST_ITEM_STYLES}>
-            <ListItemPrefix>
-              <TicketIcon className="text-primary1 h-5 w-5" />
-            </ListItemPrefix>
-            Orders
-          </ListItem>
+          <Link to="/bid-purchase-orders">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <TicketIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Orders
+            </ListItem>
+          </Link>
           <ListItem className={LIST_ITEM_STYLES}>
             <ListItemPrefix>
               <UserGroupIcon className="text-primary1 h-5 w-5" />
