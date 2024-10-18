@@ -7,18 +7,48 @@ import {
   CardHeader,
   Typography,
 } from "@material-tailwind/react";
-
+import { useLoginUserMutation } from "../apiSlice";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../authSlice";
 import Logo from "../../../assets/images/logo.png";
 
 const Login = () => {
-  const [openModal, setOpenModal] = useState(false);
+  const [loginUser, { isLoading, error }] = useLoginUserMutation();
+  const dispatch = useDispatch();
 
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [apiError, setApiError] = useState("");
+  const navigate = useNavigate();
+
+  const user = useSelector((state) => state.auth.user);
+  console.log("User data:", user);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const credentials = { email, password };
+      const response = await loginUser(credentials).unwrap();
+      dispatch(
+        setUser({
+          user: {
+            id: response.user_id,
+            username: response.username,
+            email: response.email,
+          },
+          accessToken: response.access,
+          refreshToken: response.refresh,
+        })
+      );
+      navigate("/user-management");
+    } catch (err) {
+      setApiError(err?.data?.detail || "Login failed. Please try again.");
+    }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      {/* <img src={LoginSVG} /> */}
       <Card
         shadow={false}
         className="md:px-24 md:py-14 py-8 border border-gray-300"
@@ -40,7 +70,7 @@ const Login = () => {
           </Typography>
         </CardHeader>
         <CardBody>
-          <form action="#" className="flex flex-col gap-4 md:mt-8">
+          <form onSubmit={handleLogin} className="flex flex-col gap-4 md:mt-8">
             <div>
               <label htmlFor="email">
                 <Typography
@@ -51,13 +81,13 @@ const Login = () => {
                   Your Email
                 </Typography>
               </label>
-
               <Input
                 id="email"
                 color="gray"
                 size="lg"
                 type="email"
-                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="name.father'sname@brothersitplc.com"
                 className="!w-full placeholder:!opacity-100 focus:!border-t-primary !border-t-blue-gray-200"
               />
@@ -75,14 +105,27 @@ const Login = () => {
                 color="gray"
                 size="lg"
                 type="password"
-                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="!w-full placeholder:!opacity-100 focus:!border-t-primary !border-t-blue-gray-200"
               />
             </div>
-            <Button size="lg" className="bg-primary1">
-              sign in
+            <Button
+              type="submit"
+              size="lg"
+              className="bg-primary1"
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing in..." : "Sign in"}
             </Button>
-
+            {apiError && (
+              <Typography
+                variant="small"
+                className="text-center text-red-500 mt-2"
+              >
+                {apiError}
+              </Typography>
+            )}
             <Typography
               variant="small"
               className="text-center mx-auto max-w-[19rem] !font-medium !text-gray-600"
@@ -98,8 +141,9 @@ const Login = () => {
             </Typography>
           </form>
         </CardBody>
-      </Card>{" "}
+      </Card>
     </div>
   );
 };
+
 export default Login;
