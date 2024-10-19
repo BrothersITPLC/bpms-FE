@@ -1,6 +1,6 @@
+// BidsCard.js
 import React from "react";
-import Card from "../../../components/Card";
-import { Typography, Button } from "@material-tailwind/react";
+import { Card, Button } from "@material-tailwind/react";
 
 const BidsCard = ({
   companyName,
@@ -10,42 +10,19 @@ const BidsCard = ({
   openingDate,
   bidSecurityAmount,
   bidSecurityValidity,
+  buttonLabel = "View Details", // Default to "View Details" if no buttonLabel is provided
 }) => {
-  const handleDetailsClick = () => {
-    console.log("Details for:", bidTitle);
-  };
-
   return (
-    <Card
-      title={bidTitle}
-      description={
-        <div className="overflow-wrap break-words w-72">
-          <Typography color="gray" className="mb-1">
-            Company Name: {companyName}
-          </Typography>
-          <Typography color="gray" className="mb-1">
-            RFQ No: {rfqNo}
-          </Typography>
-          <Typography color="gray" className="mb-1">
-            Submission Date: {submissionDate}
-          </Typography>
-          <Typography color="gray" className="mb-1">
-            Opening Date: {openingDate}
-          </Typography>
-          <Typography color="gray" className="mb-1">
-            Bid Security Amount: {bidSecurityAmount}
-          </Typography>
-          <Typography color="gray" className="mb-1">
-            Bid Security Validity: {bidSecurityValidity}
-          </Typography>
-        </div>
-      }
-      customButton={
-        <Button onClick={handleDetailsClick} size="sm" className="w-24">
-          View Details
-        </Button>
-      }
-    />
+    <Card className="p-4 w-72">
+      <h5 className="font-semibold">{bidTitle}</h5>
+      <p>Company: {companyName}</p>
+      <p>RFQ No: {rfqNo}</p>
+      <p>Submission Date: {submissionDate}</p>
+      <p>Opening Date: {openingDate}</p>
+      <p>Bid Security Amount: {bidSecurityAmount}</p>
+      <p>Bid Security Validity: {bidSecurityValidity}</p>
+      <Button className="mt-4 w-fit">{buttonLabel}</Button>
+    </Card>
   );
 };
 

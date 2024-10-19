@@ -1,46 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
 import BidsCard from "../../Bids/components/BidsCard";
-import {
-  Typography,
-  Tabs,
-  Tab,
-  TabsBody,
-  TabsHeader,
-  TabPanel,
-  Card,
-} from "@material-tailwind/react";
+import { Typography, Card } from "@material-tailwind/react";
 import Sidebar from "../../../components/Sidebar";
-import { FaPlus } from "react-icons/fa";
 
 const BidPurchaseOrders = () => {
-  const [activeTab, setActiveTab] = useState("active_orders");
-
   const data = [
     {
       label: "Active Orders",
       value: "active_orders",
       cardTitle: "Active Orders",
       cardDescription:
-        "Please complete the purchase for thefollowing purchase requests",
-      showStatusUpdateButton: true,
+        "Please complete the purchase for the following purchase requests",
     },
     {
-      label: "Active Bids",
-      value: "active_bids",
-      cardTitle: "Active Bids",
-      cardDescription: "These are the bids that are currently being processed.",
-      showStatusUpdateButton: false,
+      label: "Purchased Bids",
+      value: "purchased_bids",
+      cardTitle: "Purchased Bids",
+      cardDescription:
+        "These are the bids that have been successfully purchased.",
     },
     {
       label: "Past Bids",
       value: "past_bids",
       cardTitle: "Past Bids",
       cardDescription: "These are the bids that have been closed.",
-      showStatusUpdateButton: false,
     },
   ];
 
-  // Sample bids data
+  // Sample bids data for active orders section
   const sampleBids = [
     {
       companyName: "Company ABC",
@@ -82,75 +69,44 @@ const BidPurchaseOrders = () => {
           Here are the sample bid purchase orders.
         </Typography>
 
-        {/* Tabs for different bid statuses */}
-        <Tabs
-          value={activeTab}
-          className="mt-10"
-          onChange={(value) => setActiveTab(value)}
-        >
-          <TabsHeader>
-            {data.map(({ label, value }) => (
-              <Tab key={value} value={value}>
-                {label}
-              </Tab>
+        {/* Render Active Orders */}
+        <div className="mt-10">
+          <Card
+            title={data[0].cardTitle}
+            description={data[0].cardDescription}
+          />
+          <div className="w-full gap-4 flex flex-wrap mt-4">
+            {sampleBids.map((bid, index) => (
+              <BidsCard
+                key={index}
+                companyName={bid.companyName}
+                bidTitle={bid.bidTitle}
+                rfqNo={bid.rfqNo}
+                submissionDate={bid.submissionDate}
+                openingDate={bid.openingDate}
+                bidSecurityAmount={bid.bidSecurityAmount}
+                bidSecurityValidity={bid.bidSecurityValidity}
+                buttonLabel="Purchased" // This changes the button text to "Purchased"
+              />
             ))}
-          </TabsHeader>
-          <TabsBody>
-            {data.map(
-              ({
-                value,
-                cardTitle,
-                cardDescription,
-                showStatusUpdateButton,
-              }) => (
-                <TabPanel key={value} value={value}>
-                  {value === "active_orders" ? (
-                    <div className="w-full gap-4 flex flex-wrap">
-                      {sampleBids.map((bid, index) => (
-                        <BidsCard
-                          key={index}
-                          companyName={bid.companyName}
-                          bidTitle={bid.bidTitle}
-                          rfqNo={bid.rfqNo}
-                          submissionDate={bid.submissionDate}
-                          openingDate={bid.openingDate}
-                          bidSecurityAmount={bid.bidSecurityAmount}
-                          bidSecurityValidity={bid.bidSecurityValidity}
-                        />
-                      ))}
-                      <Card
-                        title={cardTitle}
-                        description={cardDescription}
-                        // button={
-                        //   showStatusUpdateButton ? (
-                        //     <div className="flex items-center justify-center cursor-pointer">
-                        //       <FaPlus className="h-5 w-5" />
-                        //       <span className="ml-2">Request Bid Purchase</span>
-                        //     </div>
-                        //   ) : (
-                        //     <div className="flex items-center justify-center">
-                        //       <span>Detail</span>
-                        //     </div>
-                        //   )
-                        // }
-                      />
-                    </div>
-                  ) : (
-                    <Card
-                      title={cardTitle}
-                      description={cardDescription}
-                      button={
-                        <div className="flex items-center justify-center">
-                          <span>Detail</span>
-                        </div>
-                      }
-                    />
-                  )}
-                </TabPanel>
-              )
-            )}
-          </TabsBody>
-        </Tabs>
+          </div>
+        </div>
+
+        {/* Render Purchased Bids */}
+        <div className="mt-10">
+          <Card
+            title={data[1].cardTitle}
+            description={data[1].cardDescription}
+          />
+        </div>
+
+        {/* Render Past Bids */}
+        <div className="mt-10">
+          <Card
+            title={data[2].cardTitle}
+            description={data[2].cardDescription}
+          />
+        </div>
       </div>
     </div>
   );
