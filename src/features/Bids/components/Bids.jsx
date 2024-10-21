@@ -12,6 +12,7 @@ import Sidebar from "../../../components/Sidebar";
 import Card from "../../../components/Card";
 import Modal from "../../../components/Modal"; // Import your existing Modal component
 import BidsCard from "./BidsCard";
+import DatePicker from "../../../components/DatePicker"; // Adjust the import path as necessary
 
 const Bids = () => {
   const [activeTab, setActiveTab] = useState("floated_bids");
@@ -51,14 +52,14 @@ const Bids = () => {
         {
           name: "submission_date",
           label: "Submission Date",
-          placeholder: "Enter submission date",
+          placeholder: "Select submission date",
           type: "date",
           min: today,
         },
         {
           name: "opening_date",
           label: "Opening Date",
-          placeholder: "Enter opening date",
+          placeholder: "Select opening date",
           type: "date",
           min: today,
         },
@@ -123,7 +124,7 @@ const Bids = () => {
   const openModal = (title, fields) => {
     setModalTitle(title);
     setModalFields(fields);
-    setConfirmText("Submit"); // You can customize this per context
+    setConfirmText("Submit");
     setModalOpen(true);
   };
 
@@ -173,6 +174,7 @@ const Bids = () => {
                 <TabPanel key={value} value={value}>
                   {value === "floated_bids" ? (
                     <div className="w-full gap-4 flex flex-wrap">
+                      {/* BidsCard components */}
                       <BidsCard
                         companyName={sampleBid.companyName}
                         bidTitle={sampleBid.bidTitle}
@@ -247,20 +249,33 @@ const Bids = () => {
           confirmText={confirmText}
           onConfirm={handleConfirm}
         >
-          {modalFields.map((field) => (
-            <div key={field.name} className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                {field.label}
-              </label>
-              <input
-                type={field.type || "text"}
-                name={field.name}
-                placeholder={field.placeholder}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                min={field.type === "date" ? field.min : undefined} // Add min for date fields
-              />
-            </div>
-          ))}
+          {modalFields.map((field) => {
+            if (field.type === "date") {
+              return (
+                <DatePicker
+                  key={field.name}
+                  field={{
+                    label: field.label,
+                    name: field.name,
+                    placeholder: field.placeholder,
+                  }}
+                />
+              );
+            }
+            return (
+              <div key={field.name} className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  {field.label}
+                </label>
+                <input
+                  type={field.type || "text"}
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+            );
+          })}
         </Modal>
       </div>
     </div>

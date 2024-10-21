@@ -8,6 +8,7 @@ import Login from "./features/Auth/components/Login";
 import Signup from "./features/Auth/components/Signup";
 import Sidebar from "./components/Sidebar";
 import UserManagement from "./features/UserManagement/components/UserManagement";
+import Tasks from "./features/TaskManagement/components/Tasks";
 import Settings from "./views/Settings/components/Settings";
 import Bids from "./features/Bids/components/Bids";
 import BidPurchaseOrders from "./features/BidPurchaseOrders/components/BidPurchaseOrders";
@@ -23,7 +24,8 @@ const App = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route path="user-management" element={<UserManagement />} />
-          yy <Route path="settings" element={<Settings />} />
+          <Route path="tasks" element={<Tasks />} />
+          <Route path="settings" element={<Settings />} />
           <Route path="sidebar" element={<Sidebar />} />
           <Route path="bid-purchase-orders" element={<BidPurchaseOrders />} />
           <Route path="bids" element={<Bids />} />

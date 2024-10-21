@@ -2,14 +2,12 @@ import React, { useState } from "react"; // Import useState here
 import {
   List,
   Card,
-  Alert,
   Avatar,
   ListItem,
   Accordion,
   Typography,
   AccordionBody,
   ListItemPrefix,
-  AccordionHeader,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
@@ -39,7 +37,7 @@ const Sidebar = () => {
 
   return (
     <div className="w-fit grid grid-cols-1 h-screen">
-      <Card className="h-full w-[20rem] mx-auto p-6 shadow-md overflow-auto sidebar">
+      <Card className="h-full w-fit mx-auto p-6 shadow-md overflow-auto sidebar">
         <div className="mb-2 flex items-center gap-4 p-4">
           <img src={Logo} alt="brand" className="w-20 h-auto" />
           <Typography color="blue-gray" className="uppercase text-xl font-bold">
@@ -62,7 +60,7 @@ const Sidebar = () => {
                 />
               </ListItemPrefix>
               <Typography className="mr-auto font-normal text-inherit">
-                Seblewongel Hailu{" "}
+                User User{" "}
               </Typography>
               <ChevronDownIcon
                 strokeWidth={3}
@@ -113,6 +111,14 @@ const Sidebar = () => {
               </List>
             </AccordionBody>
           </Accordion>
+          <Link to="/tasks">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Task Management
+            </ListItem>
+          </Link>
           <Link to="/user-management">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
