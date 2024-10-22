@@ -2,14 +2,12 @@ import React, { useState } from "react"; // Import useState here
 import {
   List,
   Card,
-  Alert,
   Avatar,
   ListItem,
   Accordion,
   Typography,
   AccordionBody,
   ListItemPrefix,
-  AccordionHeader,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
@@ -39,7 +37,7 @@ const Sidebar = () => {
 
   return (
     <div className="w-fit grid grid-cols-1 h-screen">
-      <Card className="h-full w-[20rem] mx-auto p-6 shadow-md overflow-auto sidebar">
+      <Card className="h-full w-fit mx-auto p-6 shadow-md overflow-auto sidebar">
         <div className="mb-2 flex items-center gap-4 p-4">
           <img src={Logo} alt="brand" className="w-20 h-auto" />
           <Typography color="blue-gray" className="uppercase text-xl font-bold">
@@ -62,7 +60,7 @@ const Sidebar = () => {
                 />
               </ListItemPrefix>
               <Typography className="mr-auto font-normal text-inherit">
-                Seblewongel Hailu{" "}
+                User User{" "}
               </Typography>
               <ChevronDownIcon
                 strokeWidth={3}
@@ -82,6 +80,8 @@ const Sidebar = () => {
             </AccordionBody>
           </Accordion>
           <hr className="my-2 border-gray-200" />
+
+          {/* Dashboard Accordion */}
           <Accordion open={open === 2}>
             <ListItem
               selected={open === 2}
@@ -110,6 +110,48 @@ const Sidebar = () => {
                 <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
                   Bid Stats
                 </ListItem>
+              </List>
+            </AccordionBody>
+          </Accordion>
+
+          {/* Task Management Accordion */}
+          <Accordion open={open === 3}>
+            <ListItem
+              selected={open === 3}
+              data-selected={open === 3}
+              onClick={() => handleOpen(3)}
+              className="px-3 py-[9px] select-none hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 hover:text-gray-900 focus:text-gray-900 active:text-gray-900 data-[selected=true]:text-gray-900"
+            >
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              <Typography className="mr-auto font-normal text-inherit">
+                Task Management
+              </Typography>
+              <ChevronDownIcon
+                strokeWidth={3}
+                className={`ml-auto h-4 w-4 text-gray-500 transition-transform ${
+                  open === 3 ? "rotate-180" : ""
+                }`}
+              />
+            </ListItem>
+            <AccordionBody className="py-1">
+              <List className="p-0">
+                <Link to="/assigned-tasks">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Assigned Tasks
+                  </ListItem>
+                </Link>
+                <Link to="/user-management">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    User Management
+                  </ListItem>
+                </Link>
+                <Link to="/tasks">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Tasks
+                  </ListItem>
+                </Link>
               </List>
             </AccordionBody>
           </Accordion>
@@ -162,44 +204,6 @@ const Sidebar = () => {
             Sign Out
           </ListItem>
         </List>
-        {/* <Alert
-            open={openAlert}
-            className="mt-auto"
-            color="green"
-            variant="ghost"
-          >
-            <Typography
-              variant="small"
-              color="green"
-              className="mb-1 font-bold"
-            >
-              New Version Available
-            </Typography>
-            <Typography variant="small" color="green" className="font-normal">
-              Update your app and enjoy the new features and improvements.
-            </Typography>
-            <div className="mt-4 flex gap-4">
-              <Typography
-                as="a"
-                href="#"
-                variant="small"
-                color="green"
-                className="font-normal"
-                onClick={() => setOpenAlert(false)}
-              >
-                Dismiss
-              </Typography>
-              <Typography
-                as="a"
-                href="#"
-                variant="small"
-                color="green"
-                className="font-medium"
-              >
-                Upgrade Now
-              </Typography>
-            </div>
-          </Alert> */}
         <Typography
           variant="small"
           className="mt-5 font-medium text-gray-500 flex justify-center"
