@@ -80,6 +80,8 @@ const Sidebar = () => {
             </AccordionBody>
           </Accordion>
           <hr className="my-2 border-gray-200" />
+
+          {/* Dashboard Accordion */}
           <Accordion open={open === 2}>
             <ListItem
               selected={open === 2}
@@ -111,14 +113,48 @@ const Sidebar = () => {
               </List>
             </AccordionBody>
           </Accordion>
-          <Link to="/tasks">
-            <ListItem className={LIST_ITEM_STYLES}>
+
+          {/* Task Management Accordion */}
+          <Accordion open={open === 3}>
+            <ListItem
+              selected={open === 3}
+              data-selected={open === 3}
+              onClick={() => handleOpen(3)}
+              className="px-3 py-[9px] select-none hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 hover:text-gray-900 focus:text-gray-900 active:text-gray-900 data-[selected=true]:text-gray-900"
+            >
               <ListItemPrefix>
                 <UserGroupIcon className="text-primary1 h-5 w-5" />
               </ListItemPrefix>
-              Task Management
+              <Typography className="mr-auto font-normal text-inherit">
+                Task Management
+              </Typography>
+              <ChevronDownIcon
+                strokeWidth={3}
+                className={`ml-auto h-4 w-4 text-gray-500 transition-transform ${
+                  open === 3 ? "rotate-180" : ""
+                }`}
+              />
             </ListItem>
-          </Link>
+            <AccordionBody className="py-1">
+              <List className="p-0">
+                <Link to="/assigned-tasks">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Assigned Tasks
+                  </ListItem>
+                </Link>
+                <Link to="/user-management">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    User Management
+                  </ListItem>
+                </Link>
+                <Link to="/tasks">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Tasks
+                  </ListItem>
+                </Link>
+              </List>
+            </AccordionBody>
+          </Accordion>
           <Link to="/user-management">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
@@ -168,44 +204,6 @@ const Sidebar = () => {
             Sign Out
           </ListItem>
         </List>
-        {/* <Alert
-            open={openAlert}
-            className="mt-auto"
-            color="green"
-            variant="ghost"
-          >
-            <Typography
-              variant="small"
-              color="green"
-              className="mb-1 font-bold"
-            >
-              New Version Available
-            </Typography>
-            <Typography variant="small" color="green" className="font-normal">
-              Update your app and enjoy the new features and improvements.
-            </Typography>
-            <div className="mt-4 flex gap-4">
-              <Typography
-                as="a"
-                href="#"
-                variant="small"
-                color="green"
-                className="font-normal"
-                onClick={() => setOpenAlert(false)}
-              >
-                Dismiss
-              </Typography>
-              <Typography
-                as="a"
-                href="#"
-                variant="small"
-                color="green"
-                className="font-medium"
-              >
-                Upgrade Now
-              </Typography>
-            </div>
-          </Alert> */}
         <Typography
           variant="small"
           className="mt-5 font-medium text-gray-500 flex justify-center"
