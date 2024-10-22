@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import {
-  Card,
+  Typography,
   Input,
   Button,
-  CardBody,
+  Card,
   CardHeader,
-  Typography,
+  CardBody,
 } from "@material-tailwind/react";
 import { useLoginUserMutation } from "../apiSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../authSlice";
 import Logo from "../../../assets/images/logo.png";
+import Validation from "../../../components/Validation"; // Import Validation Component
 
 const Login = () => {
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
@@ -19,6 +20,7 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [touched, setTouched] = useState({ email: false, password: false }); // Track touched state
   const [apiError, setApiError] = useState("");
   const navigate = useNavigate();
 
@@ -45,6 +47,10 @@ const Login = () => {
     } catch (err) {
       setApiError(err?.data?.detail || "Login failed. Please try again.");
     }
+  };
+
+  const handleBlur = (field) => {
+    setTouched({ ...touched, [field]: true });
   };
 
   return (
@@ -82,15 +88,22 @@ const Login = () => {
                 </Typography>
               </label>
               <Input
-                id="email"
-                color="gray"
                 size="lg"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => handleBlur("email")} // Set touched on blur
                 placeholder="name.father'sname@brothersitplc.com"
                 className="!w-full placeholder:!opacity-100 focus:!border-t-primary !border-t-blue-gray-200"
               />
+              {/* Email Validation */}
+              <Validation
+                value={email}
+                touched={touched.email} // Pass touched state
+                validationType="email" // Specify validation type
+              />
+            </div>
+            <div>
               <label htmlFor="password">
                 <Typography
                   variant="small"
@@ -107,7 +120,14 @@ const Login = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onBlur={() => handleBlur("password")} // Set touched on blur
                 className="!w-full placeholder:!opacity-100 focus:!border-t-primary !border-t-blue-gray-200"
+              />
+              {/* Password Validation */}
+              <Validation
+                value={password}
+                touched={touched.password} // Pass touched state
+                validationType="passwordComplex" // Specify password complexity validation
               />
             </div>
             <Button

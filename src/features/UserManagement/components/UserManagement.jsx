@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Sidebar from "../../../components/Sidebar";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
@@ -19,27 +19,26 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
-import { useState } from "react";
 import { useRegisterEmployeeMutation } from "../apiSlice";
+import Validation from "../../../components/Validation"; // Import Validation component
+
 const TABS = [
-  {
-    label: "All",
-    value: "all",
-  },
-  {
-    label: "Active",
-    value: "active",
-  },
-  {
-    label: "Inactive",
-    value: "inactive",
-  },
+  { label: "All", value: "all" },
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
 ];
 
 const TABLE_HEAD = ["Member", "Position", "Status", "Employed", ""];
-const TABLE_HEAD1 = ["", "Department", "", "", ""];
-
 const TABLE_ROWS = [
+  {
+    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
+    name: "John Michael",
+    email: "john@creative-tim.com",
+    job: "Manager",
+    org: "Organization",
+    active: true,
+    date: "23/04/18",
+  },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
     name: "John Michael",
@@ -97,18 +96,27 @@ const UserManagement = () => {
     job_position: "",
   });
 
-  const handleOpenModal = () => {
-    setModalOpen(true);
-  };
+  // Add touched state to track field focus/blur
+  const [touched, setTouched] = useState({
+    email: false,
+    department: false,
+    job_position: false,
+  });
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleBlur = (e) => {
+    setTouched({
+      ...touched,
+      [e.target.name]: true,
     });
   };
 
@@ -120,6 +128,7 @@ const UserManagement = () => {
       console.log("error:", error);
     }
   };
+
   const filteredRows = TABLE_ROWS.filter((row) => {
     if (selectedTab === "active") return row.active === true;
     if (selectedTab === "inactive") return row.active === false;
@@ -315,18 +324,36 @@ const UserManagement = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <Validation
+            value={formData.email}
+            touched={touched.email}
+            validationType="email"
           />
           <Input
             label="Department"
             name="department"
             value={formData.department}
             onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <Validation
+            value={formData.department}
+            touched={touched.department}
+            validationType="nonEmpty"
           />
           <Input
             label="Job Position"
             name="job_position"
             value={formData.job_position}
             onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <Validation
+            value={formData.job_position}
+            touched={touched.job_position}
+            validationType="nonEmpty"
           />
         </div>
       </Modal>

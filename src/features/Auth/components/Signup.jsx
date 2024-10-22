@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import {
   Input,
   Typography,
@@ -10,6 +9,8 @@ import {
 } from "@material-tailwind/react";
 import { useCompleteProfileMutation } from "../apiSlice";
 import { useNavigate, useLocation } from "react-router-dom";
+import Validation from "../../../components/Validation";
+
 const Signup = () => {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [completeProfile, { isLoading, error }] = useCompleteProfileMutation();
@@ -33,11 +34,21 @@ const Signup = () => {
     token: token,
   });
 
+  const [touchedFields, setTouchedFields] = useState({}); // Track touched fields for validation
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    setTouchedFields((prev) => ({
+      ...prev,
+      [name]: true,
     }));
   };
 
@@ -72,6 +83,7 @@ const Signup = () => {
       console.error("Error completing profile", err);
     }
   };
+
   return (
     <div className="flex justify-center w-full border-black-2">
       <section className="py-20 max-w-lg w-full">
@@ -94,15 +106,16 @@ const Signup = () => {
               <Input
                 size="lg"
                 placeholder="Abebe"
-                labelProps={
-                  {
-                    //   className: "hidden",
-                  }
-                }
                 name="first_name"
                 value={formData.first_name}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
+              />
+              <Validation
+                value={formData.first_name}
+                touched={touchedFields.first_name}
+                validationType="letterOnly"
               />
             </div>
             <div className="w-full">
@@ -116,15 +129,16 @@ const Signup = () => {
               <Input
                 size="lg"
                 placeholder="Kebede"
-                labelProps={
-                  {
-                    //   className: "hidden",
-                  }
-                }
                 name="last_name"
                 value={formData.last_name}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
+              />
+              <Validation
+                value={formData.last_name}
+                touched={touchedFields.last_name}
+                validationType="letterOnly"
               />
             </div>
           </div>
@@ -149,6 +163,7 @@ const Signup = () => {
                   <Option value="Male">Male</Option>
                   <Option value="Female">Female</Option>
                 </Select>
+                <Validation></Validation>
               </div>
               <div className="w-full">
                 <Typography
@@ -160,16 +175,16 @@ const Signup = () => {
                 </Typography>
                 <Input
                   size="lg"
-                  placeholder=""
-                  labelProps={
-                    {
-                      // className: "hidden",
-                    }
-                  }
                   name="username"
                   value={formData.username}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
+                />
+                <Validation
+                  value={formData.username}
+                  touched={touchedFields.username}
+                  validationType="letterAndNumber"
                 />
               </div>
               <div className="w-full">
@@ -183,15 +198,16 @@ const Signup = () => {
                 <Input
                   size="lg"
                   placeholder="+251 910 111 213"
-                  labelProps={
-                    {
-                      // className: "hidden",
-                    }
-                  }
                   name="phone_number"
                   value={formData.phone_number}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
+                />
+                <Validation
+                  value={formData.phone_number}
+                  touched={touchedFields.phone_number}
+                  validationType="symbolAndNumber"
                 />
               </div>
             </div>
@@ -208,16 +224,17 @@ const Signup = () => {
               <Input
                 size="lg"
                 placeholder="name.father'sname@brothersitplc.com"
-                labelProps={
-                  {
-                    //   className: "hidden",
-                  }
-                }
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
+              />
+              <Validation
+                value={formData.email}
+                touched={touchedFields.email}
+                validationType="email"
               />
             </div>
           </div>
@@ -233,15 +250,16 @@ const Signup = () => {
               <Input
                 type="password"
                 size="lg"
-                labelProps={
-                  {
-                    //   className: "hidden",
-                  }
-                }
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
+              />
+              <Validation
+                value={formData.password}
+                touched={touchedFields.password}
+                validationType="passwordComplex"
               />
             </div>
             <div className="w-full">
@@ -255,19 +273,19 @@ const Signup = () => {
               <Input
                 type="password"
                 size="lg"
-                labelProps={
-                  {
-                    //   className: "hidden",
-                  }
-                }
                 name="confirm_password"
                 value={formData.confirm_password}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
+              />
+              <Validation
+                value={formData.confirm_password}
+                touched={touchedFields.confirm_password}
+                validationType="nonEmpty"
               />
             </div>
           </div>
-
           <div className="mb-6 flex flex-col items-end gap-4 md:flex-row">
             <div className="w-full">
               <Typography
@@ -280,74 +298,63 @@ const Signup = () => {
               <Input
                 size="lg"
                 placeholder="6-kilo, Gerji, Bole, etc... "
-                labelProps={
-                  {
-                    //   className: "hidden",
-                  }
-                }
                 name="vicinity"
                 value={formData.vicinity}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
               />
+              <Validation
+                value={formData.vicinity}
+                touched={touchedFields.vicinity}
+                validationType="nonEmpty"
+              />
             </div>
-          </div>
-
-          <div className="mb-6 flex flex-col items-end gap-4 md:flex-row">
             <div className="w-full">
               <Typography
                 variant="small"
                 color="blue-gray"
                 className="mb-2 font-medium"
               >
-                OTP
+                OTP{" "}
               </Typography>
               <Input
                 size="lg"
-                placeholder="6-kilo, Gerji, Bole, etc... "
-                labelProps={
-                  {
-                    //   className: "hidden",
-                  }
-                }
+                placeholder="Enter OTP"
                 name="otp"
                 value={formData.otp}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
               />
+              <Validation />
             </div>
           </div>
-          <div className="mb-6 flex flex-row gap-4 md:flex-row">
+          <div className="flex items-center gap-2">
             <input
               type="checkbox"
-              name="terms"
               checked={agreeTerms}
-              onChange={(e) => setAgreeTerms(e.target.checked)}
+              onChange={() => setAgreeTerms(!agreeTerms)}
             />
-            <label>
-              I agree to the{" "}
-              <a className="underline" href="#">
-                Terms and Conditions
-              </a>
-            </label>
-          </div>
-          {error && (
-            <Typography color="red" className="text-center mt-2">
-              {error.data?.detail || "Error completing profile"}
+            <Typography variant="small" className="font-medium">
+              I agree to the terms and conditions
             </Typography>
-          )}
-        </div>{" "}
-        <div className="flex justify-start">
-          <DialogFooter>
+          </div>
+          <DialogFooter className="mt-8">
             <Button
-              size="lg"
               variant="gradient"
-              color="purple"
+              color="green"
+              fullWidth
               onClick={handleSignup}
               disabled={isLoading}
             >
-              {isLoading ? "Signing up..." : "Signup"}
+              {isLoading ? "Signing Up..." : "Signup"}
             </Button>
+            {error && (
+              <Typography color="red" className="mt-4 text-center">
+                Error: {error.message}
+              </Typography>
+            )}
           </DialogFooter>
         </div>
       </section>

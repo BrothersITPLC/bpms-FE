@@ -13,6 +13,7 @@ import Card from "../../../components/Card";
 import Modal from "../../../components/Modal"; // Import your existing Modal component
 import BidsCard from "./BidsCard";
 import DatePicker from "../../../components/DatePicker"; // Adjust the import path as necessary
+import Validation from "../../../components/Validation"; // Import Validation component
 
 const Bids = () => {
   const [activeTab, setActiveTab] = useState("floated_bids");
@@ -20,6 +21,8 @@ const Bids = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [modalFields, setModalFields] = useState([]);
   const [confirmText, setConfirmText] = useState("Submit");
+  const [touchedFields, setTouchedFields] = useState({});
+  const [formValues, setFormValues] = useState({});
 
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split("T")[0];
@@ -37,24 +40,33 @@ const Bids = () => {
           name: "company_name",
           label: "Company Name",
           placeholder: "Enter company name",
+          validationType: "nonEmpty",
         },
         {
           name: "company_address",
           label: "Company Address",
           placeholder: "Enter company address",
+          validationType: "nonEmpty",
         },
         {
           name: "bid_title",
           label: "Bid Title",
           placeholder: "Enter bid title",
+          validationType: "nonEmpty",
         },
-        { name: "rfq_no", label: "RFQ No.", placeholder: "Enter RFQ number" },
+        {
+          name: "rfq_no",
+          label: "RFQ No.",
+          placeholder: "Enter RFQ number",
+          validationType: "symbolAndNumber",
+        },
         {
           name: "submission_date",
           label: "Submission Date",
           placeholder: "Select submission date",
           type: "date",
           min: today,
+          validationType: "nonEmpty",
         },
         {
           name: "opening_date",
@@ -62,16 +74,19 @@ const Bids = () => {
           placeholder: "Select opening date",
           type: "date",
           min: today,
+          validationType: "symbolAndNumber",
         },
         {
           name: "bid_security_amount",
           label: "Bid Security Amount",
           placeholder: "Enter bid security amount",
+          validationType: "money",
         },
         {
           name: "bid_security_validity",
           label: "Bid Security Validity Period",
           placeholder: "Enter validity period",
+          validationType: "numberOnly",
         },
       ],
     },
@@ -132,9 +147,18 @@ const Bids = () => {
     setModalOpen(false);
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  const handleBlur = (name) => {
+    setTouchedFields({ ...touchedFields, [name]: true });
+  };
+
   const handleConfirm = () => {
     // Handle bid purchase logic here
-    console.log("Submitted form data:", modalFields);
+    console.log("Submitted form data:", formValues);
     closeModal(); // Close the modal after confirming
   };
 
@@ -149,7 +173,6 @@ const Bids = () => {
           You can view the statuses of different bids and propose purchases.
         </Typography>
 
-        {/* Tabs for different bid statuses */}
         <Tabs
           value={activeTab}
           className="mt-10"
@@ -259,6 +282,9 @@ const Bids = () => {
                     name: field.name,
                     placeholder: field.placeholder,
                   }}
+                  value={formValues[field.name] || ""}
+                  onChange={handleInputChange}
+                  onBlur={() => handleBlur(field.name)}
                 />
               );
             }
@@ -272,6 +298,14 @@ const Bids = () => {
                   name={field.name}
                   placeholder={field.placeholder}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  value={formValues[field.name] || ""}
+                  onChange={handleInputChange}
+                  onBlur={() => handleBlur(field.name)}
+                />
+                <Validation
+                  value={formValues[field.name] || ""}
+                  touched={touchedFields[field.name]}
+                  validationType={field.validationType}
                 />
               </div>
             );
