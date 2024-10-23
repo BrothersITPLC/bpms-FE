@@ -15,23 +15,25 @@ import BidPurchaseOrders from "./features/BidPurchaseOrders/components/BidPurcha
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";
 import Tasks from "./features/TaskManagement/components/Tasks";
+import Analytics from "./features/Dashboard/components/Analytics";
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Sidebar />} />
         <Route path="signup" element={<Signup />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="user-management" element={<UserManagement />} />
           <Route path="assigned-tasks" element={<AssignedTasks />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="sidebar" element={<Sidebar />} />
+          <Route path="login" element={<Login />} />
           <Route path="bid-purchase-orders" element={<BidPurchaseOrders />} />
           <Route path="bids" element={<Bids />} />
           <Route path="*" element={<NotFound />} />
           <Route path="tasks" element={<Tasks />} />
+          <Route path="analytics" element={<Analytics />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />

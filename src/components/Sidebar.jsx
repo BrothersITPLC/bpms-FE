@@ -25,7 +25,7 @@ import {
 import Logo from "../assets/images/logo.png";
 
 const Sidebar = () => {
-  const [open, setOpen] = useState(0); // Move state declarations here
+  const [open, setOpen] = useState(0);
   const [openAlert, setOpenAlert] = useState(true);
 
   const handleOpen = (value) => {
@@ -104,9 +104,11 @@ const Sidebar = () => {
             </ListItem>
             <AccordionBody className="py-1">
               <List className="p-0">
-                <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
-                  Analytics
-                </ListItem>
+                <Link to="/analytics">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Analytics
+                  </ListItem>
+                </Link>
                 <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
                   Bid Stats
                 </ListItem>
@@ -140,11 +142,6 @@ const Sidebar = () => {
                 <Link to="/assigned-tasks">
                   <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
                     Assigned Tasks
-                  </ListItem>
-                </Link>
-                <Link to="/user-management">
-                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
-                    User Management
                   </ListItem>
                 </Link>
                 <Link to="/tasks">
