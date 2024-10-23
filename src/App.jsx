@@ -16,6 +16,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";
 import Tasks from "./features/TaskManagement/components/Tasks";
 import Analytics from "./features/Dashboard/components/Analytics";
+import Companies from "./features/Companies/components/companies";
 
 const App = () => {
   return (
@@ -23,7 +24,6 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Sidebar />} />
         <Route path="signup" element={<Signup />} />
-
         <Route element={<ProtectedRoute />}>
           <Route path="user-management" element={<UserManagement />} />
           <Route path="assigned-tasks" element={<AssignedTasks />} />
@@ -34,6 +34,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
           <Route path="tasks" element={<Tasks />} />
           <Route path="analytics" element={<Analytics />} />
+          <Route path="companies" element={<Companies />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />

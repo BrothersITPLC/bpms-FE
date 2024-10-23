@@ -160,6 +160,14 @@ const Sidebar = () => {
               User Management
             </ListItem>
           </Link>
+          <Link>
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Companies{" "}
+            </ListItem>
+          </Link>
           <Link to="/Bids">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
