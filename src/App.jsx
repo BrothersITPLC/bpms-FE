@@ -17,7 +17,7 @@ import NotFound from "./components/NotFound";
 import Tasks from "./features/TaskManagement/components/Tasks";
 import Analytics from "./features/Dashboard/components/Analytics";
 import Companies from "./features/Companies/components/companies";
-import Kanban from "./features/TaskManagement/components/Kanban";
+import Kanban from "./features/TaskManagement/components/Kanban/components/Kanban";
 
 const App = () => {
   return (
