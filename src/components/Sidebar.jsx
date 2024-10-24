@@ -149,9 +149,9 @@ const Sidebar = () => {
                     Tasks
                   </ListItem>
                 </Link>
-                <Link to="/">
+                <Link to="/kanban">
                   <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
-                    Kanban Board
+                    My Kanban Board
                   </ListItem>
                 </Link>
               </List>
