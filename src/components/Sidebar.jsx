@@ -149,6 +149,11 @@ const Sidebar = () => {
                     Tasks
                   </ListItem>
                 </Link>
+                <Link to="/">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Kanban Board
+                  </ListItem>
+                </Link>
               </List>
             </AccordionBody>
           </Accordion>
@@ -160,7 +165,7 @@ const Sidebar = () => {
               User Management
             </ListItem>
           </Link>
-          <Link>
+          <Link to="/companies">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
                 <UserGroupIcon className="text-primary1 h-5 w-5" />

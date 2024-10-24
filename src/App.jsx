@@ -17,6 +17,7 @@ import NotFound from "./components/NotFound";
 import Tasks from "./features/TaskManagement/components/Tasks";
 import Analytics from "./features/Dashboard/components/Analytics";
 import Companies from "./features/Companies/components/companies";
+import Kanban from "./features/TaskManagement/components/Kanban";
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="tasks" element={<Tasks />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="companies" element={<Companies />} />
+          <Route path="kanban" element={<Kanban />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />
