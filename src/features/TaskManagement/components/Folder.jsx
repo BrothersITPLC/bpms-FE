@@ -45,7 +45,7 @@ const TABLE_ROWS = [
   },
 ];
 
-const Tasks = () => {
+const Folder = () => {
   // Modal states for "Add Task" and PlusCircleIcon (task details)
   const [addTaskOpen, setAddTaskOpen] = useState(false);
   const [taskDetailsOpen, setTaskDetailsOpen] = useState(false);
@@ -284,4 +284,4 @@ const Tasks = () => {
   );
 };
 
-export default Tasks;
+export default Folder;

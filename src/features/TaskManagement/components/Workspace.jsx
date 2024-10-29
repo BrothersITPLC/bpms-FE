@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import {
   PlusCircleIcon,
+  PencilSquareIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+
 import {
   Card,
   Input,
@@ -13,16 +15,20 @@ import {
   Button,
   Select,
   Option,
+  Textarea,
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
 
 const TABLE_HEAD = [
   {
-    head: "Task ID",
+    head: "Workspace ID",
     icon: <Checkbox />,
   },
   {
-    head: "Task Name",
+    head: "Workspace Name",
+  },
+  {
+    head: "Workspace discription",
   },
 ];
 
@@ -30,24 +36,28 @@ const TABLE_ROWS = [
   {
     task_id: "T-1",
     task_name: "Technical Document Preparation",
+    discription: "work space discription",
   },
   {
     task_id: "T-2",
     task_name: "Financial Document Preparation",
+    discription: "work space discription",
   },
   {
     task_id: "T-3",
     task_name: "Bid Bond Preparation",
+    discription: "work space discription",
   },
   {
     task_id: "T-4",
     task_name: "Clarification Response",
+    discription: "work space discription",
   },
 ];
 
-const Tasks = () => {
+const Workspace = () => {
   // Modal states for "Add Task" and PlusCircleIcon (task details)
-  const [addTaskOpen, setAddTaskOpen] = useState(false);
+  const [WorkspaceOpen, setWorkspaceOpen] = useState(false);
   const [taskDetailsOpen, setTaskDetailsOpen] = useState(false);
 
   // Form states
@@ -62,11 +72,11 @@ const Tasks = () => {
   });
 
   // Toggle modals
-  const handleAddTaskOpen = () => setAddTaskOpen(!addTaskOpen);
+  const handleWorkspaceOpen = () => setWorkspaceOpen(!WorkspaceOpen);
   const handleTaskDetailsOpen = () => setTaskDetailsOpen(!taskDetailsOpen);
 
   // Handle input changes for "Add Task" form
-  const handleNewTaskChange = (event) => {
+  const handleNewWorkspaceChange = (event) => {
     const { name, value } = event.target;
     setNewTaskData({ ...newTaskData, [name]: value });
   };
@@ -78,10 +88,10 @@ const Tasks = () => {
   };
 
   // Handle "Add Task" form submission
-  const handleNewTaskSubmit = (event) => {
+  const handleNewWorkspaceSubmit = (event) => {
     event.preventDefault();
     console.log("New Task Added:", newTaskData);
-    handleAddTaskOpen(); // Close modal after submission
+    handleWorkspaceOpen(); // Close modal after submission
   };
 
   // Handle PlusCircleIcon click and populate task details modal
@@ -116,7 +126,7 @@ const Tasks = () => {
             <Button
               className="bg-primary1 flex items-center gap-3"
               size="sm"
-              onClick={handleAddTaskOpen}
+              onClick={handleWorkspaceOpen}
             >
               <PlusCircleIcon className="h-5 w-5" /> Add Task
             </Button>
@@ -143,7 +153,7 @@ const Tasks = () => {
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(({ task_id, task_name }, index) => {
+            {TABLE_ROWS.map(({ task_id, task_name, discription }, index) => {
               const isLast = index === TABLE_ROWS.length - 1;
               const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
@@ -169,7 +179,14 @@ const Tasks = () => {
                       {task_name}
                     </Typography>
                   </td>
-
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      className="font-normal text-gray-600"
+                    >
+                      {discription}
+                    </Typography>
+                  </td>
                   <td className={classes}>
                     <div className="flex items-center gap-2">
                       {/* Icon button to open task details modal */}
@@ -178,7 +195,7 @@ const Tasks = () => {
                         size="sm"
                         onClick={() => handleIconClick(task_name)}
                       >
-                        <PlusCircleIcon
+                        <PencilSquareIcon
                           strokeWidth={3}
                           className="h-4 w-4 text-gray-900"
                         />
@@ -194,34 +211,34 @@ const Tasks = () => {
 
       {/* Modal for Adding a Task */}
       <Modal
-        open={addTaskOpen}
-        onClose={handleAddTaskOpen}
-        title="Add New Task"
+        open={WorkspaceOpen}
+        onClose={handleWorkspaceOpen}
+        title="Add New Workspace"
         confirmText="Submit"
-        onConfirm={handleNewTaskSubmit}
+        onConfirm={handleNewWorkspaceSubmit}
       >
-        <form onSubmit={handleNewTaskSubmit}>
+        <form onSubmit={handleNewWorkspaceSubmit}>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Task ID
+              Workspace Name
             </Typography>
             <Input
               size="lg"
-              placeholder="Enter Task ID"
-              name="task_id"
-              onChange={handleNewTaskChange}
+              placeholder="Enter Workspace Name"
+              name="workspace_name"
+              onChange={handleNewWorkspaceChange}
               required
             />
           </div>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Task Name
+              Workspace discription
             </Typography>
-            <Input
+            <Textarea
+              label="Discription"
               size="lg"
-              placeholder="Enter Task Name"
-              name="task_name"
-              onChange={handleNewTaskChange}
+              name="workspace_discription"
+              onChange={handleNewWorkspaceChange}
               required
             />
           </div>
@@ -284,4 +301,4 @@ const Tasks = () => {
   );
 };
 
-export default Tasks;
+export default Workspace;

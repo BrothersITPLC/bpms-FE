@@ -1,5 +1,4 @@
 import React from "react";
-import Sidebar from "../../../components/Sidebar";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import {
@@ -127,8 +126,7 @@ const UserManagement = () => {
   });
 
   return (
-    <div className="flex">
-      <Sidebar />
+    <>
       <div className="flex-1">
         <Card className="h-full w-full">
           <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -330,7 +328,7 @@ const UserManagement = () => {
           />
         </div>
       </Modal>
-    </div>
+    </>
   );
 };
 
