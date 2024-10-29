@@ -31,24 +31,39 @@ const AddCard = ({ column, setCards }) => {
     <>
       {adding ? (
         <motion.form layout onSubmit={handleSubmit}>
-          <textarea
-            onChange={(e) => setText(e.target.value)}
-            autoFocus
-            placeholder="Add new task..."
-            className="w-full rounded border border-violet-400 bg-violet-400/20 p-3 text-sm text-neutral-50 placeholder-violet-300 focus:outline-0"
-          />
+          <div className="mb-4">
+            <label htmlFor="taskText" className="sr-only">
+              Task Description
+            </label>
+            <textarea
+              id="taskText"
+              onChange={(e) => setText(e.target.value)}
+              autoFocus
+              placeholder="Add new task..."
+              className="w-full rounded border border-violet-400 bg-violet-400/20 p-3 text-sm text-neutral-50 placeholder-violet-300 focus:outline-0"
+            />
+          </div>
 
           {/* Assignee Input */}
-          <input
-            type="text"
-            value={assignee}
-            onChange={(e) => setAssignee(e.target.value)}
-            placeholder="Assignee"
-            className="mt-2 w-full rounded border border-neutral-400 bg-neutral-800 p-2 text-sm text-neutral-50 placeholder-neutral-400 focus:outline-0"
-          />
+          <div className="mb-4">
+            <label htmlFor="assignee" className="sr-only">
+              Assignee
+            </label>
+            <select
+              id="assignee"
+              value={assignee}
+              onChange={(e) => setAssignee(e.target.value)}
+              className="mt-2 w-full rounded border border-neutral-400 bg-neutral-800 p-2 text-sm text-neutral-50 focus:outline-0"
+            >
+              <option value="">Select an assignee</option>
+              <option value="Seblewongel">Seblewongel</option>
+              <option value="Kbruysfa">Kbruysfa</option>
+              <option value="Fasika">Fasika</option>
+            </select>
+          </div>
 
           {/* Due Date Input */}
-          <div className="mb-6">
+          <div className="mb-4">
             <DatePicker
               field={{
                 value: { dueDate },
@@ -61,18 +76,25 @@ const AddCard = ({ column, setCards }) => {
           </div>
 
           {/* Priority Dropdown */}
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-            className="mt-2 w-full rounded border border-neutral-400 bg-neutral-800 p-2 text-sm text-neutral-50 focus:outline-0"
-          >
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
+          <div className="mb-4">
+            <label htmlFor="priority" className="sr-only">
+              Priority
+            </label>
+            <select
+              id="priority"
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              className="mt-2 w-full rounded border border-neutral-400 bg-neutral-800 p-2 text-sm text-neutral-50 focus:outline-0"
+            >
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
 
           <div className="mt-2 flex items-center justify-end gap-1.5">
             <button
+              type="button"
               onClick={() => setAdding(false)}
               className="px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:text-neutral-50"
             >
