@@ -8,7 +8,6 @@ import {
 } from "@material-tailwind/react";
 import { FaPlus } from "react-icons/fa";
 import React, { useState } from "react";
-import Sidebar from "../../../components/Sidebar";
 import Card from "../../../components/Card";
 import Modal from "../../../components/Modal"; // Import your existing Modal component
 import BidsCard from "./BidsCard";
@@ -139,145 +138,142 @@ const Bids = () => {
   };
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="w-1/2 flex-1 m-4">
-        <Typography variant="h5" color="blue-gray">
-          Bids
-        </Typography>
-        <Typography color="gray" className="mt-1 font-normal">
-          You can view the statuses of different bids and propose purchases.
-        </Typography>
+    <div className="w-1/2 flex-1 m-4">
+      <Typography variant="h5" color="blue-gray">
+        Bids
+      </Typography>
+      <Typography color="gray" className="mt-1 font-normal">
+        You can view the statuses of different bids and propose purchases.
+      </Typography>
 
-        {/* Tabs for different bid statuses */}
-        <Tabs
-          value={activeTab}
-          className="mt-10"
-          onChange={(value) => setActiveTab(value)}
-        >
-          <TabsHeader>
-            {data.map(({ label, value }) => (
-              <Tab key={value} value={value}>
-                {label}
-              </Tab>
-            ))}
-          </TabsHeader>
-          <TabsBody>
-            {data.map(
-              ({
-                value,
-                cardTitle,
-                cardDescription,
-                showAddBidIcon,
-                modalFields,
-              }) => (
-                <TabPanel key={value} value={value}>
-                  {value === "floated_bids" ? (
-                    <div className="w-full gap-4 flex flex-wrap">
-                      {/* BidsCard components */}
-                      <BidsCard
-                        companyName={sampleBid.companyName}
-                        bidTitle={sampleBid.bidTitle}
-                        rfqNo={sampleBid.rfqNo}
-                        submissionDate={sampleBid.submissionDate}
-                        openingDate={sampleBid.openingDate}
-                        bidSecurityAmount={sampleBid.bidSecurityAmount}
-                        bidSecurityValidity={sampleBid.bidSecurityValidity}
-                      />
-                      <BidsCard
-                        companyName={sampleBid1.companyName}
-                        bidTitle={sampleBid1.bidTitle}
-                        rfqNo={sampleBid1.rfqNo}
-                        submissionDate={sampleBid1.submissionDate}
-                        openingDate={sampleBid1.openingDate}
-                        bidSecurityAmount={sampleBid1.bidSecurityAmount}
-                        bidSecurityValidity={sampleBid1.bidSecurityValidity}
-                      />
-                      <BidsCard
-                        companyName={sampleBid2.companyName}
-                        bidTitle={sampleBid2.bidTitle}
-                        rfqNo={sampleBid2.rfqNo}
-                        submissionDate={sampleBid2.submissionDate}
-                        openingDate={sampleBid2.openingDate}
-                        bidSecurityAmount={sampleBid2.bidSecurityAmount}
-                        bidSecurityValidity={sampleBid2.bidSecurityValidity}
-                      />
-                      <Card
-                        title={cardTitle}
-                        description={cardDescription}
-                        button={
-                          showAddBidIcon ? (
-                            <div
-                              className="flex items-center justify-center cursor-pointer"
-                              onClick={() =>
-                                openModal("Request Bid Purchase", modalFields)
-                              }
-                            >
-                              <FaPlus className="h-5 w-5" />
-                              <span className="ml-2">Request Bid Purchase</span>
-                            </div>
-                          ) : (
-                            <div className="flex items-center justify-center">
-                              <span>Detail</span>
-                            </div>
-                          )
-                        }
-                      />
-                    </div>
-                  ) : (
+      {/* Tabs for different bid statuses */}
+      <Tabs
+        value={activeTab}
+        className="mt-10"
+        onChange={(value) => setActiveTab(value)}
+      >
+        <TabsHeader>
+          {data.map(({ label, value }) => (
+            <Tab key={value} value={value}>
+              {label}
+            </Tab>
+          ))}
+        </TabsHeader>
+        <TabsBody>
+          {data.map(
+            ({
+              value,
+              cardTitle,
+              cardDescription,
+              showAddBidIcon,
+              modalFields,
+            }) => (
+              <TabPanel key={value} value={value}>
+                {value === "floated_bids" ? (
+                  <div className="w-full gap-4 flex flex-wrap">
+                    {/* BidsCard components */}
+                    <BidsCard
+                      companyName={sampleBid.companyName}
+                      bidTitle={sampleBid.bidTitle}
+                      rfqNo={sampleBid.rfqNo}
+                      submissionDate={sampleBid.submissionDate}
+                      openingDate={sampleBid.openingDate}
+                      bidSecurityAmount={sampleBid.bidSecurityAmount}
+                      bidSecurityValidity={sampleBid.bidSecurityValidity}
+                    />
+                    <BidsCard
+                      companyName={sampleBid1.companyName}
+                      bidTitle={sampleBid1.bidTitle}
+                      rfqNo={sampleBid1.rfqNo}
+                      submissionDate={sampleBid1.submissionDate}
+                      openingDate={sampleBid1.openingDate}
+                      bidSecurityAmount={sampleBid1.bidSecurityAmount}
+                      bidSecurityValidity={sampleBid1.bidSecurityValidity}
+                    />
+                    <BidsCard
+                      companyName={sampleBid2.companyName}
+                      bidTitle={sampleBid2.bidTitle}
+                      rfqNo={sampleBid2.rfqNo}
+                      submissionDate={sampleBid2.submissionDate}
+                      openingDate={sampleBid2.openingDate}
+                      bidSecurityAmount={sampleBid2.bidSecurityAmount}
+                      bidSecurityValidity={sampleBid2.bidSecurityValidity}
+                    />
                     <Card
                       title={cardTitle}
                       description={cardDescription}
                       button={
-                        <div className="flex items-center justify-center">
-                          <span>Detail</span>
-                        </div>
+                        showAddBidIcon ? (
+                          <div
+                            className="flex items-center justify-center cursor-pointer"
+                            onClick={() =>
+                              openModal("Request Bid Purchase", modalFields)
+                            }
+                          >
+                            <FaPlus className="h-5 w-5" />
+                            <span className="ml-2">Request Bid Purchase</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            <span>Detail</span>
+                          </div>
+                        )
                       }
                     />
-                  )}
-                </TabPanel>
-              )
-            )}
-          </TabsBody>
-        </Tabs>
+                  </div>
+                ) : (
+                  <Card
+                    title={cardTitle}
+                    description={cardDescription}
+                    button={
+                      <div className="flex items-center justify-center">
+                        <span>Detail</span>
+                      </div>
+                    }
+                  />
+                )}
+              </TabPanel>
+            )
+          )}
+        </TabsBody>
+      </Tabs>
 
-        {/* Modal for adding bid purchase */}
-        <Modal
-          open={isModalOpen}
-          onClose={closeModal}
-          title={modalTitle}
-          confirmText={confirmText}
-          onConfirm={handleConfirm}
-        >
-          {modalFields.map((field) => {
-            if (field.type === "date") {
-              return (
-                <DatePicker
-                  key={field.name}
-                  field={{
-                    label: field.label,
-                    name: field.name,
-                    placeholder: field.placeholder,
-                  }}
-                />
-              );
-            }
+      {/* Modal for adding bid purchase */}
+      <Modal
+        open={isModalOpen}
+        onClose={closeModal}
+        title={modalTitle}
+        confirmText={confirmText}
+        onConfirm={handleConfirm}
+      >
+        {modalFields.map((field) => {
+          if (field.type === "date") {
             return (
-              <div key={field.name} className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  {field.label}
-                </label>
-                <input
-                  type={field.type || "text"}
-                  name={field.name}
-                  placeholder={field.placeholder}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
+              <DatePicker
+                key={field.name}
+                field={{
+                  label: field.label,
+                  name: field.name,
+                  placeholder: field.placeholder,
+                }}
+              />
             );
-          })}
-        </Modal>
-      </div>
+          }
+          return (
+            <div key={field.name} className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                {field.label}
+              </label>
+              <input
+                type={field.type || "text"}
+                name={field.name}
+                placeholder={field.placeholder}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+          );
+        })}
+      </Modal>
     </div>
   );
 };

@@ -4,12 +4,9 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import Login from "./features/Auth/components/Login";
-import Signup from "./features/Auth/components/Signup";
-import Sidebar from "./components/Sidebar";
+import Profile from "./features/Auth/components/Profile";
 import UserManagement from "./features/UserManagement/components/UserManagement";
 import AssignedTasks from "./features/TaskManagement/components/AssignedTasks";
-import Settings from "./views/Settings/components/Settings";
 import Bids from "./features/Bids/components/Bids";
 import BidPurchaseOrders from "./features/BidPurchaseOrders/components/BidPurchaseOrders";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -18,28 +15,35 @@ import Tasks from "./features/TaskManagement/components/Tasks";
 import Analytics from "./features/Dashboard/components/Analytics";
 import Companies from "./features/Companies/components/companies";
 import Kanban from "./features/TaskManagement/components/Kanban/components/Kanban";
-
+//page
+import LandingPage from "./page/LandingPage";
+import HomePage from "./page/HomePage";
+import Auth from "./page/Auth";
+import Workspace from "./page/Workspace";
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Sidebar />} />
-        <Route path="signup" element={<Signup />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="user-management" element={<UserManagement />} />
-          <Route path="assigned-tasks" element={<AssignedTasks />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="login" element={<Login />} />
-          <Route path="bid-purchase-orders" element={<BidPurchaseOrders />} />
-          <Route path="bids" element={<Bids />} />
-          <Route path="*" element={<NotFound />} />
-          <Route path="tasks" element={<Tasks />} />
-          <Route path="analytics" element={<Analytics />} />
-          <Route path="companies" element={<Companies />} />
-          <Route path="kanban" element={<Kanban />} />
-        </Route>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/auth/*" element={<Auth />} />
 
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="choose-space" element={<Workspace />}></Route>
+          <Route element={<HomePage />}>
+            <Route path="user-management" element={<UserManagement />} />
+            <Route path="assigned-tasks" element={<AssignedTasks />} />
+            <Route path="tasks" element={<Tasks />} />
+            <Route path="kanban" element={<Kanban />} />
+            <Route path="settings" element={<Profile />} />
+            <Route path="bid-purchase-orders" element={<BidPurchaseOrders />} />
+            <Route path="bids" element={<Bids />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="companies" element={<Companies />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Route>
+        {/* <Route path="*" element={<Navigate to="/" />} /> */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

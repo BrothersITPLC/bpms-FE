@@ -1,4 +1,3 @@
-import Sidebar from "../../../components/Sidebar";
 import React, { useState } from "react";
 import Totalbids from "./charts/Totalbids";
 import Companybids from "./charts/Companybids";
@@ -8,10 +7,6 @@ const Analytics = () => {
   return (
     <div className="h-screen flex flex-col">
       <div className="flex h-full">
-        {/* Sidebar */}
-        <Sidebar />
-
-        {/* Main Content Area */}
         <div
           className={`ml-${"64"} transition-all duration-300 w-full flex-1 h-full overflow-auto p-6`}
         >

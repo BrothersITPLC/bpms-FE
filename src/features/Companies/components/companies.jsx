@@ -12,7 +12,6 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
-import Sidebar from "../../../components/Sidebar";
 import Modal from "../../../components/Modal";
 
 const TABLE_HEAD = [
@@ -85,8 +84,7 @@ const Companies = () => {
   };
 
   return (
-    <div className="flex w-2/3">
-      <Sidebar />
+    <div className="flex w-full">
       <Card className="h-full w-fit flex-1">
         <CardHeader
           floated={false}
