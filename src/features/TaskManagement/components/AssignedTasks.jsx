@@ -329,9 +329,6 @@ const AssignedTasks = () => {
             </Select>
           </div>
           <div className="mb-6">
-            <Typography variant="small" color="blue-gray" className="mb-2">
-              Due Date
-            </Typography>
             <DatePicker
               field={{
                 label: "Due Date",

@@ -6,7 +6,7 @@ function HomePage() {
     <div>
       <div className="flex">
         <Sidebar />
-        <Outlet />;
+        <Outlet />
       </div>
     </div>
   );
