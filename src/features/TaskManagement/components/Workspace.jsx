@@ -3,6 +3,7 @@ import {
   PlusCircleIcon,
   PencilSquareIcon,
   MagnifyingGlassIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
 
 import {
@@ -22,7 +23,6 @@ import Modal from "../../../components/Modal";
 const TABLE_HEAD = [
   {
     head: "Workspace ID",
-    icon: <Checkbox />,
   },
   {
     head: "Workspace Name",
@@ -118,7 +118,7 @@ const Workspace = () => {
           <div className="flex justify-between">
             <div className="w-fit">
               <Input
-                label="Search Task"
+                label="Search WorkSpace"
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
               />
             </div>
@@ -128,7 +128,7 @@ const Workspace = () => {
               size="sm"
               onClick={handleWorkspaceOpen}
             >
-              <PlusCircleIcon className="h-5 w-5" /> Add Task
+              <PlusCircleIcon className="h-5 w-5" /> Add Workspace
             </Button>
           </div>
         </CardHeader>
@@ -161,7 +161,6 @@ const Workspace = () => {
                 <tr key={task_id}>
                   <td className={classes}>
                     <div className="flex items-center gap-1">
-                      <Checkbox />
                       <Typography
                         variant="small"
                         color="blue-gray"
@@ -195,6 +194,22 @@ const Workspace = () => {
                         size="sm"
                         onClick={() => handleIconClick(task_name)}
                       >
+                        <UserIcon
+                          strokeWidth={3}
+                          className="h-4 w-4 text-gray-900"
+                        />
+                      </IconButton>
+                    </div>
+                  </td>
+
+                  <td className={classes}>
+                    <div className="flex items-center gap-2">
+                      {/* Icon button to open task details modal */}
+                      <IconButton
+                        variant="text"
+                        size="sm"
+                        onClick={() => handleIconClick(task_name)}
+                      >
                         <PencilSquareIcon
                           strokeWidth={3}
                           className="h-4 w-4 text-gray-900"
@@ -209,7 +224,7 @@ const Workspace = () => {
         </table>
       </Card>
 
-      {/* Modal for Adding a Task */}
+      {/* Modal for Adding a Workspace */}
       <Modal
         open={WorkspaceOpen}
         onClose={handleWorkspaceOpen}
@@ -244,8 +259,7 @@ const Workspace = () => {
           </div>
         </form>
       </Modal>
-
-      {/* Modal for Task Details */}
+      {/*Modal for Workspace Assignment*/}
       <Modal
         open={taskDetailsOpen}
         onClose={handleTaskDetailsOpen}
@@ -256,44 +270,94 @@ const Workspace = () => {
         <form onSubmit={handleTaskDetailsSubmit}>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Task Name
+              Workspace Name
             </Typography>
             <Input
               size="lg"
-              name="task_name"
-              value={taskDetailsData.task_name} // Pre-populate task name
-              readOnly
+              label="Name"
+              placeholder="Enter Workspace Name"
+              name="workspace_name"
+              onChange={handleNewWorkspaceChange}
+              required
             />
           </div>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Assignee
+              Workspace discription
             </Typography>
-            <Select
+            <Textarea
+              label="Discription"
               size="lg"
-              name="assignee"
-              value={taskDetailsData.assignee}
-              onChange={(value) =>
-                setTaskDetailsData({ ...taskDetailsData, assignee: value })
-              }
+              name="workspace_discription"
+              onChange={handleNewWorkspaceChange}
               required
-            >
-              <Option value="User1">User1</Option>
-              <Option value="User2">User2</Option>
-              <Option value="User3">User3</Option>
-            </Select>
+            />
           </div>
+
+          <div className="flex mb-6 gap-4 justify-between">
+            <div>
+              <Button
+                className="bg-delete1 flex items-center gap-3"
+                size="m"
+                onClick={handleWorkspaceOpen}
+              >
+                Delete Workspace
+              </Button>{" "}
+            </div>
+            <div>
+              <Checkbox id="ripple-on" label="Activate" ripple={true} />
+            </div>
+          </div>
+        </form>
+      </Modal>
+      {/* Modal for Workspace Details */}
+      <Modal
+        open={taskDetailsOpen}
+        onClose={handleTaskDetailsOpen}
+        title="Task Details"
+        confirmText="Submit"
+        onConfirm={handleTaskDetailsSubmit}
+      >
+        <form onSubmit={handleTaskDetailsSubmit}>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Due Date
+              Workspace Name
             </Typography>
             <Input
               size="lg"
-              type="date"
-              name="due_date"
-              onChange={handleTaskDetailsChange}
+              label="Name"
+              placeholder="Enter Workspace Name"
+              name="workspace_name"
+              onChange={handleNewWorkspaceChange}
               required
             />
+          </div>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Workspace discription
+            </Typography>
+            <Textarea
+              label="Discription"
+              size="lg"
+              name="workspace_discription"
+              onChange={handleNewWorkspaceChange}
+              required
+            />
+          </div>
+
+          <div className="flex mb-6 gap-4 justify-between">
+            <div>
+              <Button
+                className="bg-delete1 flex items-center gap-3"
+                size="m"
+                onClick={handleWorkspaceOpen}
+              >
+                Delete Workspace
+              </Button>{" "}
+            </div>
+            <div>
+              <Checkbox id="ripple-on" label="Activate" ripple={true} />
+            </div>
           </div>
         </form>
       </Modal>
@@ -302,3 +366,41 @@ const Workspace = () => {
 };
 
 export default Workspace;
+
+// <div className="mb-6 flex gap-4">
+//   <div className="flex-1">
+//     <Typography variant="small" color="blue-gray" className="mb-2">
+//       Assignee
+//     </Typography>
+//     <Select
+//       size="lg"
+//       name="assignee"
+//       value={taskDetailsData.assignee}
+//       onChange={(value) =>
+//         setTaskDetailsData({ ...taskDetailsData, assignee: value })
+//       }
+//       required
+//     >
+//       <Option value="User1">User1</Option>
+//       <Option value="User2">User2</Option>
+//       <Option value="User3">User3</Option>
+//     </Select>
+//   </div>
+//   <div className=" w-4/3">
+//     <Typography variant="small" color="blue-gray" className="mb-2">
+//       Assignee As
+//     </Typography>
+//     <Select
+//       size="lg"
+//       name="assignee"
+//       value={taskDetailsData.assignee}
+//       onChange={(value) =>
+//         setTaskDetailsData({ ...taskDetailsData, assignee: value })
+//       }
+//       required
+//     >
+//       <Option value="User1">Admin</Option>
+//       <Option value="User2">User</Option>
+//     </Select>
+//   </div>
+// </div>;
