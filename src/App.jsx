@@ -15,11 +15,15 @@ import Tasks from "./features/TaskManagement/components/Tasks";
 import Analytics from "./features/Dashboard/components/Analytics";
 import Companies from "./features/Companies/components/companies";
 import Kanban from "./features/TaskManagement/components/Kanban/components/Kanban";
+import Workspace from "./features/TaskManagement/components/Workspace";
+import Space from "./features/TaskManagement/components/Space";
+import Folder from "./features/TaskManagement/components/Folder";
+
 //page
 import LandingPage from "./page/LandingPage";
 import HomePage from "./page/HomePage";
 import Auth from "./page/Auth";
-import Workspace from "./page/Workspace";
+import WorkspaceChoose from "./page/WorkspaceChoose";
 const App = () => {
   return (
     <Router>
@@ -28,11 +32,14 @@ const App = () => {
         <Route path="/auth/*" element={<Auth />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="choose-space" element={<Workspace />}></Route>
+          <Route path="choose-space" element={<WorkspaceChoose />}></Route>
           <Route element={<HomePage />}>
             <Route path="user-management" element={<UserManagement />} />
             <Route path="assigned-tasks" element={<AssignedTasks />} />
             <Route path="tasks" element={<Tasks />} />
+            <Route path="workspace" element={<Workspace />} />
+            <Route path="space" element={<Space />} />
+            <Route path="folder" element={<Folder />} />
             <Route path="kanban" element={<Kanban />} />
             <Route path="settings" element={<Profile />} />
             <Route path="bid-purchase-orders" element={<BidPurchaseOrders />} />

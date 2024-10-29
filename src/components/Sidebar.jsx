@@ -149,6 +149,21 @@ const Sidebar = () => {
                     Tasks
                   </ListItem>
                 </Link>
+                <Link to="/workspace">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Workspace
+                  </ListItem>
+                </Link>
+                <Link to="/space">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Space
+                  </ListItem>
+                </Link>
+                <Link to="/folder">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Folder
+                  </ListItem>
+                </Link>
                 <Link to="/kanban">
                   <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
                     My Kanban Board

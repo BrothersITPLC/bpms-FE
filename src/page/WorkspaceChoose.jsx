@@ -1,7 +1,7 @@
 import { Typography } from "@material-tailwind/react";
 
 import SpaceList from "../components/SpaceList";
-export function Workspace() {
+export function WorkspaceChoose() {
   return (
     <section className="m-10 flex gap-4 items-center flex-col">
       <Typography variant="h3" color="blue-gray">
@@ -15,4 +15,4 @@ export function Workspace() {
     </section>
   );
 }
-export default Workspace;
+export default WorkspaceChoose;
