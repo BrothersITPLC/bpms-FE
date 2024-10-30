@@ -8,6 +8,7 @@ import {
   Typography,
   AccordionBody,
   ListItemPrefix,
+  Badge,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
@@ -60,7 +61,10 @@ const Sidebar = () => {
                 />
               </ListItemPrefix>
               <Typography className="mr-auto font-normal text-inherit">
-                User User{" "}
+                <div className="flex gap-20">
+                  {" "}
+                  User <Badge content="5"></Badge>{" "}
+                </div>
               </Typography>
               <ChevronDownIcon
                 strokeWidth={3}
@@ -78,7 +82,9 @@ const Sidebar = () => {
                 </Link>
                 <Link to="/Notifications">
                   <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
-                    Notifications
+                    <div className="flex gap-8">
+                      Notifications <Badge className="ml-4" content="5"></Badge>
+                    </div>
                   </ListItem>
                 </Link>
               </List>
