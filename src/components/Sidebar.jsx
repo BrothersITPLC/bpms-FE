@@ -76,6 +76,11 @@ const Sidebar = () => {
                     Settings
                   </ListItem>
                 </Link>
+                <Link to="/Notifications">
+                  <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
+                    Notifications
+                  </ListItem>
+                </Link>
               </List>
             </AccordionBody>
           </Accordion>
