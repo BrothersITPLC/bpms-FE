@@ -98,8 +98,8 @@ const Tasks = () => {
   };
 
   return (
-    <div className="flex w-full">
-      <Card className="h-full w-fit flex-1">
+    <div className="flex-1">
+      <Card className="h-full w-full flex-1">
         <CardHeader
           floated={false}
           shadow={false}

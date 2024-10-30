@@ -11,95 +11,91 @@ import {
   IconButton,
   Typography,
   Button,
-  Select,
-  Option,
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
 
 const TABLE_HEAD = [
   {
-    head: "Task ID",
+    head: "Space ID",
     icon: <Checkbox />,
   },
   {
-    head: "Task Name",
+    head: "Space Name",
   },
 ];
 
 const TABLE_ROWS = [
   {
-    task_id: "T-1",
-    task_name: "Technical Document Preparation",
+    space_id: "S-1",
+    space_name: "Development Space",
   },
   {
-    task_id: "T-2",
-    task_name: "Financial Document Preparation",
+    space_id: "S-2",
+    space_name: "Design Space",
   },
   {
-    task_id: "T-3",
-    task_name: "Bid Bond Preparation",
+    space_id: "S-3",
+    space_name: "Testing Space",
   },
   {
-    task_id: "T-4",
-    task_name: "Clarification Response",
+    space_id: "S-4",
+    space_name: "Deployment Space",
   },
 ];
 
 const Space = () => {
-  // Modal states for "Add Task" and PlusCircleIcon (task details)
-  const [addTaskOpen, setAddTaskOpen] = useState(false);
-  const [taskDetailsOpen, setTaskDetailsOpen] = useState(false);
+  // Modal states for "Add Space" and space details
+  const [addSpaceOpen, setAddSpaceOpen] = useState(false);
+  const [spaceDetailsOpen, setSpaceDetailsOpen] = useState(false);
 
   // Form states
-  const [newTaskData, setNewTaskData] = useState({
-    task_id: "",
-    task_name: "",
+  const [newSpaceData, setNewSpaceData] = useState({
+    space_id: "",
+    space_name: "",
   });
-  const [taskDetailsData, setTaskDetailsData] = useState({
-    task_name: "",
-    assignee: "",
-    due_date: "",
+  const [spaceDetailsData, setSpaceDetailsData] = useState({
+    space_name: "",
   });
 
   // Toggle modals
-  const handleAddTaskOpen = () => setAddTaskOpen(!addTaskOpen);
-  const handleTaskDetailsOpen = () => setTaskDetailsOpen(!taskDetailsOpen);
+  const handleAddSpaceOpen = () => setAddSpaceOpen(!addSpaceOpen);
+  const handleSpaceDetailsOpen = () => setSpaceDetailsOpen(!spaceDetailsOpen);
 
-  // Handle input changes for "Add Task" form
-  const handleNewTaskChange = (event) => {
+  // Handle input changes for "Add Space" form
+  const handleNewSpaceChange = (event) => {
     const { name, value } = event.target;
-    setNewTaskData({ ...newTaskData, [name]: value });
+    setNewSpaceData({ ...newSpaceData, [name]: value });
   };
 
-  // Handle input changes for task details modal
-  const handleTaskDetailsChange = (event) => {
+  // Handle input changes for space details modal
+  const handleSpaceDetailsChange = (event) => {
     const { name, value } = event.target;
-    setTaskDetailsData({ ...taskDetailsData, [name]: value });
+    setSpaceDetailsData({ ...spaceDetailsData, [name]: value });
   };
 
-  // Handle "Add Task" form submission
-  const handleNewTaskSubmit = (event) => {
+  // Handle "Add Space" form submission
+  const handleNewSpaceSubmit = (event) => {
     event.preventDefault();
-    console.log("New Task Added:", newTaskData);
-    handleAddTaskOpen(); // Close modal after submission
+    console.log("New Space Added:", newSpaceData);
+    handleAddSpaceOpen(); // Close modal after submission
   };
 
-  // Handle PlusCircleIcon click and populate task details modal
-  const handleIconClick = (taskName) => {
-    setTaskDetailsData({ ...taskDetailsData, task_name: taskName });
-    handleTaskDetailsOpen(); // Open the task details modal
+  // Handle icon click and populate space details modal
+  const handleIconClick = (spaceName) => {
+    setSpaceDetailsData({ space_name: spaceName });
+    handleSpaceDetailsOpen(); // Open the space details modal
   };
 
-  // Handle task details form submission
-  const handleTaskDetailsSubmit = (event) => {
+  // Handle space details form submission
+  const handleSpaceDetailsSubmit = (event) => {
     event.preventDefault();
-    console.log("Task Details Submitted:", taskDetailsData);
-    handleTaskDetailsOpen(); // Close modal after submission
+    console.log("Space Details Submitted:", spaceDetailsData);
+    handleSpaceDetailsOpen(); // Close modal after submission
   };
 
   return (
-    <div className="flex w-full">
-      <Card className="h-full w-fit flex-1">
+    <div className="flex-1">
+      <Card className="h-full w-full flex-1">
         <CardHeader
           floated={false}
           shadow={false}
@@ -108,17 +104,17 @@ const Space = () => {
           <div className="flex justify-between">
             <div className="w-fit">
               <Input
-                label="Search Task"
+                label="Search Space"
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
               />
             </div>
-            {/* Button to open "Add Task" modal */}
+            {/* Button to open "Add Space" modal */}
             <Button
               className="bg-primary1 flex items-center gap-3"
               size="sm"
-              onClick={handleAddTaskOpen}
+              onClick={handleAddSpaceOpen}
             >
-              <PlusCircleIcon className="h-5 w-5" /> Add Task
+              <PlusCircleIcon className="h-5 w-5" /> Add Space
             </Button>
           </div>
         </CardHeader>
@@ -143,12 +139,12 @@ const Space = () => {
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(({ task_id, task_name }, index) => {
+            {TABLE_ROWS.map(({ space_id, space_name }, index) => {
               const isLast = index === TABLE_ROWS.length - 1;
               const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
               return (
-                <tr key={task_id}>
+                <tr key={space_id}>
                   <td className={classes}>
                     <div className="flex items-center gap-1">
                       <Checkbox />
@@ -157,7 +153,7 @@ const Space = () => {
                         color="blue-gray"
                         className="font-bold"
                       >
-                        {task_id}
+                        {space_id}
                       </Typography>
                     </div>
                   </td>
@@ -166,17 +162,16 @@ const Space = () => {
                       variant="small"
                       className="font-normal text-gray-600"
                     >
-                      {task_name}
+                      {space_name}
                     </Typography>
                   </td>
-
                   <td className={classes}>
                     <div className="flex items-center gap-2">
-                      {/* Icon button to open task details modal */}
+                      {/* Icon button to open space details modal */}
                       <IconButton
                         variant="text"
                         size="sm"
-                        onClick={() => handleIconClick(task_name)}
+                        onClick={() => handleIconClick(space_name)}
                       >
                         <PlusCircleIcon
                           strokeWidth={3}
@@ -192,90 +187,60 @@ const Space = () => {
         </table>
       </Card>
 
-      {/* Modal for Adding a Task */}
+      {/* Modal for Adding a Space */}
       <Modal
-        open={addTaskOpen}
-        onClose={handleAddTaskOpen}
-        title="Add New Task"
+        open={addSpaceOpen}
+        onClose={handleAddSpaceOpen}
+        title="Add New Space"
         confirmText="Submit"
-        onConfirm={handleNewTaskSubmit}
+        onConfirm={handleNewSpaceSubmit}
       >
-        <form onSubmit={handleNewTaskSubmit}>
+        <form onSubmit={handleNewSpaceSubmit}>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Task ID
+              Space ID
             </Typography>
             <Input
               size="lg"
-              placeholder="Enter Task ID"
-              name="task_id"
-              onChange={handleNewTaskChange}
+              placeholder="Enter Space ID"
+              name="space_id"
+              onChange={handleNewSpaceChange}
               required
             />
           </div>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Task Name
+              Space Name
             </Typography>
             <Input
               size="lg"
-              placeholder="Enter Task Name"
-              name="task_name"
-              onChange={handleNewTaskChange}
+              placeholder="Enter Space Name"
+              name="space_name"
+              onChange={handleNewSpaceChange}
               required
             />
           </div>
         </form>
       </Modal>
 
-      {/* Modal for Task Details */}
+      {/* Modal for Space Details */}
       <Modal
-        open={taskDetailsOpen}
-        onClose={handleTaskDetailsOpen}
-        title="Task Details"
+        open={spaceDetailsOpen}
+        onClose={handleSpaceDetailsOpen}
+        title="Space Details"
         confirmText="Submit"
-        onConfirm={handleTaskDetailsSubmit}
+        onConfirm={handleSpaceDetailsSubmit}
       >
-        <form onSubmit={handleTaskDetailsSubmit}>
+        <form onSubmit={handleSpaceDetailsSubmit}>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Task Name
+              Space Name
             </Typography>
             <Input
               size="lg"
-              name="task_name"
-              value={taskDetailsData.task_name} // Pre-populate task name
+              name="space_name"
+              value={spaceDetailsData.space_name} // Pre-populate space name
               readOnly
-            />
-          </div>
-          <div className="mb-6">
-            <Typography variant="small" color="blue-gray" className="mb-2">
-              Assignee
-            </Typography>
-            <Select
-              size="lg"
-              name="assignee"
-              value={taskDetailsData.assignee}
-              onChange={(value) =>
-                setTaskDetailsData({ ...taskDetailsData, assignee: value })
-              }
-              required
-            >
-              <Option value="User1">User1</Option>
-              <Option value="User2">User2</Option>
-              <Option value="User3">User3</Option>
-            </Select>
-          </div>
-          <div className="mb-6">
-            <Typography variant="small" color="blue-gray" className="mb-2">
-              Due Date
-            </Typography>
-            <Input
-              size="lg"
-              type="date"
-              name="due_date"
-              onChange={handleTaskDetailsChange}
-              required
             />
           </div>
         </form>

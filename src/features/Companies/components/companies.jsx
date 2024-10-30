@@ -84,8 +84,8 @@ const Companies = () => {
   };
 
   return (
-    <div className="flex w-full">
-      <Card className="h-full w-fit flex-1">
+    <div className="flex-1 w-full">
+      <Card className="h-full w-full">
         <CardHeader
           floated={false}
           shadow={false}
