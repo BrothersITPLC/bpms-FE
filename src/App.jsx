@@ -24,6 +24,7 @@ import LandingPage from "./page/LandingPage";
 import HomePage from "./page/HomePage";
 import Auth from "./page/Auth";
 import WorkspaceChoose from "./page/WorkspaceChoose";
+import Notifications from "./features/Notifications/Notifications";
 const App = () => {
   return (
     <Router>
@@ -46,6 +47,7 @@ const App = () => {
             <Route path="bids" element={<Bids />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="companies" element={<Companies />} />
+            <Route path="notifications" element={<Notifications />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>
