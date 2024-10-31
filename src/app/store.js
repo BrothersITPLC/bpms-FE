@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/Auth/apiSlice";
+import { WorkspaceApiSlice } from "../features/TaskManagement/apiSlice";
 import authReducer from "../features/Auth/authSlice";
 import {
   persistStore,
@@ -12,7 +13,6 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-
 const persistConfig = {
   key: "auth",
   storage,
@@ -24,6 +24,8 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 export const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
+    [WorkspaceApiSlice.reducerPath]: WorkspaceApiSlice.reducer,
+
     auth: persistedAuthReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -31,7 +33,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(apiSlice.middleware),
+    }).concat(apiSlice.middleware, WorkspaceApiSlice.middleware),
 });
 
 export const persistor = persistStore(store);

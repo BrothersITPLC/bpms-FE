@@ -14,101 +14,153 @@ import {
   IconButton,
   Typography,
   Button,
+  Textarea,
   Select,
   Option,
-  Textarea,
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
+import {
+  useListWorkspacesQuery,
+  useCreateWorkspaceMutation,
+  useUpdateWorkspaceByIdMutation,
+} from "../apiSlice";
 
 const TABLE_HEAD = [
-  {
-    head: "Workspace ID",
-  },
-  {
-    head: "Workspace Name",
-  },
-  {
-    head: "Workspace discription",
-  },
-];
-
-const TABLE_ROWS = [
-  {
-    task_id: "T-1",
-    task_name: "Technical Document Preparation",
-    discription: "work space discription",
-  },
-  {
-    task_id: "T-2",
-    task_name: "Financial Document Preparation",
-    discription: "work space discription",
-  },
-  {
-    task_id: "T-3",
-    task_name: "Bid Bond Preparation",
-    discription: "work space discription",
-  },
-  {
-    task_id: "T-4",
-    task_name: "Clarification Response",
-    discription: "work space discription",
-  },
+  { head: "Workspace ID" },
+  { head: "Workspace Name" },
+  { head: "Workspace Description" },
 ];
 
 const Workspace = () => {
+  // RTK Query hooks for fetching and creating workspaces
+  const countries = [
+    { name: "Argentina" },
+    { name: "Brazil" },
+    { name: "Canada" },
+    { name: "Denmark" },
+    { name: "Egypt" },
+    { name: "Finland" },
+    { name: "Germany" },
+    { name: "Hungary" },
+    { name: "India" },
+    { name: "Japan" },
+  ];
+  const { data: workspaces, error, isLoading } = useListWorkspacesQuery();
+  const [createWorkspace] = useCreateWorkspaceMutation();
+  const [updateWorkspaceById] = useUpdateWorkspaceByIdMutation();
+  //asigne
+  const [query, setQuery] = useState("");
+  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+  const [newWorkspaceData, setNewWorkspaceData] = useState({
+    id: null,
+    workspace_name: "",
+    workspace_description: "",
+    is_ative: true,
+    is_archived: false,
+    workspace_id: "",
+  });
+
   // Modal states for "Add Task" and PlusCircleIcon (task details)
   const [WorkspaceOpen, setWorkspaceOpen] = useState(false);
-  const [taskDetailsOpen, setTaskDetailsOpen] = useState(false);
-
-  // Form states
-  const [newTaskData, setNewTaskData] = useState({
-    task_id: "",
-    task_name: "",
-  });
-  const [taskDetailsData, setTaskDetailsData] = useState({
-    task_name: "",
-    assignee: "",
-    due_date: "",
-  });
-
-  // Toggle modals
-  const handleWorkspaceOpen = () => setWorkspaceOpen(!WorkspaceOpen);
-  const handleTaskDetailsOpen = () => setTaskDetailsOpen(!taskDetailsOpen);
-
+  const [WorkspacekDetailsOpen, setWorkspaceDetailsOpen] = useState(false);
+  const [AsignWorkspacekMemberOpen, setAsignWorkspacekMemberOpen] =
+    useState(false);
   // Handle input changes for "Add Task" form
   const handleNewWorkspaceChange = (event) => {
     const { name, value } = event.target;
-    setNewTaskData({ ...newTaskData, [name]: value });
+    setNewWorkspaceData({ ...newWorkspaceData, [name]: value });
   };
+  // Toggle modals
+  const handleWorkspaceOpen = () => setWorkspaceOpen(!WorkspaceOpen);
+  const handleWorkspacekDetailsOpen = () =>
+    setWorkspaceDetailsOpen(!WorkspacekDetailsOpen);
+  const handleWorkspaceMemberOpen = () =>
+    setAsignWorkspacekMemberOpen(!AsignWorkspacekMemberOpen);
 
-  // Handle input changes for task details modal
-  const handleTaskDetailsChange = (event) => {
-    const { name, value } = event.target;
-    setTaskDetailsData({ ...taskDetailsData, [name]: value });
-  };
-
-  // Handle "Add Task" form submission
-  const handleNewWorkspaceSubmit = (event) => {
+  // Handle "Add Workspace" form submission
+  const handleNewWorkspaceSubmit = async (event) => {
     event.preventDefault();
-    console.log("New Task Added:", newTaskData);
-    handleWorkspaceOpen(); // Close modal after submission
+    try {
+      await createWorkspace({
+        name: newWorkspaceData.workspace_name,
+        description: newWorkspaceData.workspace_description,
+      });
+      handleWorkspaceOpen();
+    } catch (error) {
+      console.error("Failed to create workspace:", error);
+    }
   };
-
+  // Handle "Edit Workspace" form submission
+  const handleUpdateWorkspace = async () => {
+    try {
+      await updateWorkspaceById({
+        id: newWorkspaceData.id,
+        name: newWorkspaceData.workspace_name,
+        description: newWorkspaceData.workspace_description,
+        is_ative: newWorkspaceData.is_ative,
+      }).unwrap();
+    } catch (error) {
+      console.error("Failed to update workspace:", error);
+    }
+  };
+  // Handle "Delet Workspace" form submission
+  const handleDeletWorkspace = async (id) => {
+    try {
+      await updateWorkspaceById({
+        id: newWorkspaceData.id,
+        is_archived: !newWorkspaceData.is_archived,
+      }).unwrap();
+    } catch (error) {
+      console.error("Failed to Delet workspace:", error);
+    }
+  };
   // Handle PlusCircleIcon click and populate task details modal
-  const handleIconClick = (taskName) => {
-    setTaskDetailsData({ ...taskDetailsData, task_name: taskName });
-    handleTaskDetailsOpen(); // Open the task details modal
+  const handleEditIconClick = (workspace) => {
+    setNewWorkspaceData({
+      id: workspace.id,
+      workspace_name: workspace.name,
+      workspace_description: workspace.description,
+      is_ative: workspace.is_ative,
+      is_archived: workspace.is_archived,
+      workspace_id: workspace.workspace_id,
+    });
+    handleWorkspacekDetailsOpen();
   };
 
-  // Handle task details form submission
-  const handleTaskDetailsSubmit = (event) => {
-    event.preventDefault();
-    console.log("Task Details Submitted:", taskDetailsData);
-    handleTaskDetailsOpen(); // Close modal after submission
+  const handleAssignIconClick = () => {
+    handleWorkspaceMemberOpen();
+  };
+  //asigne
+  // Filter countries as the user types
+  const handleInputChange = (event) => {
+    const input = event.target.value;
+    setQuery(input);
+
+    // Filter country list based on input
+    const results = countries.filter((country) =>
+      country.name.toLowerCase().includes(input.toLowerCase())
+    );
+    setFilteredCountries(results);
+    setIsDropdownVisible(true); // Show dropdown when typing
+  };
+
+  // Show dropdown when the input is focused
+  const handleInputFocus = () => {
+    setFilteredCountries(countries); // Show all countries initially
+    setIsDropdownVisible(true);
+  };
+
+  // Hide dropdown when a country is selected
+  const selectCountry = (countryName) => {
+    setQuery(countryName);
+    setIsDropdownVisible(false);
   };
 
   return (
     <div className="flex w-full">
+      {/* Table for Displaying a Workspace */}
       <Card className="h-full w-fit flex-1">
         <CardHeader
           floated={false}
@@ -133,13 +185,16 @@ const Workspace = () => {
           </div>
         </CardHeader>
 
-        <table className="w-full min-w-max table-auto text-left">
-          <thead>
-            <tr>
-              {TABLE_HEAD.map(({ head, icon }) => (
-                <th key={head} className="border-b border-gray-300 p-4">
-                  <div className="flex items-center gap-1">
-                    {icon}
+        {isLoading ? (
+          <p>Loading workspaces...</p>
+        ) : error ? (
+          <p>Error fetching workspaces.</p>
+        ) : (
+          <table className="w-full min-w-max table-auto text-left">
+            <thead>
+              <tr>
+                {TABLE_HEAD.map(({ head }) => (
+                  <th key={head} className="border-b border-gray-300 p-4">
                     <Typography
                       color="blue-gray"
                       variant="small"
@@ -147,81 +202,67 @@ const Workspace = () => {
                     >
                       {head}
                     </Typography>
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {TABLE_ROWS.map(({ task_id, task_name, discription }, index) => {
-              const isLast = index === TABLE_ROWS.length - 1;
-              const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
-
-              return (
-                <tr key={task_id}>
-                  <td className={classes}>
-                    <div className="flex items-center gap-1">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-bold"
-                      >
-                        {task_id}
-                      </Typography>
-                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {workspaces.map((workspace) => (
+                <tr key={workspace.id}>
+                  <td className="p-4 border-b border-gray-300">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-bold"
+                    >
+                      {workspace.workspace_id}
+                    </Typography>
                   </td>
-                  <td className={classes}>
+                  <td className="p-4 border-b border-gray-300">
                     <Typography
                       variant="small"
                       className="font-normal text-gray-600"
                     >
-                      {task_name}
+                      {workspace.name}
                     </Typography>
                   </td>
-                  <td className={classes}>
+                  <td className="p-4 border-b border-gray-300">
                     <Typography
                       variant="small"
                       className="font-normal text-gray-600"
                     >
-                      {discription}
+                      {workspace.description.length > 50
+                        ? `${workspace.description.substring(0, 50)}...`
+                        : workspace.description}
                     </Typography>
                   </td>
-                  <td className={classes}>
-                    <div className="flex items-center gap-2">
-                      {/* Icon button to open task details modal */}
-                      <IconButton
-                        variant="text"
-                        size="sm"
-                        onClick={() => handleIconClick(task_name)}
-                      >
-                        <UserIcon
-                          strokeWidth={3}
-                          className="h-4 w-4 text-gray-900"
-                        />
-                      </IconButton>
-                    </div>
-                  </td>
-
-                  <td className={classes}>
-                    <div className="flex items-center gap-2">
-                      {/* Icon button to open task details modal */}
-                      <IconButton
-                        variant="text"
-                        size="sm"
-                        onClick={() => handleIconClick(task_name)}
-                      >
-                        <PencilSquareIcon
-                          strokeWidth={3}
-                          className="h-4 w-4 text-gray-900"
-                        />
-                      </IconButton>
-                    </div>
+                  <td className="p-4 border-b border-gray-300 flex gap-16">
+                    <IconButton
+                      variant="text"
+                      size="sm"
+                      onClick={() => handleAssignIconClick()}
+                    >
+                      <UserIcon
+                        strokeWidth={3}
+                        className="h-4 w-4 text-gray-900"
+                      />
+                    </IconButton>
+                    <IconButton
+                      variant="text"
+                      size="sm"
+                      onClick={() => handleEditIconClick(workspace)}
+                    >
+                      <PencilSquareIcon
+                        strokeWidth={3}
+                        className="h-4 w-4 text-gray-900"
+                      />
+                    </IconButton>
                   </td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        )}
       </Card>
 
       {/* Modal for Adding a Workspace */}
@@ -239,6 +280,7 @@ const Workspace = () => {
             </Typography>
             <Input
               size="lg"
+              label="Name"
               placeholder="Enter Workspace Name"
               name="workspace_name"
               onChange={handleNewWorkspaceChange}
@@ -252,155 +294,128 @@ const Workspace = () => {
             <Textarea
               label="Discription"
               size="lg"
-              name="workspace_discription"
+              className="h-44"
+              name="workspace_description"
               onChange={handleNewWorkspaceChange}
               required
             />
+          </div>
+        </form>
+      </Modal>
+      {/*Modal for Workspace Edit*/}
+      <Modal
+        open={WorkspacekDetailsOpen}
+        onClose={handleWorkspacekDetailsOpen}
+        title="Edit Workspace"
+        confirmText="Submit"
+        onConfirm={handleUpdateWorkspace}
+        showDelete={true}
+        onConfirmDelete={() => handleDeletWorkspace(newWorkspaceData.id)}
+      >
+        <form onSubmit={handleUpdateWorkspace}>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Workspace Name
+            </Typography>
+            <Input
+              size="lg"
+              label="Name"
+              placeholder="Enter Workspace Name"
+              name="workspace_name"
+              value={newWorkspaceData.workspace_name}
+              onChange={handleNewWorkspaceChange}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Workspace discription
+            </Typography>
+            <Textarea
+              label="Description"
+              size="lg"
+              className="h-44"
+              name="workspace_description"
+              value={newWorkspaceData.workspace_description}
+              onChange={handleNewWorkspaceChange}
+              required
+            />
+          </div>
+
+          <div className="flex mb-6 gap-4 justify-between">
+            <div>
+              <Checkbox
+                id="active-checkbox"
+                label={newWorkspaceData.is_ative ? "Active" : "Not Active"}
+                name="is_ative"
+                checked={newWorkspaceData.is_ative}
+                onChange={() =>
+                  setNewWorkspaceData({
+                    ...newWorkspaceData,
+                    is_ative: !newWorkspaceData.is_ative,
+                  })
+                }
+                ripple={true}
+              />
+            </div>
           </div>
         </form>
       </Modal>
       {/*Modal for Workspace Assignment*/}
       <Modal
-        open={taskDetailsOpen}
-        onClose={handleTaskDetailsOpen}
-        title="Task Details"
+        open={AsignWorkspacekMemberOpen}
+        onClose={handleWorkspaceMemberOpen}
+        title="Assigne a Member"
         confirmText="Submit"
-        onConfirm={handleTaskDetailsSubmit}
+        onConfirm={handleNewWorkspaceChange}
       >
-        <form onSubmit={handleTaskDetailsSubmit}>
-          <div className="mb-6">
-            <Typography variant="small" color="blue-gray" className="mb-2">
-              Workspace Name
-            </Typography>
-            <Input
-              size="lg"
-              label="Name"
-              placeholder="Enter Workspace Name"
-              name="workspace_name"
-              onChange={handleNewWorkspaceChange}
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <Typography variant="small" color="blue-gray" className="mb-2">
-              Workspace discription
-            </Typography>
-            <Textarea
-              label="Discription"
-              size="lg"
-              name="workspace_discription"
-              onChange={handleNewWorkspaceChange}
-              required
-            />
-          </div>
+        <div className="relative w-full max-w-xs mx-auto">
+          {/* Input Field */}
+          <Input
+            type="text"
+            value={query}
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+            placeholder="Type a country"
+            className="py-3 px-4 w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+          />
 
-          <div className="flex mb-6 gap-4 justify-between">
-            <div>
-              <Button
-                className="bg-delete1 flex items-center gap-3"
-                size="m"
-                onClick={handleWorkspaceOpen}
-              >
-                Delete Workspace
-              </Button>{" "}
-            </div>
-            <div>
-              <Checkbox id="ripple-on" label="Activate" ripple={true} />
-            </div>
-          </div>
-        </form>
-      </Modal>
-      {/* Modal for Workspace Details */}
-      <Modal
-        open={taskDetailsOpen}
-        onClose={handleTaskDetailsOpen}
-        title="Task Details"
-        confirmText="Submit"
-        onConfirm={handleTaskDetailsSubmit}
-      >
-        <form onSubmit={handleTaskDetailsSubmit}>
-          <div className="mb-6">
-            <Typography variant="small" color="blue-gray" className="mb-2">
-              Workspace Name
-            </Typography>
-            <Input
-              size="lg"
-              label="Name"
-              placeholder="Enter Workspace Name"
-              name="workspace_name"
-              onChange={handleNewWorkspaceChange}
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <Typography variant="small" color="blue-gray" className="mb-2">
-              Workspace discription
-            </Typography>
-            <Textarea
-              label="Discription"
-              size="lg"
-              name="workspace_discription"
-              onChange={handleNewWorkspaceChange}
-              required
-            />
-          </div>
+          {/* Dropdown List */}
+          {isDropdownVisible && (
+            <div className="absolute z-50 w-full max-h-72 p-1 bg-white border border-gray-200 rounded-lg overflow-y-auto">
+              {filteredCountries.map((country, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between cursor-pointer py-2 px-4 w-full text-sm text-gray-800 hover:bg-gray-100 rounded-lg"
+                >
+                  <span onClick={() => selectCountry(country.name)}>
+                    {country.name}
+                  </span>
 
-          <div className="flex mb-6 gap-4 justify-between">
-            <div>
-              <Button
-                className="bg-delete1 flex items-center gap-3"
-                size="m"
-                onClick={handleWorkspaceOpen}
-              >
-                Delete Workspace
-              </Button>{" "}
+                  {/* Icons */}
+                  <div className="flex items-center space-x-2 gap-4">
+                    <button
+                      className="text-green-500 hover:text-green-700"
+                      onClick={() => handleAddCountry(country.name)}
+                    >
+                      +
+                    </button>
+
+                    <button
+                      className="text-red-500 hover:text-red-700"
+                      onClick={() => handleRemoveCountry(country.name)}
+                    >
+                      x
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div>
-              <Checkbox id="ripple-on" label="Activate" ripple={true} />
-            </div>
-          </div>
-        </form>
+          )}
+        </div>
       </Modal>
     </div>
   );
 };
 
 export default Workspace;
-
-// <div className="mb-6 flex gap-4">
-//   <div className="flex-1">
-//     <Typography variant="small" color="blue-gray" className="mb-2">
-//       Assignee
-//     </Typography>
-//     <Select
-//       size="lg"
-//       name="assignee"
-//       value={taskDetailsData.assignee}
-//       onChange={(value) =>
-//         setTaskDetailsData({ ...taskDetailsData, assignee: value })
-//       }
-//       required
-//     >
-//       <Option value="User1">User1</Option>
-//       <Option value="User2">User2</Option>
-//       <Option value="User3">User3</Option>
-//     </Select>
-//   </div>
-//   <div className=" w-4/3">
-//     <Typography variant="small" color="blue-gray" className="mb-2">
-//       Assignee As
-//     </Typography>
-//     <Select
-//       size="lg"
-//       name="assignee"
-//       value={taskDetailsData.assignee}
-//       onChange={(value) =>
-//         setTaskDetailsData({ ...taskDetailsData, assignee: value })
-//       }
-//       required
-//     >
-//       <Option value="User1">Admin</Option>
-//       <Option value="User2">User</Option>
-//     </Select>
-//   </div>
-// </div>;

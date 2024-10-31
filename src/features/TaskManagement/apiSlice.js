@@ -1,47 +1,52 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "../baseQuery";
 
-export const apiSlice = createApi({
+export const WorkspaceApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
   tagTypes: ["Workspace"],
   endpoints: (builder) => ({
     listWorkspaces: builder.query({
       query: () => ({
-        url: "space/workspace/",
+        url: "/space/workspace/",
         method: "GET",
       }),
-      providesTags: ["Workspace"],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Workspace", id })),
+              { type: "Workspace", id: "LIST" },
+            ]
+          : [{ type: "Workspace", id: "LIST" }],
     }),
     createWorkspace: builder.mutation({
       query: (data) => ({
-        url: "space/workspace/",
+        url: "/space/workspace/",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Workspace"],
-    }),
-    getWorkspaceById: builder.query({
-      query: (id) => ({
-        url: `space/workspace/${id}/`,
-        method: "GET",
-      }),
-      providesTags: (result, error, id) => [{ type: "Workspace", id }],
+      invalidatesTags: [{ type: "Workspace", id: "LIST" }],
     }),
     updateWorkspaceById: builder.mutation({
       query: ({ id, ...data }) => ({
-        url: `space/workspace/${id}/`,
+        url: `/space/workspace/${id}/`,
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "Workspace", id }],
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Workspace", id },
+        { type: "Workspace", id: "LIST" },
+      ],
     }),
     deleteWorkspaceById: builder.mutation({
       query: (id) => ({
-        url: `space/workspace/${id}/`,
+        url: `/space/workspace/${id}/`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Workspace", id }],
+      invalidatesTags: (result, error, id) => [
+        { type: "Workspace", id },
+        { type: "Workspace", id: "LIST" },
+      ],
     }),
   }),
 });
@@ -49,7 +54,6 @@ export const apiSlice = createApi({
 export const {
   useListWorkspacesQuery,
   useCreateWorkspaceMutation,
-  useGetWorkspaceByIdQuery,
   useUpdateWorkspaceByIdMutation,
   useDeleteWorkspaceByIdMutation,
-} = apiSlice;
+} = WorkspaceApiSlice;
