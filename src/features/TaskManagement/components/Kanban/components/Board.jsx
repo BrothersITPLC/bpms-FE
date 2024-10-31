@@ -34,7 +34,7 @@ const Board = () => {
   ];
 
   return (
-    <div className="flex h-full w-full gap-3 overflow-scroll p-12">
+    <div className="ml-4 flex h-full w-full gap-3 overflow-scroll p-12">
       {columns.map(({ title, column }) => (
         <Column
           key={column}
