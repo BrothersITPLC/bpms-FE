@@ -191,6 +191,22 @@ const Sidebar = () => {
               User Management
             </ListItem>
           </Link>
+          <Link to="/resource-requests">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Resource Requests{" "}
+            </ListItem>
+          </Link>
+          <Link to="/user-resource-requests">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Request a Resource{" "}
+            </ListItem>
+          </Link>
           <Link to="/companies">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
