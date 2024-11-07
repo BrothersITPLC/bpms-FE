@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Profile from "./features/Auth/components/Profile";
 import UserManagement from "./features/UserManagement/components/UserManagement";
-// import AssignedTasks from "./features/TaskManagement/components/AssignedTasks";
+import AssignedTasks from "./features/TaskManagement/components/AssignedTasks";
 import Bids from "./features/Bids/components/Bids";
 import BidPurchaseOrders from "./features/BidPurchaseOrders/components/BidPurchaseOrders";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -39,7 +39,7 @@ const App = () => {
           <Route path="choose-space" element={<WorkspaceChoose />}></Route>
           <Route element={<HomePage />}>
             <Route path="user-management" element={<UserManagement />} />
-            {/* <Route path="assigned-tasks" element={<AssignedTasks />} /> */}
+            <Route path="assigned-tasks" element={<AssignedTasks />} />
             <Route path="tasks" element={<Tasks />} />
             <Route path="workspace" element={<Workspace />} />
             <Route path="space" element={<Space />} />

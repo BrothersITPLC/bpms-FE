@@ -121,8 +121,7 @@ const AssignedTasks = () => {
   });
 
   return (
-    <div className="flex">
-      <Sidebar />
+    <>
       <div className="flex-1">
         <Card className="h-full w-full">
           <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -354,7 +353,7 @@ const AssignedTasks = () => {
           </form>
         </Modal>
       </div>
-    </div>
+    </>
   );
 };
 
