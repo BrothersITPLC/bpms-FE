@@ -1,9 +1,9 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseQueryWithReauth } from "../baseQuery";
+import { baseQuery } from "../baseQuery";
 
 export const apiSlice = createApi({
-  reducerPath: "api",
-  baseQuery: baseQueryWithReauth,
+  reducerPath: "Hrapi",
+  baseQuery: baseQuery,
   tagTypes: ["User"],
   endpoints: (builder) => ({
     registerEmployee: builder.mutation({

@@ -6,9 +6,9 @@ const ProtectedRoute = ({ redirectTo = "/" }) => {
 
   const isAuthenticated = !!user;
 
-  // if (!isAuthenticated) {
-  //   return <Navigate to={redirectTo} />;
-  // }
+  if (!isAuthenticated) {
+    return <Navigate to={redirectTo} />;
+  }
 
   return <Outlet />;
 };

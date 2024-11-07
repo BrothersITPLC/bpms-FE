@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/Auth/apiSlice";
 import { WorkspaceApiSlice } from "../features/TaskManagement/apiSlice";
-import authReducer from "../features/Auth/authSlice";
+import rootReducer from "./rootReducer";
 import {
   persistStore,
   persistReducer,
@@ -19,15 +19,10 @@ const persistConfig = {
   whitelist: ["auth"],
 };
 
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+const persistedAuthReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: {
-    [apiSlice.reducerPath]: apiSlice.reducer,
-    [WorkspaceApiSlice.reducerPath]: WorkspaceApiSlice.reducer,
-
-    auth: persistedAuthReducer,
-  },
+  reducer: persistedAuthReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
