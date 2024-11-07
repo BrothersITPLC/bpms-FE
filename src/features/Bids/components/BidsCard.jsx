@@ -1,27 +1,84 @@
 // BidsCard.js
-import React from "react";
-import { Card, Button } from "@material-tailwind/react";
+import React, { useState } from "react";
+import { Card, Button, IconButton } from "@material-tailwind/react";
+import { FaEllipsisH, FaEdit, FaTrash } from "react-icons/fa";
 
 const BidsCard = ({
+  id,
   companyName,
   bidTitle,
   rfqNo,
-  submissionDate,
-  openingDate,
-  bidSecurityAmount,
-  bidSecurityValidity,
-  buttonLabel = "View Details", // Default to "View Details" if no buttonLabel is provided
+  created_by,
+  client,
+  buttonLabel = "View Details",
+  onEdit,
+  onDelete,
 }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
+
   return (
-    <Card className="p-4 w-72">
-      <h5 className="font-semibold">{bidTitle}</h5>
-      <p>Company: {companyName}</p>
-      <p>RFQ No: {rfqNo}</p>
-      <p>Submission Date: {submissionDate}</p>
-      <p>Opening Date: {openingDate}</p>
-      <p>Bid Security Amount: {bidSecurityAmount}</p>
-      <p>Bid Security Validity: {bidSecurityValidity}</p>
-      <Button className="mt-4 w-fit">{buttonLabel}</Button>
+    <Card
+      shadow={false}
+      className="relative p-6 w-80 bg-white border rounded-lg hover:border-blue-900 transition-shadow duration-300 ease-in-out"
+    >
+      {/* Three-dot menu for Edit and Delete */}
+      <div className="absolute top-3 right-3">
+        <IconButton
+          onClick={toggleMenu}
+          className="text-gray-600 hover:text-blue-600"
+          variant="text"
+          size="sm"
+        >
+          <FaEllipsisH />
+        </IconButton>
+
+        {menuOpen && (
+          <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow-lg z-10">
+            <button
+              onClick={() => {
+                onEdit(id);
+                toggleMenu();
+              }}
+              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <FaEdit className="mr-2" /> Edit
+            </button>
+            <button
+              onClick={() => {
+                onDelete(id);
+                toggleMenu();
+              }}
+              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <FaTrash className="mr-2" /> Delete
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Bid Information */}
+      <h5 className="font-semibold text-xl text-gray-800 mb-2">{bidTitle}</h5>
+      <p className="text-gray-600 mb-1">
+        <span className="font-medium text-gray-700">Company:</span>{" "}
+        {companyName}
+      </p>
+      <p className="text-gray-600 mb-1">
+        <span className="font-medium text-gray-700">RFQ No:</span> {rfqNo}
+      </p>
+      <p className="text-gray-600 mb-1">
+        <span className="font-medium text-gray-700">Created by:</span>{" "}
+        {created_by}
+      </p>
+      <p className="text-gray-600 mb-4">
+        <span className="font-medium text-gray-700">Client:</span> {client}
+      </p>
+
+      {/* View Details Button */}
+      <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md py-2 mt-4 transition-colors duration-200 ease-in-out">
+        {buttonLabel}
+      </Button>
     </Card>
   );
 };

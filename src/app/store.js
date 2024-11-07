@@ -2,6 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/Auth/apiSlice";
 import { WorkspaceApiSlice } from "../features/TaskManagement/apiSlice";
 import rootReducer from "./rootReducer";
+import { companyAPI } from "../features/Companies/companyApi";
+import { bidApi } from "../features/Bids/bidApi";
 import {
   persistStore,
   persistReducer,
@@ -23,12 +25,16 @@ const persistedAuthReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedAuthReducer,
+
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(apiSlice.middleware, WorkspaceApiSlice.middleware),
+    }).concat(
+      [apiSlice.middleware, companyAPI.middleware, bidApi.middleware],
+      WorkspaceApiSlice.middleware
+    ),
 });
 
 export const persistor = persistStore(store);

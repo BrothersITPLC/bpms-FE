@@ -27,6 +27,7 @@ const Column = ({ title, column, cards, setCards }) => {
     e.preventDefault();
     setActive(true);
   };
+
   const handleDragStart = (e, card) => {
     e.dataTransfer.setData("cardId", card.id);
   };
@@ -50,7 +51,11 @@ const Column = ({ title, column, cards, setCards }) => {
         }`}
       >
         {filteredCards.map((card) => (
-          <Card key={card.id} {...card} handleDragStart={handleDragStart} />
+          <Card
+            key={card.id}
+            {...card} // Spread the card properties including assignee, dueDate, and priority
+            handleDragStart={handleDragStart}
+          />
         ))}
         <DropIndicator column={column} />
         <AddCard column={column} setCards={setCards} />

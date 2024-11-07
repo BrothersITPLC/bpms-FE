@@ -6,7 +6,6 @@ import {
   UserIcon,
   PlusIcon,
 } from "@heroicons/react/24/outline";
-
 import {
   Card,
   Input,
@@ -65,6 +64,7 @@ const Workspace = () => {
   // Handle input changes for "Add Task" form
   const handleNewWorkspaceChange = (event) => {
     const { name, value } = event.target;
+    setNewWorkspaceData({ ...newWorkspaceData, [name]: value });
     setNewWorkspaceData({ ...newWorkspaceData, [name]: value });
   };
   // Toggle modals
@@ -161,12 +161,13 @@ const Workspace = () => {
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
               />
             </div>
-            {/* Button to open "Add Task" modal */}
+            {/* Button to open "Add Workspace" modal */}
             <Button
               className="bg-primary1 flex items-center gap-3"
               size="sm"
               onClick={handleWorkspaceOpen}
             >
+              <PlusCircleIcon className="h-5 w-5" /> Add Workspace
               <PlusCircleIcon className="h-5 w-5" /> Add Workspace
             </Button>
           </div>
@@ -181,8 +182,9 @@ const Workspace = () => {
       </Card>
 
       {/* Modal for Adding a Workspace */}
+      {/* Modal for Adding a Workspace */}
       <Modal
-        open={WorkspaceOpen}
+        open={workspaceOpen}
         onClose={handleWorkspaceOpen}
         title="Add New Workspace"
         confirmText="Submit"
@@ -191,7 +193,7 @@ const Workspace = () => {
         <form onSubmit={handleNewWorkspaceSubmit}>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Workspace Name
+              Workspace Name Workspace Name
             </Typography>
             <Input
               size="lg"
