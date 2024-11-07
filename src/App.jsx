@@ -18,7 +18,6 @@ import Kanban from "./features/TaskManagement/components/Kanban/components/Kanba
 import Workspace from "./features/TaskManagement/components/Workspace";
 // import Space from "./features/TaskManagement/components/Space";
 // import Folder from "./features/TaskManagement/components/Folder";
-import "react-toastify/dist/ReactToastify.css";
 import Component from "./features/TaskManagement/components/Component";
 
 //page

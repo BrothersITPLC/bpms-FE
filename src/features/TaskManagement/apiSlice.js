@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { baseUrl, baseQuery } from "../baseQuery";
+import { baseQuery } from "../baseQuery";
 
 export const WorkspaceApiSlice = createApi({
   reducerPath: "Workspaceapi",

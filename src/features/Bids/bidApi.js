@@ -1,5 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseQuery, baseQueryWithReauth } from "../baseQuery";
+import { baseQuery } from "../baseQuery";
 
 export const bidApi = createApi({
   reducerPath: "bidApi",

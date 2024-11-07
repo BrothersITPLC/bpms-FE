@@ -18,7 +18,7 @@ const Modal = ({
   onConfirmDelete,
 }) => {
   return (
-    <Dialog open={open} size={size} handler={onClose}>
+    <Dialog open={open} handler={onClose}>
       <DialogHeader>{title}</DialogHeader>
       <DialogBody className="overflow-y-auto max-h-[60vh]">
         {children}
