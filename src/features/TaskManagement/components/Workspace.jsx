@@ -152,9 +152,9 @@ const Workspace = () => {
         <CardHeader
           floated={false}
           shadow={false}
-          className="mb-2 rounded-none p-2"
+          className="mb-2 rounded-none "
         >
-          <div className="flex justify-between">
+          <div className="flex w-full ">
             <div className="w-fit">
               <Input
                 label="Search WorkSpace"
@@ -163,7 +163,7 @@ const Workspace = () => {
             </div>
             {/* Button to open "Add Task" modal */}
             <Button
-              className="bg-primary1 flex items-center gap-3"
+              className="bg-primary1 flex items-center mx-auto"
               size="sm"
               onClick={handleWorkspaceOpen}
             >

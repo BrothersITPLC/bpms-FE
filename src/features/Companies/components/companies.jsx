@@ -138,7 +138,7 @@ const Companies = () => {
   };
 
   return (
-    <div className="flex w-full p-4">
+    <div className="flex-1 w-full">
       <Card className="h-full w-full shadow-md rounded-lg overflow-hidden">
         <CardHeader
           floated={false}
