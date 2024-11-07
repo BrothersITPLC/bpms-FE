@@ -24,6 +24,9 @@ import LandingPage from "./page/LandingPage";
 import HomePage from "./page/HomePage";
 import Auth from "./page/Auth";
 import WorkspaceChoose from "./page/WorkspaceChoose";
+import Notifications from "./features/Notifications/Notifications";
+import ResourceRequests from "./features/Resource/components/ResourceRequests";
+import UserResourceRequests from "./features/Resource/components/UserResourceRequests";
 const App = () => {
   return (
     <Router>
@@ -46,6 +49,12 @@ const App = () => {
             <Route path="bids" element={<Bids />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="companies" element={<Companies />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="resource-requests" element={<ResourceRequests />} />
+            <Route
+              path="user-resource-requests"
+              element={<UserResourceRequests />}
+            />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>

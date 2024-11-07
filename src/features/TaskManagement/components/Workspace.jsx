@@ -5,7 +5,6 @@ import {
   MagnifyingGlassIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-
 import {
   Card,
   Input,
@@ -28,88 +27,89 @@ const TABLE_HEAD = [
     head: "Workspace Name",
   },
   {
-    head: "Workspace discription",
+    head: "Workspace Description",
   },
 ];
 
 const TABLE_ROWS = [
   {
-    task_id: "T-1",
-    task_name: "Technical Document Preparation",
-    discription: "work space discription",
+    workspace_id: "W-1",
+    workspace_name: "Development Workspace",
+    description: "Workspace for development tasks",
   },
   {
-    task_id: "T-2",
-    task_name: "Financial Document Preparation",
-    discription: "work space discription",
+    workspace_id: "W-2",
+    workspace_name: "Design Workspace",
+    description: "Workspace for design tasks",
   },
   {
-    task_id: "T-3",
-    task_name: "Bid Bond Preparation",
-    discription: "work space discription",
+    workspace_id: "W-3",
+    workspace_name: "Testing Workspace",
+    description: "Workspace for testing tasks",
   },
   {
-    task_id: "T-4",
-    task_name: "Clarification Response",
-    discription: "work space discription",
+    workspace_id: "W-4",
+    workspace_name: "Deployment Workspace",
+    description: "Workspace for deployment tasks",
   },
 ];
 
 const Workspace = () => {
-  // Modal states for "Add Task" and PlusCircleIcon (task details)
-  const [WorkspaceOpen, setWorkspaceOpen] = useState(false);
-  const [taskDetailsOpen, setTaskDetailsOpen] = useState(false);
+  // Modal states for "Add Workspace" and workspace details
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  const [workspaceDetailsOpen, setWorkspaceDetailsOpen] = useState(false);
 
   // Form states
-  const [newTaskData, setNewTaskData] = useState({
-    task_id: "",
-    task_name: "",
+  const [newWorkspaceData, setNewWorkspaceData] = useState({
+    workspace_id: "",
+    workspace_name: "",
+    description: "",
   });
-  const [taskDetailsData, setTaskDetailsData] = useState({
-    task_name: "",
-    assignee: "",
-    due_date: "",
+  const [workspaceDetailsData, setWorkspaceDetailsData] = useState({
+    workspace_name: "",
+    description: "",
   });
 
   // Toggle modals
-  const handleWorkspaceOpen = () => setWorkspaceOpen(!WorkspaceOpen);
-  const handleTaskDetailsOpen = () => setTaskDetailsOpen(!taskDetailsOpen);
+  const handleWorkspaceOpen = () => setWorkspaceOpen(!workspaceOpen);
+  const handleWorkspaceDetailsOpen = () =>
+    setWorkspaceDetailsOpen(!workspaceDetailsOpen);
 
-  // Handle input changes for "Add Task" form
+  // Handle input changes for "Add Workspace" form
   const handleNewWorkspaceChange = (event) => {
     const { name, value } = event.target;
-    setNewTaskData({ ...newTaskData, [name]: value });
+    setNewWorkspaceData({ ...newWorkspaceData, [name]: value });
   };
 
-  // Handle input changes for task details modal
-  const handleTaskDetailsChange = (event) => {
+  // Handle input changes for workspace details modal
+  const handleWorkspaceDetailsChange = (event) => {
     const { name, value } = event.target;
-    setTaskDetailsData({ ...taskDetailsData, [name]: value });
+    setWorkspaceDetailsData({ ...workspaceDetailsData, [name]: value });
   };
 
-  // Handle "Add Task" form submission
+  // Handle "Add Workspace" form submission
   const handleNewWorkspaceSubmit = (event) => {
     event.preventDefault();
-    console.log("New Task Added:", newTaskData);
+    console.log("New Workspace Added:", newWorkspaceData);
     handleWorkspaceOpen(); // Close modal after submission
   };
 
-  // Handle PlusCircleIcon click and populate task details modal
-  const handleIconClick = (taskName) => {
-    setTaskDetailsData({ ...taskDetailsData, task_name: taskName });
-    handleTaskDetailsOpen(); // Open the task details modal
+  // Handle icon click and populate workspace details modal
+  const handleIconClick = (workspaceName, description) => {
+    setWorkspaceDetailsData({ workspace_name: workspaceName, description });
+    handleWorkspaceDetailsOpen(); // Open the workspace details modal
   };
 
-  // Handle task details form submission
-  const handleTaskDetailsSubmit = (event) => {
+  // Handle workspace details form submission
+  const handleWorkspaceDetailsSubmit = (event) => {
     event.preventDefault();
-    console.log("Task Details Submitted:", taskDetailsData);
-    handleTaskDetailsOpen(); // Close modal after submission
+    console.log("Workspace Details Submitted:", workspaceDetailsData);
+    handleWorkspaceDetailsOpen(); // Close modal after submission
   };
 
   return (
-    <div className="flex w-full">
-      <Card className="h-full w-fit flex-1">
+    <div className="flex-1 ">
+      <Card className="h-full w-full">
         <CardHeader
           floated={false}
           shadow={false}
@@ -122,12 +122,13 @@ const Workspace = () => {
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
               />
             </div>
-            {/* Button to open "Add Task" modal */}
+            {/* Button to open "Add Workspace" modal */}
             <Button
               className="bg-primary1 flex items-center gap-3"
               size="sm"
               onClick={handleWorkspaceOpen}
             >
+              <PlusCircleIcon className="h-5 w-5" /> Add Workspace
               <PlusCircleIcon className="h-5 w-5" /> Add Workspace
             </Button>
           </div>
@@ -153,80 +154,83 @@ const Workspace = () => {
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(({ task_id, task_name, discription }, index) => {
-              const isLast = index === TABLE_ROWS.length - 1;
-              const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
+            {TABLE_ROWS.map(
+              ({ workspace_id, workspace_name, description }, index) => {
+                const isLast = index === TABLE_ROWS.length - 1;
+                const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
-              return (
-                <tr key={task_id}>
-                  <td className={classes}>
-                    <div className="flex items-center gap-1">
+                return (
+                  <tr key={task_id}>
+                    <td className={classes}>
+                      <div className="flex items-center gap-1">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-bold"
+                        >
+                          {task_id}
+                        </Typography>
+                      </div>
+                    </td>
+                    <td className={classes}>
                       <Typography
                         variant="small"
-                        color="blue-gray"
-                        className="font-bold"
+                        className="font-normal text-gray-600"
                       >
-                        {task_id}
+                        {task_name}
                       </Typography>
-                    </div>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      className="font-normal text-gray-600"
-                    >
-                      {task_name}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      className="font-normal text-gray-600"
-                    >
-                      {discription}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <div className="flex items-center gap-2">
-                      {/* Icon button to open task details modal */}
-                      <IconButton
-                        variant="text"
-                        size="sm"
-                        onClick={() => handleIconClick(task_name)}
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        className="font-normal text-gray-600"
                       >
-                        <UserIcon
-                          strokeWidth={3}
-                          className="h-4 w-4 text-gray-900"
-                        />
-                      </IconButton>
-                    </div>
-                  </td>
+                        {discription}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <div className="flex items-center gap-2">
+                        {/* Icon button to open task details modal */}
+                        <IconButton
+                          variant="text"
+                          size="sm"
+                          onClick={() => handleIconClick(task_name)}
+                        >
+                          <UserIcon
+                            strokeWidth={3}
+                            className="h-4 w-4 text-gray-900"
+                          />
+                        </IconButton>
+                      </div>
+                    </td>
 
-                  <td className={classes}>
-                    <div className="flex items-center gap-2">
-                      {/* Icon button to open task details modal */}
-                      <IconButton
-                        variant="text"
-                        size="sm"
-                        onClick={() => handleIconClick(task_name)}
-                      >
-                        <PencilSquareIcon
-                          strokeWidth={3}
-                          className="h-4 w-4 text-gray-900"
-                        />
-                      </IconButton>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+                    <td className={classes}>
+                      <div className="flex items-center gap-2">
+                        {/* Icon button to open task details modal */}
+                        <IconButton
+                          variant="text"
+                          size="sm"
+                          onClick={() => handleIconClick(task_name)}
+                        >
+                          <PencilSquareIcon
+                            strokeWidth={3}
+                            className="h-4 w-4 text-gray-900"
+                          />
+                        </IconButton>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
       </Card>
 
       {/* Modal for Adding a Workspace */}
+      {/* Modal for Adding a Workspace */}
       <Modal
-        open={WorkspaceOpen}
+        open={workspaceOpen}
         onClose={handleWorkspaceOpen}
         title="Add New Workspace"
         confirmText="Submit"
@@ -247,12 +251,12 @@ const Workspace = () => {
           </div>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Workspace discription
+              Workspace Description
             </Typography>
             <Textarea
-              label="Discription"
+              label="Description"
               size="lg"
-              name="workspace_discription"
+              name="description"
               onChange={handleNewWorkspaceChange}
               required
             />
@@ -261,16 +265,16 @@ const Workspace = () => {
       </Modal>
       {/*Modal for Workspace Assignment*/}
       <Modal
-        open={taskDetailsOpen}
-        onClose={handleTaskDetailsOpen}
-        title="Task Details"
+        open={workspaceDetailsOpen}
+        onClose={handleWorkspaceDetailsOpen}
+        title="Workspace Details"
         confirmText="Submit"
-        onConfirm={handleTaskDetailsSubmit}
+        onConfirm={handleWorkspaceDetailsSubmit}
       >
-        <form onSubmit={handleTaskDetailsSubmit}>
+        <form onSubmit={handleWorkspaceDetailsSubmit}>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Workspace Name
+              Workspace Name Workspace Name
             </Typography>
             <Input
               size="lg"

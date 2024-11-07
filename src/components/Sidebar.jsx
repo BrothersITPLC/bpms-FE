@@ -8,6 +8,7 @@ import {
   Typography,
   AccordionBody,
   ListItemPrefix,
+  Badge,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
@@ -60,7 +61,10 @@ const Sidebar = () => {
                 />
               </ListItemPrefix>
               <Typography className="mr-auto font-normal text-inherit">
-                User User{" "}
+                <div className="flex gap-20">
+                  {" "}
+                  User <Badge content="5"></Badge>{" "}
+                </div>
               </Typography>
               <ChevronDownIcon
                 strokeWidth={3}
@@ -74,6 +78,13 @@ const Sidebar = () => {
                 <Link to="/Settings">
                   <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
                     Settings
+                  </ListItem>
+                </Link>
+                <Link to="/Notifications">
+                  <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
+                    <div className="flex gap-8">
+                      Notifications <Badge className="ml-4" content="5"></Badge>
+                    </div>
                   </ListItem>
                 </Link>
               </List>
@@ -178,6 +189,22 @@ const Sidebar = () => {
                 <UserGroupIcon className="text-primary1 h-5 w-5" />
               </ListItemPrefix>
               User Management
+            </ListItem>
+          </Link>
+          <Link to="/resource-requests">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Resource Requests{" "}
+            </ListItem>
+          </Link>
+          <Link to="/user-resource-requests">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Request a Resource{" "}
             </ListItem>
           </Link>
           <Link to="/companies">
