@@ -146,9 +146,9 @@ const Workspace = () => {
   const handleInputChange = (e) => setQuery(e.target.value);
 
   return (
-    <div className="flex w-full">
+    <div className="flex-1 w-full">
       {/* Table for Displaying a Workspace */}
-      <Card className="h-full w-fit flex-1">
+      <Card className="h-full w-full ">
         <CardHeader
           floated={false}
           shadow={false}
