@@ -40,9 +40,9 @@ const SpaceComponent = ({ space }) => {
     const { name, value } = event.target;
     setNewSpaceData({ ...newSpaceData, [name]: value });
   };
-  const [spacekDetailsOpen, setSpaceDetailsOpen] = useState(false);
+  const [spaceDetailsOpen, setSpaceDetailsOpen] = useState(false);
 
-  const handleSpacekDetailsOpen = () => setSpaceDetailsOpen(!spacekDetailsOpen);
+  const handlespaceDetailsOpen = () => setSpaceDetailsOpen(!spaceDetailsOpen);
 
   const handleUpdateWorkspace = async () => {
     try {
@@ -132,6 +132,7 @@ const SpaceComponent = ({ space }) => {
     folderError = queryResult.error || "";
     folderIsLoading = queryResult.isLoading;
   }
+  console.log(folderData);
 
   return (
     <div className={`ml-4`}>
@@ -157,7 +158,7 @@ const SpaceComponent = ({ space }) => {
                 size="sm"
                 color="blue"
                 className="rounded-full"
-                onClick={() => handleSpacekDetailsOpen()}
+                onClick={() => handlespaceDetailsOpen()}
               >
                 <PencilIcon className="h-4 w-4" />
               </IconButton>
@@ -194,8 +195,8 @@ const SpaceComponent = ({ space }) => {
 
       {/*Modal for space Edit*/}
       <Modal
-        open={spacekDetailsOpen}
-        onClose={handleSpacekDetailsOpen}
+        open={spaceDetailsOpen}
+        onClose={handlespaceDetailsOpen}
         title="Edit Workspace"
         confirmText="Submit"
         onConfirm={handleUpdateWorkspace}
