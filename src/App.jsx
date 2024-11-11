@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Profile from "./features/Auth/components/Profile";
 import UserManagement from "./features/UserManagement/components/UserManagement";
 import AssignedTasks from "./features/TaskManagement/components/AssignedTasks";
@@ -18,7 +13,6 @@ import Kanban from "./features/TaskManagement/components/Kanban/components/Kanba
 import Workspace from "./features/TaskManagement/components/Workspace";
 import Space from "./features/TaskManagement/components/Space";
 import Folder from "./features/TaskManagement/components/Folder";
-import Component from "./features/TaskManagement/components/Component";
 
 //page
 import LandingPage from "./page/LandingPage";
@@ -28,6 +22,7 @@ import WorkspaceChoose from "./page/WorkspaceChoose";
 import Notifications from "./features/Notifications/Notifications";
 import ResourceRequests from "./features/Resource/components/ResourceRequests";
 import UserResourceRequests from "./features/Resource/components/UserResourceRequests";
+import Store from "./features/InventoryManagement/components/Store";
 const App = () => {
   return (
     <Router>
@@ -52,6 +47,7 @@ const App = () => {
             <Route path="companies" element={<Companies />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="resource-requests" element={<ResourceRequests />} />
+            <Route path="store" element={<Store />} />
             <Route
               path="user-resource-requests"
               element={<UserResourceRequests />}
