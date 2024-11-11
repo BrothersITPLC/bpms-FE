@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Card, Button, Typography } from "@material-tailwind/react";
-import StockOutModal from "./StockOutModal"; // Import the new StockOutModal
+import StockOutModal from "./StockOutModal"; // Stock-Out Modal
+import StockInModal from "./StockInModal"; // New Stock-In Modal
 
 const TABLE_HEAD = [
   "Product ID",
@@ -45,27 +46,47 @@ const TABLE_ROWS = [
 
 const Products = ({ store }) => {
   const [openStockOutModal, setOpenStockOutModal] = useState(false);
+  const [openStockInModal, setOpenStockInModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Open the Stock Out Modal
+  // Open the Stock-Out Modal
   const openStockOutModalHandler = (product) => {
     setSelectedProduct(product);
     setOpenStockOutModal(true);
   };
 
-  // Close the Stock Out Modal
+  // Open the Stock-In Modal
+  const openStockInModalHandler = (product) => {
+    setSelectedProduct(product);
+    setOpenStockInModal(true);
+  };
+
+  // Close the Stock-Out Modal
   const closeStockOutModalHandler = () => {
     setOpenStockOutModal(false);
     setSelectedProduct(null);
   };
 
-  // Handle the Stock Out action
+  // Close the Stock-In Modal
+  const closeStockInModalHandler = () => {
+    setOpenStockInModal(false);
+    setSelectedProduct(null);
+  };
+
+  // Handle the Stock-Out action
   const handleStockOut = ({ stockOutTo, quantity }) => {
     console.log(
       `Stocking out ${quantity} of ${selectedProduct.model} to ${stockOutTo}`
     );
-    // Here you would handle the logic to update the product quantity, send API requests, etc.
+    // Implement API or state update logic for stock-out
     closeStockOutModalHandler();
+  };
+
+  // Handle the Stock-In action
+  const handleStockIn = ({ quantity }) => {
+    console.log(`Stocking in ${quantity} of ${selectedProduct.model}`);
+    // Implement API or state update logic for stock-in
+    closeStockInModalHandler();
   };
 
   return (
@@ -122,16 +143,23 @@ const Products = ({ store }) => {
                 </td>
                 <td className="p-4">
                   <div className="flex gap-2">
-                    <Button variant="gradient" color="green" size="sm">
+                    <Button
+                      variant="gradient"
+                      color="green"
+                      size="sm"
+                      onClick={() =>
+                        openStockInModalHandler({ id, type, model, quantity })
+                      } // Open stock-in modal
+                    >
                       Stock-In
                     </Button>
                     <Button
                       variant="gradient"
-                      color="red"
+                      color="purple"
                       size="sm"
                       onClick={() =>
                         openStockOutModalHandler({ id, type, model, quantity })
-                      } // Open stock out modal
+                      } // Open stock-out modal
                     >
                       Stock-Out
                     </Button>
@@ -157,6 +185,14 @@ const Products = ({ store }) => {
         open={openStockOutModal}
         onClose={closeStockOutModalHandler}
         onConfirm={handleStockOut}
+        product={selectedProduct} // Pass selected product to the modal
+      />
+
+      {/* StockInModal */}
+      <StockInModal
+        open={openStockInModal}
+        onClose={closeStockInModalHandler}
+        onConfirm={handleStockIn}
         product={selectedProduct} // Pass selected product to the modal
       />
     </div>
