@@ -14,11 +14,12 @@ const Modal = ({
   children,
   confirmText,
   onConfirm,
+  size = "md", // Default to 'md' size
   showDelete,
   onConfirmDelete,
 }) => {
   return (
-    <Dialog open={open} handler={onClose}>
+    <Dialog open={open} handler={onClose} size={size}>
       <DialogHeader>{title}</DialogHeader>
       <DialogBody className="overflow-y-auto max-h-[60vh]">
         {children}
