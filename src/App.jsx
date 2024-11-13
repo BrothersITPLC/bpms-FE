@@ -23,6 +23,7 @@ import Notifications from "./features/Notifications/Notifications";
 import ResourceRequests from "./features/Resource/components/ResourceRequests";
 import UserResourceRequests from "./features/Resource/components/UserResourceRequests";
 import Store from "./features/InventoryManagement/components/Store";
+import ProductsTable from "./features/InventoryManagement/components/ProductsTable";
 const App = () => {
   return (
     <Router>
@@ -48,6 +49,7 @@ const App = () => {
             <Route path="notifications" element={<Notifications />} />
             <Route path="resource-requests" element={<ResourceRequests />} />
             <Route path="store" element={<Store />} />
+            <Route path="products-table" element={<ProductsTable />} />
             <Route
               path="user-resource-requests"
               element={<UserResourceRequests />}

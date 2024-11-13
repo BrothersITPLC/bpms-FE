@@ -277,9 +277,11 @@ const Sidebar = () => {
                   Stores
                 </ListItem>
               </Link>
-              <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
-                Products{" "}
-              </ListItem>
+              <Link to="/products-table">
+                <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                  Products{" "}
+                </ListItem>
+              </Link>
             </List>
           </AccordionBody>
         </Accordion>
