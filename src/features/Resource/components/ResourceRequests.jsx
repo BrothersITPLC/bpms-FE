@@ -10,7 +10,6 @@ import {
   CardBody,
   Chip,
   CardFooter,
-  Tab,
   Avatar,
   Tooltip,
   IconButton,
