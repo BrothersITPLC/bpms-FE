@@ -4,6 +4,7 @@ import { WorkspaceApiSlice } from "../features/TaskManagement/apiSlice";
 import rootReducer from "./rootReducer";
 import { companyAPI } from "../features/Companies/companyApi";
 import { bidApi } from "../features/Bids/bidApi";
+import { roleApi } from "../features/RoleManagment/api";
 import {
   persistStore,
   persistReducer,
@@ -32,7 +33,12 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }).concat(
-      [apiSlice.middleware, companyAPI.middleware, bidApi.middleware],
+      [
+        apiSlice.middleware,
+        companyAPI.middleware,
+        bidApi.middleware,
+        roleApi.middleware,
+      ],
       WorkspaceApiSlice.middleware
     ),
 });

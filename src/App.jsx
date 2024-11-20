@@ -24,6 +24,10 @@ import ResourceRequests from "./features/Resource/components/ResourceRequests";
 import UserResourceRequests from "./features/Resource/components/UserResourceRequests";
 import Store from "./features/InventoryManagement/components/Store";
 import ProductsTable from "./features/InventoryManagement/components/ProductsTable";
+import Role from "./features/RoleManagment/components/role";
+import RoleLayout from "./features/RoleManagment/components/layout";
+import PermissionManagement from "./features/RoleManagment/components/permission";
+import RolePermissionMapping from "./features/RoleManagment/components/rolePermission";
 const App = () => {
   return (
     <Router>
@@ -46,6 +50,17 @@ const App = () => {
             <Route path="bids" element={<Bids />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="companies" element={<Companies />} />
+            <Route path="role-management" element={<RoleLayout />}>
+              <Route index element={<Role />} />
+              <Route
+                path="role-permission-mapping"
+                element={<RolePermissionMapping />}
+              />
+              <Route
+                path="permission-management"
+                element={<PermissionManagement />}
+              />
+            </Route>
             <Route path="notifications" element={<Notifications />} />
             <Route path="resource-requests" element={<ResourceRequests />} />
             <Route path="store" element={<Store />} />
