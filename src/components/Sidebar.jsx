@@ -237,6 +237,14 @@ const Sidebar = () => {
             </ListItemPrefix>
             Customers
           </ListItem>
+          <Link to="/work-report-table">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Work Report
+            </ListItem>
+          </Link>
         </List>
         <hr className="my-2 border-gray-200" />
         {/* <Link to="/store">
