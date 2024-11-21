@@ -24,7 +24,7 @@ import ResourceRequests from "./features/Resource/components/ResourceRequests";
 import UserResourceRequests from "./features/Resource/components/UserResourceRequests";
 import Store from "./features/InventoryManagement/components/Store";
 import ProductsTable from "./features/InventoryManagement/components/ProductsTable";
-import MonthlyPlans from "./features/WorkReport/components/MonthlyPlans";
+import MonthlyPlan from "./features/WorkReport/components/MonthlyPlan";
 import Departments from "./features/Department/components/Departments";
 const App = () => {
   return (
@@ -56,7 +56,7 @@ const App = () => {
               path="user-resource-requests"
               element={<UserResourceRequests />}
             />
-            <Route path="monthly-plans" element={<MonthlyPlans />} />
+            <Route path="monthly-plan" element={<MonthlyPlan />} />
             <Route path="departments" element={<Departments />} />
             <Route path="*" element={<NotFound />} />
           </Route>
