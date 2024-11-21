@@ -191,6 +191,16 @@ const Sidebar = () => {
               User Management
             </ListItem>
           </Link>
+
+          <Link to="/departments">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Departments{" "}
+            </ListItem>
+          </Link>
+
           <Link to="/resource-requests">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
