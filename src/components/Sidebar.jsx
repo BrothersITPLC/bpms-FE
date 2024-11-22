@@ -252,12 +252,12 @@ const Sidebar = () => {
             </ListItemPrefix>
             Customers
           </ListItem>
-          <Link to="/work-report-table">
+          <Link to="/monthly-plan">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
                 <UserGroupIcon className="text-primary1 h-5 w-5" />
               </ListItemPrefix>
-              Work Report
+              Work Plan
             </ListItem>
           </Link>
         </List>
