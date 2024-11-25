@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   PlusCircleIcon,
   MagnifyingGlassIcon,
+  PencilIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import {
   Card,
@@ -14,91 +16,43 @@ import {
   Option,
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
+import {
+  useAddDepartmentMutation,
+  useDeleteDepartmentMutation,
+  useGetDepartmentQuery,
+} from "../api/department";
 
-const TABLE_HEAD = [
-  {
-    head: "Department ID",
-    icon: <Checkbox />,
-  },
-  {
-    head: "Department Name",
-  },
-  {
-    head: "Manager",
-  },
-];
-
-const TABLE_ROWS = [
-  {
-    department_id: "D-1",
-    department_name: "Technical",
-    manager: "Seblewongel Hailu",
-  },
-  {
-    department_id: "D-2",
-    department_name: "Finance",
-    manager: "Fasika Getachew",
-  },
-  {
-    department_id: "D-3",
-    department_name: "HR",
-    manager: "Kbruysfa Desalegn",
-  },
-  {
-    department_id: "D-4",
-    department_name: "Procurement",
-    manager: "Yohannes Assefa",
-  },
-];
+import DepartmentForm from "./departmentForm";
 
 const Departments = () => {
   const [addDepartmentOpen, setAddDepartmentOpen] = useState(false);
-  const [departmentDetailsOpen, setDepartmentDetailsOpen] = useState(false);
+  const [editDepartmentOpen, setEditDepartmentOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedID, setSelectedID] = useState(null);
 
-  const [newDepartmentData, setNewDepartmentData] = useState({
-    department_name: "",
-    manager: "",
-  });
-  const [departmentDetailsData, setDepartmentDetailsData] = useState({
-    department_name: "",
-    manager: "",
-  });
+  const { data: departments, refetch: refetchDepartment } =
+    useGetDepartmentQuery();
+
+  const [deleteDepartment] = useDeleteDepartmentMutation();
 
   const handleAddDepartmentOpen = () =>
     setAddDepartmentOpen(!addDepartmentOpen);
-  const handleDepartmentDetailsOpen = () =>
-    setDepartmentDetailsOpen(!departmentDetailsOpen);
+  const handleEditDepartmentOpen = () =>
+    setEditDepartmentOpen(!editDepartmentOpen);
 
-  const handleNewDepartmentChange = (event) => {
-    const { name, value } = event.target;
-    setNewDepartmentData({ ...newDepartmentData, [name]: value });
+  const handleDeleteDepartment = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this department?"
+    );
+    if (confirmDelete) {
+      await deleteDepartment(id).unwrap();
+      refetchDepartment();
+    }
   };
 
-  const handleDepartmentDetailsChange = (event) => {
-    const { name, value } = event.target;
-    setDepartmentDetailsData({ ...departmentDetailsData, [name]: value });
+  const handleOnSave = () => {
+    refetchDepartment();
   };
-
-  const handleNewDepartmentSubmit = async (event) => {
-    event.preventDefault();
-    setIsLoading(true);
-    // Simulate a backend call to add the new department
-    setTimeout(() => {
-      console.log("New Department Added:", newDepartmentData);
-      setIsLoading(false);
-      handleAddDepartmentOpen();
-    }, 1000);
-  };
-
-  const handleIconClick = (departmentName, manager) => {
-    setDepartmentDetailsData({
-      department_name: departmentName,
-      manager: manager,
-    });
-    handleDepartmentDetailsOpen();
-  };
-
   return (
     <>
       <Card className="h-full w-fit flex-1">
@@ -117,7 +71,10 @@ const Departments = () => {
             <Button
               className="bg-primary1 flex items-center gap-3"
               size="sm"
-              onClick={handleAddDepartmentOpen}
+              onClick={() => {
+                setSelectedID(null);
+                handleAddDepartmentOpen();
+              }}
             >
               <PlusCircleIcon className="h-5 w-5" /> Add Department
             </Button>
@@ -127,103 +84,53 @@ const Departments = () => {
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
-              {TABLE_HEAD.map(({ head, icon }) => (
-                <th key={head} className="border-b border-gray-300 p-4">
-                  <div className="flex items-center gap-1">
-                    {icon}
-                    <Typography
-                      color="blue-gray"
-                      variant="small"
-                      className="!font-bold"
-                    >
-                      {head}
-                    </Typography>
-                  </div>
-                </th>
-              ))}
+              <th className="border-b border-gray-300 p-4">Department ID</th>
+              <th className="border-b border-gray-300 p-4">Department Name</th>
+              <th className="border-b border-gray-300 p-4">Manager</th>
+              <th className="border-b border-gray-300 p-4">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(
-              ({ department_id, department_name, manager }, index) => {
-                const isLast = index === TABLE_ROWS.length - 1;
-                const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
-
-                return (
-                  <tr key={department_id}>
-                    <td className={classes}>
-                      <div className="flex items-center gap-1">
-                        <Checkbox />
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-bold"
-                        >
-                          {department_id}
-                        </Typography>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        className="font-normal text-gray-600"
-                      >
-                        {department_name}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        className="font-normal text-gray-600"
-                      >
-                        {manager}
-                      </Typography>
-                    </td>
-                  </tr>
-                );
-              }
-            )}
+            {departments?.map((department) => (
+              <tr key={department.id}>
+                <td className="p-4">{department.id}</td>
+                <td className="p-4">{department.name}</td>
+                <td className="p-4">{department.manager || "-"}</td>
+                <td className="p-4">
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      className="bg-blue-500"
+                      onClick={() => {
+                        setSelectedID(department?.id);
+                        handleAddDepartmentOpen();
+                      }}
+                    >
+                      <PencilIcon className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="bg-red-500"
+                      onClick={() => handleDeleteDepartment(department.id)}
+                    >
+                      <TrashIcon className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </Card>
 
-      {/* Modal for Adding a Department */}
-      <Modal
-        open={addDepartmentOpen}
-        onClose={handleAddDepartmentOpen}
-        title="Add New Department"
-        confirmText={isLoading ? "Adding..." : "Add"}
-        onConfirm={handleNewDepartmentSubmit}
-        disabled={isLoading}
-        className="relative -z-20"
-      >
-        <div className="-z-10 flex flex-col gap-4">
-          <Input
-            label="Department Name"
-            name="department_name"
-            value={newDepartmentData.department_name}
-            onChange={handleNewDepartmentChange}
-            required
-          />
-          <Select
-            size="lg"
-            variant="outlined"
-            label="Manager"
-            name="manager"
-            value={newDepartmentData.manager}
-            onChange={(value) =>
-              setNewDepartmentData({ ...newDepartmentData, manager: value })
-            }
-            required
-            className="relative z-50"
-          >
-            <Option value="Seblewongel Hailu">Seblewongel Hailu</Option>
-            <Option value="Fasika Getachew">Fasika Getachew</Option>
-            <Option value="Kbruysfa Desalegn">Kbruysfa Desalegn</Option>
-            <Option value="Yohannes Assefa">Yohannes Assefa</Option>
-          </Select>
-        </div>
-      </Modal>
+      <DepartmentForm
+        addDepartmentOpen={addDepartmentOpen}
+        handleAddDepartmentOpen={handleAddDepartmentOpen}
+        id={selectedID}
+        onSave={handleOnSave}
+      />
+
+      {/* Edit Department Modal */}
     </>
   );
 };

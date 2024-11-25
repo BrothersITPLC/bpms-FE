@@ -5,6 +5,7 @@ import rootReducer from "./rootReducer";
 import { companyAPI } from "../features/Companies/companyApi";
 import { bidApi } from "../features/Bids/bidApi";
 import { roleApi } from "../features/RoleManagment/api";
+import { departmentApi } from "../features/Department/api/department";
 import {
   persistStore,
   persistReducer,
@@ -38,6 +39,7 @@ export const store = configureStore({
         companyAPI.middleware,
         bidApi.middleware,
         roleApi.middleware,
+        departmentApi.middleware,
       ],
       WorkspaceApiSlice.middleware
     ),
