@@ -35,8 +35,8 @@ export const departmentApi = createApi({
       }),
     }),
     getDepartment: builder.query({
-      query: () => ({
-        url: `/users/department/`,
+      query: ({ search }) => ({
+        url: `/users/department/?search=${search}`,
       }),
     }),
     getDetailDepartment: builder.query({

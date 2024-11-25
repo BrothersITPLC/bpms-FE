@@ -26,19 +26,17 @@ import DepartmentForm from "./departmentForm";
 
 const Departments = () => {
   const [addDepartmentOpen, setAddDepartmentOpen] = useState(false);
-  const [editDepartmentOpen, setEditDepartmentOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedID, setSelectedID] = useState(null);
 
   const { data: departments, refetch: refetchDepartment } =
-    useGetDepartmentQuery();
+    useGetDepartmentQuery({ search: search });
 
   const [deleteDepartment] = useDeleteDepartmentMutation();
 
   const handleAddDepartmentOpen = () =>
     setAddDepartmentOpen(!addDepartmentOpen);
-  const handleEditDepartmentOpen = () =>
-    setEditDepartmentOpen(!editDepartmentOpen);
 
   const handleDeleteDepartment = async (id) => {
     const confirmDelete = window.confirm(
@@ -64,6 +62,8 @@ const Departments = () => {
           <div className="flex justify-between">
             <div className="w-fit">
               <Input
+                value={search}
+                onChange={(e) => setSearch(e.target?.value)}
                 label="Search Department"
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
               />
