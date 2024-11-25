@@ -20,6 +20,7 @@ import {
 import Modal from "../../../components/Modal";
 import { useState } from "react";
 import { useRegisterEmployeeMutation } from "../apiSlice";
+import { useGetDepartmentQuery } from "../../Department/api/department";
 const TABS = [
   {
     label: "All",
@@ -125,6 +126,8 @@ const UserManagement = () => {
     if (selectedTab === "inactive") return row.active === false;
     return true;
   });
+
+  const { data: departments } = useGetDepartmentQuery({ search: "" });
 
   return (
     <>
@@ -315,18 +318,16 @@ const UserManagement = () => {
             value={formData.email}
             onChange={handleChange}
           />
-          <Input
-            label="Department"
+
+          <select
+            value={formData?.department}
             name="department"
-            value={formData.department}
             onChange={handleChange}
-          />
-          <Input
-            label="Job Position"
-            name="job_position"
-            value={formData.job_position}
-            onChange={handleChange}
-          />
+          >
+            {departments?.map((department) => (
+              <option key={department?.id}>{department?.name}</option>
+            ))}
+          </select>
         </div>
       </Modal>
     </>

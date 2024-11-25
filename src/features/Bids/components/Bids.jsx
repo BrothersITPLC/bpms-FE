@@ -21,6 +21,7 @@ import Card from "../../../components/Card";
 import Modal from "../../../components/Modal";
 import BidsCard from "./BidsCard";
 import DatePicker from "../../../components/DatePicker";
+import { Outlet } from "react-router-dom";
 import {
   useAddRFPMutation,
   useDeleteRFPMutation,
@@ -145,22 +146,27 @@ const Bids = () => {
           Create
         </Button>
       </div>
-
-      <div className="w-full flex gap-5 flex-wrap py-[2rem]">
-        {rfps?.map((rfp) => (
-          <div key={rfp.id} className=" gap-4 flex flex-wrap">
-            <BidsCard
-              id={rfp?.id}
-              companyName={rfp.client_name}
-              bidTitle={rfp.name}
-              rfqNo={rfp.rfp_number}
-              client={rfp.client_name}
-              created_by={rfp.created_by}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
+      <div className="flex flex-row gap-5">
+        <div className="flex gap-5  h-[80vh]">
+          <div className="md:w-fit flex flex-col  gap-5 max-h-[calc(100vh-10rem)] overflow-y-auto  py-[2rem]">
+            {rfps?.map((rfp) => (
+              <div key={rfp.id} className=" gap-4 flex flex-wrap">
+                <BidsCard
+                  id={rfp?.id}
+                  companyName={rfp.client_name}
+                  bidTitle={rfp.name}
+                  rfqNo={rfp.rfp_number}
+                  client={rfp.client_name}
+                  created_by={rfp.created_by}
+                  onDelete={handleDelete}
+                  onEdit={handleEdit}
+                />
+              </div>
+            ))}
           </div>
-        ))}
+          <div className="w-[0.25rem] rounded-full  h-full bg-primary1"></div>
+        </div>
+        <Outlet />
       </div>
 
       <Modal

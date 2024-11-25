@@ -2,7 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "../baseQuery";
 
 export const roleApi = createApi({
-  reducerPath: "company-api",
+  reducerPath: "role-api",
 
   baseQuery: baseQuery,
 

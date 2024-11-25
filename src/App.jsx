@@ -30,6 +30,9 @@ import Role from "./features/RoleManagment/components/role";
 import RoleLayout from "./features/RoleManagment/components/layout";
 import PermissionManagement from "./features/RoleManagment/components/permission";
 import RolePermissionMapping from "./features/RoleManagment/components/rolePermission";
+import BidDetail from "./features/Bids/components/BidDetail";
+import "react-toastify/dist/ReactToastify.css";
+
 const App = () => {
   return (
     <Router>
@@ -49,7 +52,12 @@ const App = () => {
             <Route path="kanban" element={<Kanban />} />
             <Route path="settings" element={<Profile />} />
             <Route path="bid-purchase-orders" element={<BidPurchaseOrders />} />
-            <Route path="bids" element={<Bids />} />
+            <Route path="bids" element={<Bids></Bids>}>
+              {/* <Route index element={<Role />} /> */}
+              <Route path=":id" element={<BidDetail />} />
+            </Route>
+            {/* <Route path="bids/" element={<Bids />} /> */}
+
             <Route path="analytics" element={<Analytics />} />
             <Route path="companies" element={<Companies />} />
             <Route path="role-management" element={<RoleLayout />}>
