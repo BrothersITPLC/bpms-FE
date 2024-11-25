@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, TrashIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   CardHeader,
@@ -9,7 +9,6 @@ import {
   Button,
   CardBody,
   Chip,
-  CardFooter,
   Tabs,
   TabsHeader,
   Tab,
@@ -18,26 +17,15 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
-import { useState } from "react";
 import { useRegisterEmployeeMutation } from "../apiSlice";
+
 const TABS = [
-  {
-    label: "All",
-    value: "all",
-  },
-  {
-    label: "Active",
-    value: "active",
-  },
-  {
-    label: "Inactive",
-    value: "inactive",
-  },
+  { label: "All", value: "all" },
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
 ];
 
 const TABLE_HEAD = ["Member", "Position", "Status", "Employed", ""];
-const TABLE_HEAD1 = ["", "Department", "", "", ""];
-
 const TABLE_ROWS = [
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
@@ -75,7 +63,6 @@ const TABLE_ROWS = [
     active: false,
     date: "23/04/18",
   },
-
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
     name: "Kbruysfa Desalegn",
@@ -96,30 +83,50 @@ const UserManagement = () => {
     email: "",
     job_position: "",
   });
+  const [editingUser, setEditingUser] = useState(null); // New state for the user being edited
 
-  const handleOpenModal = () => {
+  const handleDeleteUser = (name) => {
+    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+      console.log("Deleted user:", name);
+      // Here, you can add your API call to delete the user.
+    }
+  };
+
+  const handleOpenModal = (user = null) => {
+    if (user) {
+      setFormData({
+        department: user.org,
+        email: user.email,
+        job_position: user.job,
+      });
+      setEditingUser(user); // Set the user to be edited
+    }
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
+    setEditingUser(null); // Reset editing user when closing modal
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleConfirm = async () => {
-    try {
-      const result = await registerEmployee(formData).unwrap();
-      handleCloseModal();
-    } catch (error) {
-      console.log("error:", error);
+    if (editingUser) {
+      // Update logic (you may call an API to update the user)
+      console.log("Updating user:", formData);
+    } else {
+      try {
+        await registerEmployee(formData).unwrap();
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
+    handleCloseModal();
   };
+
   const filteredRows = TABLE_ROWS.filter((row) => {
     if (selectedTab === "active") return row.active === true;
     if (selectedTab === "inactive") return row.active === false;
@@ -134,7 +141,7 @@ const UserManagement = () => {
             <div className="mb-8 flex items-center justify-between gap-8">
               <div>
                 <Typography variant="h5" color="blue-gray">
-                  Members list
+                  Members List
                 </Typography>
                 <Typography color="gray" className="mt-1 font-normal">
                   See information about all members
@@ -142,23 +149,19 @@ const UserManagement = () => {
               </div>
               <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
                 <Button variant="outlined" size="sm">
-                  view all
+                  View All
                 </Button>
                 <Button
                   className="flex bg-primary1 items-center gap-3"
                   size="sm"
-                  onClick={handleOpenModal}
+                  onClick={() => handleOpenModal()} // Open modal for adding new user
                 >
-                  <UserPlusIcon strokeWidth={2} className=" h-4 w-4" /> Add user
+                  <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add User
                 </Button>
               </div>
             </div>
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-              <Tabs
-                value={selectedTab}
-                className="w-full md:w-max"
-                onChange={setSelectedTab}
-              >
+              <Tabs value={selectedTab} className="w-full md:w-max">
                 <TabsHeader>
                   {TABS.map(({ label, value }) => (
                     <Tab
@@ -202,7 +205,7 @@ const UserManagement = () => {
               <tbody>
                 {filteredRows.map(
                   ({ img, name, email, job, org, active, date }, index) => {
-                    const isLast = index === TABLE_ROWS.length - 1;
+                    const isLast = index === filteredRows.length - 1;
                     const classes = isLast
                       ? "p-4"
                       : "p-4 border-b border-blue-gray-50";
@@ -268,11 +271,37 @@ const UserManagement = () => {
                           </Typography>
                         </td>
                         <td className={classes}>
-                          <Tooltip content="Edit User">
-                            <IconButton variant="text">
-                              <PencilIcon className="h-4 w-4" />
-                            </IconButton>
-                          </Tooltip>
+                          <div className="flex justify-end gap-2">
+                            <Tooltip content="Edit">
+                              <div className="flex flex-row">
+                                <IconButton
+                                  variant="text"
+                                  onClick={() =>
+                                    handleOpenModal({
+                                      name,
+                                      email,
+                                      job,
+                                      org,
+                                      active,
+                                      date,
+                                    })
+                                  }
+                                >
+                                  <PencilIcon className="h-4 w-4" />
+                                </IconButton>
+                              </div>
+                            </Tooltip>
+                            <Tooltip content="Delete">
+                              <div className="flex flex-row">
+                                <IconButton
+                                  variant="text"
+                                  onClick={() => handleDeleteUser(name)} // Add the delete logic here
+                                >
+                                  <TrashIcon className="h-4 w-4" />
+                                </IconButton>
+                              </div>
+                            </Tooltip>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -281,53 +310,40 @@ const UserManagement = () => {
               </tbody>
             </table>
           </CardBody>
-          <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-            <Typography
-              variant="small"
-              color="blue-gray"
-              className="font-normal"
-            >
-              Page 1 of 10
-            </Typography>
-            <div className="flex gap-2">
-              <Button variant="outlined" size="sm">
-                Previous
-              </Button>
-              <Button variant="outlined" size="sm">
-                Next
-              </Button>
-            </div>
-          </CardFooter>
         </Card>
       </div>
+
+      {/* Modal for Adding/Editing User */}
       <Modal
         open={modalOpen}
         onClose={handleCloseModal}
-        title="Add Member"
-        confirmText={isLoading ? "Adding..." : "Add"}
+        title={editingUser ? "Edit User" : "Add User"}
+        confirmText={isLoading ? "Loading..." : editingUser ? "Update" : "Add"}
         onConfirm={handleConfirm}
-        disabled={isLoading}
+        onCancel={handleCloseModal}
+        confirmDisabled={isLoading}
       >
-        <div className="flex flex-col gap-4">
+        <form className="flex flex-col gap-6 w-full" onChange={handleChange}>
           <Input
-            label="Email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
+            label="Job Position"
+            name="job_position"
+            required
+            defaultValue={formData.job_position}
           />
           <Input
             label="Department"
             name="department"
-            value={formData.department}
-            onChange={handleChange}
+            required
+            defaultValue={formData.department}
           />
           <Input
-            label="Job Position"
-            name="job_position"
-            value={formData.job_position}
-            onChange={handleChange}
+            type="email"
+            label="Email"
+            name="email"
+            required
+            defaultValue={formData.email}
           />
-        </div>
+        </form>
       </Modal>
     </>
   );
