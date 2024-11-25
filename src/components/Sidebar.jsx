@@ -87,6 +87,11 @@ const Sidebar = () => {
                     </div>
                   </ListItem>
                 </Link>
+                <Link to="/monthly-plan">
+                  <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
+                    <div className="flex gap-8">Monthly Plan</div>
+                  </ListItem>
+                </Link>
               </List>
             </AccordionBody>
           </Accordion>
@@ -191,6 +196,16 @@ const Sidebar = () => {
               User Management
             </ListItem>
           </Link>
+
+          <Link to="/departments">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Departments{" "}
+            </ListItem>
+          </Link>
+
           <Link to="/resource-requests">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
@@ -245,6 +260,14 @@ const Sidebar = () => {
             </ListItemPrefix>
             Customers
           </ListItem>
+          <Link to="/monthly-plan">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Work Plan
+            </ListItem>
+          </Link>
         </List>
         <hr className="my-2 border-gray-200" />
         {/* <Link to="/store">

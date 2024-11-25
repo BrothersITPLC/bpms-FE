@@ -24,6 +24,8 @@ import ResourceRequests from "./features/Resource/components/ResourceRequests";
 import UserResourceRequests from "./features/Resource/components/UserResourceRequests";
 import Store from "./features/InventoryManagement/components/Store";
 import ProductsTable from "./features/InventoryManagement/components/ProductsTable";
+import MonthlyPlan from "./features/WorkReport/components/MonthlyPlan";
+import Departments from "./features/Department/components/Departments";
 import Role from "./features/RoleManagment/components/role";
 import RoleLayout from "./features/RoleManagment/components/layout";
 import PermissionManagement from "./features/RoleManagment/components/permission";
@@ -69,6 +71,8 @@ const App = () => {
               path="user-resource-requests"
               element={<UserResourceRequests />}
             />
+            <Route path="monthly-plan" element={<MonthlyPlan />} />
+            <Route path="departments" element={<Departments />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>
