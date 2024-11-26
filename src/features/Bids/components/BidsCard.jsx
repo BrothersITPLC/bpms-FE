@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Card, Button, IconButton } from "@material-tailwind/react";
 import { FaEllipsisH, FaEdit, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const BidsCard = ({
   id,
@@ -13,15 +14,22 @@ const BidsCard = ({
   buttonLabel = "View Details",
   onEdit,
   onDelete,
+  is_active,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
+  const navigate = useNavigate();
 
   return (
     <Card
       shadow={false}
-      className="relative p-6 w-80 bg-white border rounded-lg hover:border-blue-900 transition-shadow duration-300 ease-in-out"
+      onClick={() => {
+        navigate(`/bids/${id}`);
+      }}
+      className={`relative p-6 w-80 bg-white border rounded-lg hover:border-blue-900 transition-shadow duration-300 ease-in-out${
+        is_active ? " border-primary1" : ""
+      }`}
     >
       {/* Three-dot menu for Edit and Delete */}
       <div className="absolute top-3 right-3">
