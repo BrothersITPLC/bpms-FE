@@ -6,6 +6,7 @@ import { companyAPI } from "../features/Companies/companyApi";
 import { bidApi } from "../features/Bids/bidApi";
 import { roleApi } from "../features/RoleManagment/api";
 import { departmentApi } from "../features/Department/api/department";
+import { userAPI } from "../features/UserManagement/userAPI";
 import {
   persistStore,
   persistReducer,
@@ -40,6 +41,7 @@ export const store = configureStore({
         bidApi.middleware,
         roleApi.middleware,
         departmentApi.middleware,
+        userAPI.middleware,
       ],
       WorkspaceApiSlice.middleware
     ),

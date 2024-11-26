@@ -148,7 +148,7 @@ const Bids = () => {
       </div>
       <div className="flex flex-row gap-5">
         <div className="flex gap-5  h-[80vh]">
-          <div className="md:w-fit flex flex-col  gap-5 max-h-[calc(100vh-10rem)] overflow-y-auto  py-[2rem]">
+          <div className="md:w-fit flex flex-col  gap-5 max-h-[calc(100vh-10rem)] overflow-y-auto px-3  py-[2rem]">
             {rfps?.map((rfp) => (
               <div key={rfp.id} className=" gap-4 flex flex-wrap">
                 <BidsCard
@@ -164,7 +164,7 @@ const Bids = () => {
               </div>
             ))}
           </div>
-          <div className="w-[0.25rem] rounded-full  h-full bg-primary1"></div>
+          <div className="w-[0.15rem] rounded-full  h-full bg-primary1"></div>
         </div>
         <Outlet />
       </div>

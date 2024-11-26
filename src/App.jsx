@@ -92,3 +92,17 @@ const App = () => {
 };
 
 export default App;
+
+<style>{`
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f0f0f0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #10b981; /* Tailwind green-500 */
+      border-radius: 10px;
+      border: 2px solid #f0f0f0;
+    }
+  `}</style>;
