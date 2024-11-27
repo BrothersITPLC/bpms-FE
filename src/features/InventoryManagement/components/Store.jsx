@@ -85,8 +85,7 @@ const Store = () => {
         size="xxl"
       >
         <div className="space-y-4">
-          <div className="flex justify-between">
-            <Typography variant="h5">{selectedStore?.name} Products</Typography>
+          <div className="flex justify-end">
             <Button
               variant="gradient"
               color="green"
