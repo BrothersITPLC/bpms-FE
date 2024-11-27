@@ -40,6 +40,7 @@ import { useEffect } from "react";
 import CusstomSpinner from "../../../components/Spinner";
 import { useParams } from "react-router-dom";
 import LotCard from "./LotCard";
+import { formatDateForDatetimeLocal } from "../../../../helpers/formateDateLocal";
 
 const Lott = () => {
   const [activeTab, setActiveTab] = useState("floated_bids");
@@ -242,24 +243,24 @@ const Lott = () => {
             <Input
               label="validity_duration"
               name="validity_duration"
-              type="date"
-              value={formData.validity_duration}
+              type="datetime-local"
+              value={formatDateForDatetimeLocal(formData.validity_duration)}
               onChange={handleChange}
               required
             />
             <Input
               label="submission_date"
               name="submission_date"
-              type="date"
-              value={formData.submission_date}
+              type="datetime-local"
+              value={formatDateForDatetimeLocal(formData.submission_date)}
               onChange={handleChange}
               required
             />
             <Input
               label="opening_date"
               name="opening_date"
-              type="date"
-              value={formData.opening_date}
+              type="datetime-local"
+              value={formatDateForDatetimeLocal(formData.opening_date)}
               onChange={handleChange}
               required
             />
