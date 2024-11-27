@@ -57,8 +57,8 @@ export const bidApi = createApi({
       }),
     }),
     deleteLott: builder.mutation({
-      query: (data) => ({
-        url: "lot/1/",
+      query: (id) => ({
+        url: `/lot/${id}/`,
         method: "DELETE",
       }),
     }),

@@ -61,7 +61,7 @@ const Lott = () => {
     }
   );
 
-  const { data: rfps, refetch: refetchRFP } = useGetLottQuery(params?.id, {
+  const { data: lots, refetch: refetchRFP } = useGetLottQuery(params?.id, {
     skip: params?.id == null,
   });
   const [formData, setFormData] = useState({
@@ -106,7 +106,7 @@ const Lott = () => {
       });
     }
   }, [selectedID, detailLot]);
-  // const [deleteLott] = useDeleteLottMutation();
+  const [deleteLott] = useDeleteLottMutation();
   // deleteLott();
 
   const closeModal = () => {
@@ -134,7 +134,7 @@ const Lott = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this RFP?")) {
       try {
-        await deleteRFP(id).unwrap();
+        await deleteLott(id).unwrap();
         toast.success("Deleted Successfully");
         refetchRFP();
       } catch (error) {
@@ -172,7 +172,7 @@ const Lott = () => {
       </div>
 
       <div className=" grid  grid-cols-2 w-full gap-5 max-h-[calc(100vh-20rem)] overflow-y-auto  flex-wrap py-[2rem]">
-        {rfps?.map((rfp) => (
+        {lots?.map((rfp) => (
           <div key={rfp.id} className=" gap-4 flex flex-wrap">
             <LotCard
               id={rfp?.id}
