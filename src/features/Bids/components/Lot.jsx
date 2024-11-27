@@ -172,7 +172,7 @@ const Lott = () => {
         </div>
       </div>
 
-      <div className=" grid  grid-cols-2 w-full gap-5 max-h-[calc(100vh-20rem)] overflow-y-auto  flex-wrap py-[2rem]">
+      <div className=" grid  grid-cols-2 w-full gap-5 max-h-[calc(100vh-20rem)] pb-40 overflow-y-auto  flex-wrap py-[2rem]">
         {lots?.map((rfp) => (
           <div key={rfp.id} className=" gap-4 flex flex-wrap">
             <LotCard
