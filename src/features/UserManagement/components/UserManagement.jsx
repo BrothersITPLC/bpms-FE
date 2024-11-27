@@ -17,8 +17,14 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
-import { useRegisterEmployeeMutation } from "../apiSlice";
-
+import {
+  useDeleteEmployeeMutation,
+  useGetEmployeeQuery,
+  useRegisterEmployeeMutation,
+  useUpdateEmployeeMutation,
+} from "../userAPI";
+import { useGetDepartmentQuery } from "../../Department/api/department";
+import { toast } from "react-toastify";
 const TABS = [
   { label: "All", value: "all" },
   { label: "Active", value: "active" },
@@ -81,23 +87,35 @@ const UserManagement = () => {
   const [formData, setFormData] = useState({
     department: "",
     email: "",
-    job_position: "",
+    id: "",
   });
   const [editingUser, setEditingUser] = useState(null); // New state for the user being edited
-
-  const handleDeleteUser = (name) => {
+  const [selectedID, setSelectedID] = useState();
+  const handleDeleteUser = async (id) => {
     if (window.confirm(`Are you sure you want to delete ${name}?`)) {
       console.log("Deleted user:", name);
+      try {
+        await deleteEmployee({ id }).unwrap();
+        refetchEmployee();
+        toast.success("deleted successfully");
+      } catch (error) {
+        toast.error("error please try again");
+      }
       // Here, you can add your API call to delete the user.
     }
   };
 
+  const [deleteEmployee] = useDeleteEmployeeMutation();
+
+  const { data: employees, refetch: refetchEmployee } = useGetEmployeeQuery();
+  const [updateEmployee] = useUpdateEmployeeMutation();
+
   const handleOpenModal = (user = null) => {
     if (user) {
       setFormData({
-        department: user.org,
+        department: user.department || "",
         email: user.email,
-        job_position: user.job,
+        id: user.id,
       });
       setEditingUser(user); // Set the user to be edited
     }
@@ -114,17 +132,25 @@ const UserManagement = () => {
   };
 
   const handleConfirm = async () => {
-    if (editingUser) {
-      // Update logic (you may call an API to update the user)
-      console.log("Updating user:", formData);
-    } else {
-      try {
+    try {
+      if (editingUser) {
+        await updateEmployee({
+          id: formData?.id,
+          data: {
+            email: formData?.email,
+            department: formData?.department,
+          },
+        });
+        // Update logic (you may call an API to update the user)
+        // console.log("Updating user:", formData);
+      } else {
         await registerEmployee(formData).unwrap();
-      } catch (error) {
-        console.error("Error:", error);
       }
+      handleCloseModal();
+      refetchEmployee();
+    } catch (error) {
+      console.error("Error:", error);
     }
-    handleCloseModal();
   };
 
   const filteredRows = TABLE_ROWS.filter((row) => {
@@ -132,6 +158,8 @@ const UserManagement = () => {
     if (selectedTab === "inactive") return row.active === false;
     return true;
   });
+
+  const { data: departments } = useGetDepartmentQuery({ search: "" });
 
   return (
     <>
@@ -203,110 +231,108 @@ const UserManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredRows.map(
-                  ({ img, name, email, job, org, active, date }, index) => {
-                    const isLast = index === filteredRows.length - 1;
-                    const classes = isLast
-                      ? "p-4"
-                      : "p-4 border-b border-blue-gray-50";
+                {employees?.map((employee, index) => {
+                  const isLast = index === filteredRows.length - 1;
+                  const classes = isLast
+                    ? "p-4"
+                    : "p-4 border-b border-blue-gray-50";
 
-                    return (
-                      <tr key={name}>
-                        <td className={classes}>
-                          <div className="flex items-center gap-3">
-                            <Avatar src={img} alt={name} size="sm" />
-                            <div className="flex flex-col">
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal"
-                              >
-                                {name}
-                              </Typography>
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal opacity-70"
-                              >
-                                {email}
-                              </Typography>
-                            </div>
-                          </div>
-                        </td>
-                        <td className={classes}>
+                  return (
+                    <tr key={employee?.id}>
+                      <td className={classes}>
+                        <div className="flex items-center gap-3">
+                          {/* <Avatar src={img} alt={name} size="sm" /> */}
                           <div className="flex flex-col">
-                            <Typography
+                            {/* <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {job}
-                            </Typography>
+                              {name}
+                            </Typography> */}
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-normal opacity-70"
                             >
-                              {org}
+                              {employee?.email}
                             </Typography>
                           </div>
-                        </td>
-                        <td className={classes}>
-                          <div className="w-max">
-                            <Chip
-                              variant="ghost"
-                              size="sm"
-                              value={active ? "active" : "inactive"}
-                              color={active ? "green" : "blue-gray"}
-                            />
-                          </div>
-                        </td>
-                        <td className={classes}>
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <div className="flex flex-col">
                           <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {date}
+                            {employee?.department_name}
                           </Typography>
-                        </td>
-                        <td className={classes}>
-                          <div className="flex justify-end gap-2">
-                            <Tooltip content="Edit">
-                              <div className="flex flex-row">
-                                <IconButton
-                                  variant="text"
-                                  onClick={() =>
-                                    handleOpenModal({
-                                      name,
-                                      email,
-                                      job,
-                                      org,
-                                      active,
-                                      date,
-                                    })
-                                  }
-                                >
-                                  <PencilIcon className="h-4 w-4" />
-                                </IconButton>
-                              </div>
-                            </Tooltip>
-                            <Tooltip content="Delete">
-                              <div className="flex flex-row">
-                                <IconButton
-                                  variant="text"
-                                  onClick={() => handleDeleteUser(name)} // Add the delete logic here
-                                >
-                                  <TrashIcon className="h-4 w-4" />
-                                </IconButton>
-                              </div>
-                            </Tooltip>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
+                          {/* <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal opacity-70"
+                          >
+                            {org}
+                          </Typography> */}
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <div className="w-max">
+                          <Chip
+                            variant="ghost"
+                            size="sm"
+                            // value={active ? "active" : "inactive"}
+                            // color={active ? "green" : "blue-gray"}
+                          />
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {/* {date} */}
+                        </Typography>
+                      </td>
+                      <td className={classes}>
+                        <div className="flex justify-end gap-2">
+                          <Tooltip content="Edit">
+                            <div className="flex flex-row">
+                              <IconButton
+                                variant="text"
+                                onClick={() =>
+                                  handleOpenModal({
+                                    email: employee?.email,
+                                    department: employee?.department,
+                                    id: employee?.id,
+                                    // org,
+                                    // active,
+                                    // date,
+                                  })
+                                }
+                              >
+                                <PencilIcon className="h-4 w-4" />
+                              </IconButton>
+                            </div>
+                          </Tooltip>
+                          <Tooltip content="Delete">
+                            <div className="flex flex-row">
+                              <IconButton
+                                variant="text"
+                                onClick={() => handleDeleteUser(employee?.id)} // Add the delete logic here
+                              >
+                                <TrashIcon className="h-4 w-4" />
+                              </IconButton>
+                            </div>
+                          </Tooltip>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </CardBody>
@@ -324,18 +350,23 @@ const UserManagement = () => {
         confirmDisabled={isLoading}
       >
         <form className="flex flex-col gap-6 w-full" onChange={handleChange}>
-          <Input
-            label="Job Position"
-            name="job_position"
-            required
-            defaultValue={formData.job_position}
-          />
-          <Input
-            label="Department"
+          <select
+            value={formData?.department}
+            className="h-[3rem] rounded border-primary1 border"
             name="department"
-            required
-            defaultValue={formData.department}
-          />
+            onChange={handleChange}
+          >
+            {" "}
+            <option value="" disabled>
+              Select Department
+            </option>
+            {departments?.map((department) => (
+              <option key={department?.id} value={department?.id}>
+                {department?.name}
+              </option>
+            ))}
+          </select>
+
           <Input
             type="email"
             label="Email"

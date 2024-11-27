@@ -37,8 +37,8 @@ const Sidebar = () => {
     "select-none hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 hover:text-gray-900 focus:text-gray-900 active:text-gray-900 data-[selected=true]:text-gray-900";
 
   return (
-    <div className="w-fit grid grid-cols-1 h-screen">
-      <Card className="h-full w-fit mx-auto p-6 shadow-md overflow-auto sidebar">
+    <div className="w-[18rem] sticky grid grid-cols-1 h-screen">
+      <Card className="h-full fixed w-fit mx-auto p-6 shadow-md overflow-auto sidebar">
         <div className="mb-2 flex items-center gap-4 p-4">
           <img src={Logo} alt="brand" className="w-20 h-auto" />
           <Typography color="blue-gray" className="uppercase text-xl font-bold">
@@ -228,6 +228,14 @@ const Sidebar = () => {
                 <UserGroupIcon className="text-primary1 h-5 w-5" />
               </ListItemPrefix>
               Companies{" "}
+            </ListItem>
+          </Link>
+          <Link to="/role-management">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Role Management{" "}
             </ListItem>
           </Link>
           <Link to="/Bids">
