@@ -172,7 +172,9 @@ const Bids = () => {
           </div>
           <div className="w-[0.15rem] rounded-full  h-full bg-primary1"></div>
         </div>
-        <Outlet />
+        <div className="flex w-full">
+          <Outlet />
+        </div>
       </div>
 
       <Modal

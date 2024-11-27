@@ -32,6 +32,7 @@ import PermissionManagement from "./features/RoleManagment/components/permission
 import RolePermissionMapping from "./features/RoleManagment/components/rolePermission";
 import BidDetail from "./features/Bids/components/BidDetail";
 import "react-toastify/dist/ReactToastify.css";
+import BidAnalytics from "./features/Bids/components/BidAnalytics";
 
 const App = () => {
   return (
@@ -53,6 +54,7 @@ const App = () => {
             <Route path="settings" element={<Profile />} />
             <Route path="bid-purchase-orders" element={<BidPurchaseOrders />} />
             <Route path="bids" element={<Bids></Bids>}>
+              <Route index element={<BidAnalytics></BidAnalytics>}></Route>
               {/* <Route index element={<Role />} /> */}
               <Route path=":id" element={<BidDetail />} />
             </Route>
