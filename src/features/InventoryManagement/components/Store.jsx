@@ -69,6 +69,12 @@ const Store = () => {
     closeAddStoreModal(); // Close the modal after adding the store
   };
 
+  // Function to handle "Add Product" button click
+  const handleAddProduct = () => {
+    console.log("Add Product clicked for store:", selectedStore?.name);
+    // Implement your add product functionality here
+  };
+
   return (
     <div className="flex flex-wrap space-y-6">
       <div className="flex flex-wrap gap-6">
@@ -141,7 +147,7 @@ const Store = () => {
               placeholder="Enter store location"
             />
           </div>
-          <div>
+          {/* <div>
             <label className="block text-sm">Image URL (Optional)</label>
             <input
               type="text"
@@ -151,7 +157,7 @@ const Store = () => {
               className="w-full p-2 border border-gray-300 rounded"
               placeholder="Enter image URL"
             />
-          </div>
+          </div> */}
         </div>
       </Modal>
 
@@ -163,6 +169,7 @@ const Store = () => {
         confirmText="Close"
         onConfirm={() => setOpenModal(false)}
         size="xxl"
+        onAddProduct={handleAddProduct} // Pass the handleAddProduct function
       >
         <div className="space-y-4">
           {/* Render Products Table inside the modal */}

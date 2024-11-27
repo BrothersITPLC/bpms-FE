@@ -7,8 +7,9 @@ const TABLE_HEAD = [
   "Product ID",
   "Product Type",
   "Product Model",
-  "Actions",
   "Quantity",
+  "Price", // New price column
+  "Actions", // Actions column moved to the end
 ];
 
 const TABLE_ROWS = [
@@ -17,30 +18,35 @@ const TABLE_ROWS = [
     type: "Router",
     model: "Router X",
     quantity: 10,
+    price: 150,
   },
   {
     id: 2,
     type: "Switch",
     model: "Switch Y",
     quantity: 5,
+    price: 300,
   },
   {
     id: 3,
     type: "Patch Cord",
     model: "Patch Cord Z",
     quantity: 50,
+    price: 20,
   },
   {
     id: 4,
     type: "Firewall",
     model: "Firewall A",
     quantity: 20,
+    price: 500,
   },
   {
     id: 5,
     type: "Server",
     model: "Server B",
     quantity: 2,
+    price: 2000,
   },
 ];
 
@@ -112,7 +118,7 @@ const Products = ({ store }) => {
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(({ id, type, model, quantity }) => (
+            {TABLE_ROWS.map(({ id, type, model, quantity, price }) => (
               <tr key={id} className="even:bg-blue-gray-50/50">
                 <td className="p-4">
                   <Typography
@@ -142,14 +148,38 @@ const Products = ({ store }) => {
                   </Typography>
                 </td>
                 <td className="p-4">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal"
+                  >
+                    {quantity}
+                  </Typography>
+                </td>
+                <td className="p-4">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal"
+                  >
+                    ${price.toFixed(2)}
+                  </Typography>
+                </td>
+                <td className="p-4">
                   <div className="flex gap-2">
                     <Button
                       variant="gradient"
                       color="green"
                       size="sm"
                       onClick={() =>
-                        openStockInModalHandler({ id, type, model, quantity })
-                      } // Open stock-in modal
+                        openStockInModalHandler({
+                          id,
+                          type,
+                          model,
+                          quantity,
+                          price,
+                        })
+                      }
                     >
                       Stock-In
                     </Button>
@@ -158,21 +188,18 @@ const Products = ({ store }) => {
                       color="purple"
                       size="sm"
                       onClick={() =>
-                        openStockOutModalHandler({ id, type, model, quantity })
-                      } // Open stock-out modal
+                        openStockOutModalHandler({
+                          id,
+                          type,
+                          model,
+                          quantity,
+                          price,
+                        })
+                      }
                     >
                       Stock-Out
                     </Button>
                   </div>
-                </td>
-                <td className="p-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {quantity}
-                  </Typography>
                 </td>
               </tr>
             ))}
@@ -185,7 +212,7 @@ const Products = ({ store }) => {
         open={openStockOutModal}
         onClose={closeStockOutModalHandler}
         onConfirm={handleStockOut}
-        product={selectedProduct} // Pass selected product to the modal
+        product={selectedProduct}
       />
 
       {/* StockInModal */}
@@ -193,7 +220,7 @@ const Products = ({ store }) => {
         open={openStockInModal}
         onClose={closeStockInModalHandler}
         onConfirm={handleStockIn}
-        product={selectedProduct} // Pass selected product to the modal
+        product={selectedProduct}
       />
     </div>
   );

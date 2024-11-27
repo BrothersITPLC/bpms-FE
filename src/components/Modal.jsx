@@ -17,10 +17,25 @@ const Modal = ({
   size = "md", // Default to 'md' size
   showDelete,
   onConfirmDelete,
+  onAddProduct, // New prop for Add Product button click handler
 }) => {
   return (
     <Dialog open={open} handler={onClose} size={size}>
-      <DialogHeader>{title}</DialogHeader>
+      <DialogHeader>
+        <div className="flex justify-between items-center w-full">
+          <h2 className="text-lg font-semibold">{title}</h2>
+          {onAddProduct && (
+            <Button
+              variant="gradient"
+              color="green"
+              onClick={onAddProduct}
+              className="ml-4"
+            >
+              Add Product
+            </Button>
+          )}
+        </div>
+      </DialogHeader>
       <DialogBody className="overflow-y-auto max-h-[60vh]">
         {children}
       </DialogBody>
@@ -35,8 +50,7 @@ const Modal = ({
             <span>Delete</span>
           </Button>
         )}
-        <div className=" justify-self-end">
-          {" "}
+        <div className="justify-self-end">
           <Button
             variant="text"
             color="black"
