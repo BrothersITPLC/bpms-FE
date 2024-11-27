@@ -133,8 +133,8 @@ const Bids = () => {
   return (
     <div className="w-1/2 flex-1 m-4 px-9 py-[2rem]">
       <div className="flex flex-row gap-5">
-        <div className="flex gap-5  h-[80vh]">
-          <div className="flex flex-col gap-2">
+        <div className="flex gap-5 ">
+          <div className="flex flex-col gap-2  h-[80vh]">
             <div className="flex flex-row justify-between border-b border-primary1/10 pb-3 w-full items-center">
               <div>
                 <Typography variant="h5" color="blue-gray">
