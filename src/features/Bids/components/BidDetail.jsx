@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { FaBuilding, FaLink, FaBox, FaUser, FaFileAlt } from "react-icons/fa";
 import { useGetDetailDepartmentQuery } from "../../Department/api/department";
 import { useGetDetailRFPQuery } from "../bidApi";
-
+import Lott from "./Lot";
 const BidDetail = () => {
   const location = useLocation();
   const url = useParams();
@@ -12,19 +12,14 @@ const BidDetail = () => {
   });
 
   return (
-    <div className="w-full">
-      <div className="w-full flex justify-end">
-        {" "}
-        <button className="px-3 py-2 rounded bg-primary1 text-white shadow ">
-          Create Lot
-        </button>{" "}
-      </div>
-      <div className="w-full px-4 py-4 h-[10rem] ">
+    <div className="w-full mt-8">
+      <div className="w-full flex justify-end"></div>
+      <div className="w-full  py-4   ">
         <div className="w-full  mx-auto bg-white  rounded-lg border-primary1/10 border overflow-hidden">
           <div className="px-6 py-4 bg-gray-100">
             <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
               <FaFileAlt className="h-6 w-6 text-blue-600" />
-              Request for Quotation (RFQ) {url?.id}
+              Request for Quotation (RFQ)
             </h2>
           </div>
           <div className="px-6 py-4 ">
@@ -83,6 +78,7 @@ const BidDetail = () => {
           </div>
         </div>
       </div>
+      <Lott></Lott>
     </div>
   );
 };

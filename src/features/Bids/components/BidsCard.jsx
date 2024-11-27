@@ -1,7 +1,7 @@
 // BidsCard.js
 import React, { useState } from "react";
 import { Card, Button, IconButton } from "@material-tailwind/react";
-import { FaEllipsisH, FaEdit, FaTrash } from "react-icons/fa";
+import { FaEllipsisH, FaEdit, FaTrash, FaGlobe } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const BidsCard = ({
@@ -10,8 +10,8 @@ const BidsCard = ({
   bidTitle,
   rfqNo,
   created_by,
-  client,
-  buttonLabel = "View Details",
+  url,
+
   onEdit,
   onDelete,
   is_active,
@@ -79,14 +79,14 @@ const BidsCard = ({
         <span className="font-medium text-gray-700">Created by:</span>{" "}
         {created_by}
       </p>
-      <p className="text-gray-600 mb-4">
-        <span className="font-medium text-gray-700">Client:</span> {client}
+      <p className="flex gap-5 mb-4">
+        <FaGlobe className="font-medium text-primary1"></FaGlobe>{" "}
+        <a href={url} className="text-sm text-primary1" target="_blank">
+          Visit
+        </a>
       </p>
 
       {/* View Details Button */}
-      <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md py-2 mt-4 transition-colors duration-200 ease-in-out">
-        {buttonLabel}
-      </Button>
     </Card>
   );
 };

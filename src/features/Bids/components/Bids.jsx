@@ -149,7 +149,7 @@ const Bids = () => {
                 onClick={() => openModal("Create RFP")}
                 className="bg-primary1 w-[10rem] h-[3rem]"
               >
-                Create
+                Create RFP
               </Button>
             </div>
             <div className="md:w-full flex flex-col   gap-5 max-h-[calc(100vh-10rem)] overflow-y-auto px-3  py-[2rem]">
@@ -161,7 +161,7 @@ const Bids = () => {
                     companyName={rfp.client_name}
                     bidTitle={rfp.name}
                     rfqNo={rfp.rfp_number}
-                    client={rfp.client_name}
+                    url={rfp.url}
                     created_by={rfp.created_by}
                     onDelete={handleDelete}
                     onEdit={handleEdit}
