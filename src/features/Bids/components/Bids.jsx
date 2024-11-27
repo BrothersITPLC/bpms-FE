@@ -202,8 +202,8 @@ const Bids = () => {
               required
             >
               {clients?.map((client) => (
-                <Option key={client.id} value={client.id}>
-                  {client.name}
+                <Option key={client?.id} value={client?.id}>
+                  {client?.name}
                 </Option>
               ))}
             </Select>
