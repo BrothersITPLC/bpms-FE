@@ -3,14 +3,17 @@ import {
   FaMoneyBillAlt,
   FaBox,
   FaUser,
-  FaFileAlt,
+  FaDollarSign,
   FaCalendar,
   FaEllipsisH,
   FaEdit,
   FaTrash,
 } from "react-icons/fa";
+import { FaCalendarAlt, FaDoorOpen, FaFileUpload } from "react-icons/fa";
+
 import { IconButton } from "@material-tailwind/react";
 import { formatDateForDatetimeLocal } from "../../../../helpers/formateDateLocal";
+import { formatFriendlyDate } from "../../../../helpers/formatingDateUserFreindly";
 
 export default function LotCard({
   id,
@@ -75,12 +78,12 @@ export default function LotCard({
           <div className="flex flex-wrap justify-between gap-8">
             <InfoBlock icon={<FaBox />} label="Lot No" value={lot_number} />
             <InfoBlock
-              icon={<FaMoneyBillAlt />}
+              icon={<FaDollarSign />}
               label="Price"
               value={`${price} Birr`}
             />
             <InfoBlock
-              icon={<FaMoneyBillAlt />}
+              icon={<FaDollarSign />}
               label="Security Price"
               value={`${security_price} Birr`}
             />
@@ -93,22 +96,22 @@ export default function LotCard({
               value={created_by}
             />
             <InfoBlock
-              icon={<FaCalendar />}
+              icon={<FaDoorOpen />}
               label="Opening Date"
-              value={formatDateForDatetimeLocal(opening_date)}
+              value={formatFriendlyDate(opening_date)}
             />
             <InfoBlock
-              icon={<FaCalendar />}
+              icon={<FaFileUpload />}
               label="Submission Date"
-              value={new Date(submission_date).toLocaleDateString()}
+              value={formatFriendlyDate(submission_date)}
             />
           </div>
           {/* Row 3 */}
           <div className="flex flex-wrap justify-between gap-8">
             <InfoBlock
-              icon={<FaCalendar />}
+              icon={<FaCalendarAlt />}
               label="Validity Date"
-              value={new Date(validity_date).toLocaleDateString()}
+              value={formatFriendlyDate(validity_date)}
             />
           </div>
         </dl>

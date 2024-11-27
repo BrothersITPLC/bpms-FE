@@ -131,7 +131,7 @@ const Bids = () => {
   };
 
   return (
-    <div className="w-1/2 flex-1 m-4 px-9 py-[2rem]">
+    <div className="w-1/2 flex-1 m-4 px-9 py-[2rem] max-h-[calc(100vh-2rem)] overflow-hidden ">
       <div className="flex flex-row gap-5">
         <div className="flex gap-5 ">
           <div className="flex flex-col gap-2  h-[80vh]">
