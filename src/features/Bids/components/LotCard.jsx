@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   FaMoneyBillAlt,
   FaLink,
@@ -6,8 +7,10 @@ import {
   FaFileAlt,
   FaCalendar,
 } from "react-icons/fa";
-
+import { Card, Button, IconButton } from "@material-tailwind/react";
+import { FaEllipsisH, FaEdit, FaTrash, FaGlobe } from "react-icons/fa";
 export default function LotCard({
+  id,
   name,
   lot_number,
   price,
@@ -16,10 +19,48 @@ export default function LotCard({
   opening_date,
   submission_date,
   created_by,
+  onEdit,
+  onDelete,
 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
   return (
-    <div className="w-full  mx-auto bg-white border  rounded-lg overflow-hidden">
+    <div className="w-full  mx-auto bg-white border relative  rounded-lg overflow-hidden">
       <div className="px-6 py-1 bg-gray-100"></div>
+      <div className="absolute top-3 right-3">
+        <IconButton
+          onClick={toggleMenu}
+          className="text-gray-600 hover:text-blue-600"
+          variant="text"
+          size="sm"
+        >
+          <FaEllipsisH />
+        </IconButton>
+
+        {menuOpen && (
+          <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow-lg z-10">
+            <button
+              onClick={() => {
+                onEdit(id);
+                toggleMenu();
+              }}
+              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <FaEdit className="mr-2" /> Edit
+            </button>
+            <button
+              onClick={() => {
+                onDelete(id);
+                toggleMenu();
+              }}
+              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <FaTrash className="mr-2" /> Delete
+            </button>
+          </div>
+        )}
+      </div>
       <div className="px-6 py-4">
         <dl className=" flex flex-col gap-7 py-4 ">
           <div className="flex gap-8 w-full justify-between">

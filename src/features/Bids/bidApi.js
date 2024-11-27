@@ -20,6 +20,13 @@ export const bidApi = createApi({
         body: data,
       }),
     }),
+    updateLott: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/lot/${id}/`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
     deleteRFP: builder.mutation({
       query: (id) => ({
         url: `/rfp/${id}/`,
@@ -34,6 +41,11 @@ export const bidApi = createApi({
     getDetailRFP: builder.query({
       query: (id) => ({
         url: `/rfp/${id}/`,
+      }),
+    }),
+    getDetailLot: builder.query({
+      query: (id) => ({
+        url: `/lot/${id}/`,
       }),
     }),
 
@@ -67,4 +79,6 @@ export const {
   useAddLottMutation,
   useGetLottQuery,
   useDeleteLottMutation,
+  useGetDetailLotQuery,
+  useUpdateLottMutation,
 } = bidApi;

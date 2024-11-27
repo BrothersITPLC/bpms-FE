@@ -30,6 +30,8 @@ import {
   useGetLottQuery,
   useAddLottMutation,
   useDeleteLottMutation,
+  useGetDetailLotQuery,
+  useUpdateLottMutation,
 } from "../bidApi";
 
 import { useGetCompanyQuery } from "../../Companies/companyApi";
@@ -48,11 +50,11 @@ const Lott = () => {
 
   const [selectedID, setSelectedID] = useState(null);
   const [addRFP] = useAddLottMutation();
-  const [updateRFP] = useUpdateRFPMutation();
+  const [updateLot] = useUpdateLottMutation();
   const [deleteRFP] = useDeleteRFPMutation();
-  const { data: clients } = useGetCompanyQuery({ search: "" });
+
   const params = useParams();
-  const { data: RFPDetail, isLoading: detailLoading } = useGetDetailRFPQuery(
+  const { data: detailLot, isLoading: detailLoading } = useGetDetailLotQuery(
     selectedID,
     {
       skip: selectedID === null,
@@ -90,16 +92,20 @@ const Lott = () => {
     setModalOpen(true);
   };
 
-  // useEffect(() => {
-  //   if (selectedID && RFPDetail?.id) {
-  //     setFormData({
-  //       client: RFPDetail?.client,
-  //       name: RFPDetail?.name,
-  //       lot_number: RFPDetail?.lot_number,
-  //       url: RFPDetail?.url,
-  //     });
-  //   }
-  // }, [selectedID, RFPDetail]);
+  useEffect(() => {
+    if (selectedID && detailLot?.id) {
+      setFormData({
+        price: detailLot?.price,
+        name: detailLot?.name,
+        lot_number: detailLot?.lot_number,
+        rfp: detailLot?.rfp,
+        security_price: detailLot?.security_price,
+        validity_duration: Date.now(detailLot?.validity_duration),
+        opening_date: detailLot?.opening_date,
+        submission_date: detailLot?.submission_date,
+      });
+    }
+  }, [selectedID, detailLot]);
   // const [deleteLott] = useDeleteLottMutation();
   // deleteLott();
 
@@ -112,7 +118,7 @@ const Lott = () => {
   const handleConfirm = async () => {
     try {
       if (isEditing && selectedID) {
-        await updateRFP({ id: selectedID, data: formData }).unwrap();
+        await updateLot({ id: selectedID, data: formData }).unwrap();
         toast.success("Updated Successfully");
       } else {
         await addRFP({ ...formData, rfp: params?.id }).unwrap();
@@ -169,6 +175,7 @@ const Lott = () => {
         {rfps?.map((rfp) => (
           <div key={rfp.id} className=" gap-4 flex flex-wrap">
             <LotCard
+              id={rfp?.id}
               name={rfp.name}
               price={rfp.price}
               lot_number={rfp.lot_number}
@@ -187,7 +194,7 @@ const Lott = () => {
       <Modal
         open={isModalOpen}
         onClose={closeModal}
-        title={isEditing ? "Edit RFP" : "Add RFP"}
+        title={isEditing ? "Edit Lot" : "Add Lot"}
         confirmText={isEditing ? "Update" : "Submit"}
         onConfirm={handleConfirm}
         size="md"
@@ -244,7 +251,7 @@ const Lott = () => {
               label="submission_date"
               name="submission_date"
               type="date"
-              value={formData.validity_duration}
+              value={formData.submission_date}
               onChange={handleChange}
               required
             />
