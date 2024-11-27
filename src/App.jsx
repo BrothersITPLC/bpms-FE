@@ -26,6 +26,13 @@ import Store from "./features/InventoryManagement/components/Store";
 import ProductsTable from "./features/InventoryManagement/components/ProductsTable";
 import MonthlyPlan from "./features/WorkReport/components/MonthlyPlan";
 import Departments from "./features/Department/components/Departments";
+import Role from "./features/RoleManagment/components/role";
+import RoleLayout from "./features/RoleManagment/components/layout";
+import PermissionManagement from "./features/RoleManagment/components/permission";
+import RolePermissionMapping from "./features/RoleManagment/components/rolePermission";
+import BidDetail from "./features/Bids/components/BidDetail";
+import "react-toastify/dist/ReactToastify.css";
+
 const App = () => {
   return (
     <Router>
@@ -45,9 +52,25 @@ const App = () => {
             <Route path="kanban" element={<Kanban />} />
             <Route path="settings" element={<Profile />} />
             <Route path="bid-purchase-orders" element={<BidPurchaseOrders />} />
-            <Route path="bids" element={<Bids />} />
+            <Route path="bids" element={<Bids></Bids>}>
+              {/* <Route index element={<Role />} /> */}
+              <Route path=":id" element={<BidDetail />} />
+            </Route>
+            {/* <Route path="bids/" element={<Bids />} /> */}
+
             <Route path="analytics" element={<Analytics />} />
             <Route path="companies" element={<Companies />} />
+            <Route path="role-management" element={<RoleLayout />}>
+              <Route index element={<Role />} />
+              <Route
+                path="role-permission-mapping"
+                element={<RolePermissionMapping />}
+              />
+              <Route
+                path="permission-management"
+                element={<PermissionManagement />}
+              />
+            </Route>
             <Route path="notifications" element={<Notifications />} />
             <Route path="resource-requests" element={<ResourceRequests />} />
             <Route path="store" element={<Store />} />
@@ -69,3 +92,17 @@ const App = () => {
 };
 
 export default App;
+
+<style>{`
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f0f0f0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #10b981; /* Tailwind green-500 */
+      border-radius: 10px;
+      border: 2px solid #f0f0f0;
+    }
+  `}</style>;

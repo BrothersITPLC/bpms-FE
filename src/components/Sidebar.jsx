@@ -230,6 +230,14 @@ const Sidebar = () => {
               Companies{" "}
             </ListItem>
           </Link>
+          <Link to="/role-management">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Role Management{" "}
+            </ListItem>
+          </Link>
           <Link to="/Bids">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
