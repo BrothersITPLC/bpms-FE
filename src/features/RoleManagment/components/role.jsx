@@ -66,7 +66,7 @@ export default function RoleManagement() {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full" shadow={false}>
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-4 flex items-center justify-between gap-8">
           <Typography variant="h5" color="blue-black">

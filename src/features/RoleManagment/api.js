@@ -39,6 +39,21 @@ export const roleApi = createApi({
         url: `/users/groups`,
       }),
     }),
+    getPermissions: builder.query({
+      query: () => ({ url: "/users/permissions" }),
+    }),
+    addPermissionToRole: builder.mutation({
+      query: ({ permission_id, role_id }) => ({
+        url: `users/groups/${role_id}/permissions/${permission_id}/add/`,
+        method: "POST",
+      }),
+    }),
+    removePermissionFromRole: builder.mutation({
+      query: ({ permission_id, role_id }) => ({
+        url: `users/groups/${role_id}/permissions/${permission_id}/remove/`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -48,4 +63,7 @@ export const {
   useDeleteRoleMutation,
   useGetRolesQuery,
   useDeleteBulkCompanyMutation,
+  useGetPermissionsQuery,
+  useRemovePermissionFromRoleMutation,
+  useAddPermissionToRoleMutation,
 } = roleApi;
