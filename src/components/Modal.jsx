@@ -12,18 +12,19 @@ const Modal = ({
   onClose,
   title,
   children,
-  confirmText,
+  confirmText = "Confirm", // Default text for the confirm button
   onConfirm,
   size = "md", // Default to 'md' size
   showDelete,
   onConfirmDelete,
-  onAddProduct, // New prop for Add Product button click handler
+  onAddProduct, // Button handler for "Add Product"
 }) => {
   return (
     <Dialog open={open} handler={onClose} size={size}>
       <DialogHeader>
         <div className="flex justify-between items-center w-full">
           <h2 className="text-lg font-semibold">{title}</h2>
+          {/* Render "Add Product" button only if onAddProduct is passed */}
           {onAddProduct && (
             <Button
               variant="gradient"
