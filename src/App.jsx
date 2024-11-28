@@ -32,6 +32,7 @@ import PermissionManagement from "./features/RoleManagment/components/permission
 import RolePermissionMapping from "./features/RoleManagment/components/rolePermission";
 import BidDetail from "./features/Bids/components/BidDetail";
 import "react-toastify/dist/ReactToastify.css";
+import CompaniesStore from "./features/InventoryManagement/components/CompaniesStore";
 
 const App = () => {
   return (
@@ -75,6 +76,8 @@ const App = () => {
             <Route path="resource-requests" element={<ResourceRequests />} />
             <Route path="store" element={<Store />} />
             <Route path="products-table" element={<ProductsTable />} />
+            <Route path="companies-store" element={<CompaniesStore />} />
+
             <Route
               path="user-resource-requests"
               element={<UserResourceRequests />}

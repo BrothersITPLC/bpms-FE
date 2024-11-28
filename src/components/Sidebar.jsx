@@ -303,6 +303,11 @@ const Sidebar = () => {
           </ListItem>
           <AccordionBody className="py-1">
             <List className="p-0">
+              <Link to="/companies-store">
+                <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                  Companies{" "}
+                </ListItem>
+              </Link>
               <Link to="/store">
                 <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
                   Stores
