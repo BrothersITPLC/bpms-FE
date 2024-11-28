@@ -7,8 +7,9 @@ import {
   Input,
   Button,
 } from "@material-tailwind/react";
-import Modal from "../../../components/Modal"; // Assuming you have a reusable modal component
-import logoImage from "../../../assets/images/logo.png"; // Import the static logo
+import Modal from "../../../components/Modal";
+import logoImage from "../../../assets/images/logo.png";
+import nhyLogo from "../../../assets/images/nhy.png";
 import { BuildingOfficeIcon } from "@heroicons/react/24/solid";
 
 const CompaniesStore = () => {
@@ -17,13 +18,13 @@ const CompaniesStore = () => {
       id: 1,
       name: "Brothers IT PLC",
       motto: "Expanding success!",
-      logo: logoImage, // Use the imported static logo
+      logo: logoImage,
     },
     {
       id: 2,
       name: "NHY Trading",
       motto: "Sustainability First",
-      logo: logoImage, // Reuse the same logo or provide a different one if needed
+      logo: nhyLogo,
     },
   ]);
 
@@ -48,7 +49,6 @@ const CompaniesStore = () => {
     setOpenModal(true);
   };
 
-  // Open modal for adding
   const openAddModalHandler = () => {
     setFormData({ name: "", motto: "", logo: "" });
     setSelectedCompany(null);
@@ -56,14 +56,12 @@ const CompaniesStore = () => {
     setOpenModal(true);
   };
 
-  // Close modal
   const closeModalHandler = () => {
     setSelectedCompany(null);
     setFormData({ name: "", motto: "", logo: "" });
     setOpenModal(false);
   };
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
