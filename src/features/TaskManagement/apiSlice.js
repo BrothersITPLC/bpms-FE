@@ -108,6 +108,27 @@ export const WorkspaceApiSlice = createApi({
       }),
       invalidatesTags: [{ type: "folder", id: "LIST" }],
     }),
+    createTask: builder.mutation({
+      query: (data) => ({
+        url: "/space/task/",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: [{ type: "task", id: "LIST" }],
+    }),
+    listTasks: builder.query({
+      query: (id) => ({
+        url: `/space/task/`,
+        method: "GET",
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "task", id })),
+              { type: "task", id: "LIST" },
+            ]
+          : [{ type: "task", id: "LIST" }],
+    }),
     listFolder: builder.query({
       query: (id) => ({
         url: `/space/folders/?space_id=${id}`,
@@ -135,4 +156,6 @@ export const {
   useUpdateSpaceByIdMutation,
   useCreateFolderMutation,
   useListFolderQuery,
+  useListTasksQuery,
+  useCreateTaskMutation,
 } = WorkspaceApiSlice;
