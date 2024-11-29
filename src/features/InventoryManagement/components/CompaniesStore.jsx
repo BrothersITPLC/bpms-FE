@@ -9,7 +9,7 @@ import {
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
 import logoImage from "../../../assets/images/logo.png";
-import nhyLogo from "../../../assets/images/nhy.png";
+import nhyLogo from "../../../assets/images/nhy.png"; // Import the static logo
 import { BuildingOfficeIcon } from "@heroicons/react/24/solid";
 
 const CompaniesStore = () => {
@@ -18,13 +18,13 @@ const CompaniesStore = () => {
       id: 1,
       name: "Brothers IT PLC",
       motto: "Expanding success!",
-      logo: logoImage,
+      logo: logoImage, // Use the imported static logo
     },
     {
       id: 2,
       name: "NHY Trading",
       motto: "Sustainability First",
-      logo: nhyLogo,
+      logo: nhyLogo, // Reuse the same logo or provide a different one if needed
     },
   ]);
 
@@ -49,6 +49,7 @@ const CompaniesStore = () => {
     setOpenModal(true);
   };
 
+  // Open modal for adding
   const openAddModalHandler = () => {
     setFormData({ name: "", motto: "", logo: "" });
     setSelectedCompany(null);
@@ -56,12 +57,14 @@ const CompaniesStore = () => {
     setOpenModal(true);
   };
 
+  // Close modal
   const closeModalHandler = () => {
     setSelectedCompany(null);
     setFormData({ name: "", motto: "", logo: "" });
     setOpenModal(false);
   };
 
+  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
