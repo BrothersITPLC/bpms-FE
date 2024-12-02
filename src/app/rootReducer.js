@@ -7,6 +7,7 @@ import { bidApi } from "../features/Bids/bidApi";
 import { roleApi } from "../features/RoleManagment/api";
 import { departmentApi } from "../features/Department/api/department";
 import { userAPI } from "../features/UserManagement/userAPI";
+import { OwnerAPI } from "../features/InventoryManagement/api/owner";
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
   [WorkspaceApiSlice.reducerPath]: WorkspaceApiSlice.reducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   [roleApi.reducerPath]: roleApi.reducer,
   [departmentApi.reducerPath]: departmentApi.reducer,
   [userAPI.reducerPath]: userAPI.reducer,
+  [OwnerAPI.reducerPath]: OwnerAPI.reducer,
   auth: authReducer,
 });
 

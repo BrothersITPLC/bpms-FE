@@ -11,30 +11,35 @@ import Modal from "../../../components/Modal";
 import logoImage from "../../../assets/images/logo.png";
 import nhyLogo from "../../../assets/images/nhy.png"; // Import the static logo
 import { BuildingOfficeIcon } from "@heroicons/react/24/solid";
+import { useCreateOwnerMutation, useGetOwnersQuery } from "../api/owner";
 
 const CompaniesStore = () => {
-  const [companies, setCompanies] = useState([
-    {
-      id: 1,
-      name: "Brothers IT PLC",
-      motto: "Expanding success!",
-      logo: logoImage, // Use the imported static logo
-    },
-    {
-      id: 2,
-      name: "NHY Trading",
-      motto: "Sustainability First",
-      logo: nhyLogo, // Reuse the same logo or provide a different one if needed
-    },
-  ]);
+  // const [companies, setCompanies] = useState([
+  //   {
+  //     id: 1,
+  //     name: "Brothers IT PLC",
+  //     motto: "Expanding success!",
+  //     logo: logoImage, // Use the imported static logo
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "NHY Trading",
+  //     motto: "Sustainability First",
+  //     logo: nhyLogo, // Reuse the same logo or provide a different one if needed
+  //   },
+  // ]);
 
+  const { data: companies, refetch: refetchData } = useGetOwnersQuery();
+  const [addOwner] = useCreateOwnerMutation();
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [image, setImage] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     motto: "",
     logo: "",
   });
+
   const [isAdding, setIsAdding] = useState(false);
 
   // Open modal for editing
@@ -76,6 +81,7 @@ const CompaniesStore = () => {
   // Handle file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
+    setImage(file);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -90,22 +96,25 @@ const CompaniesStore = () => {
 
   // Save changes to the company
   const saveChangesHandler = () => {
-    setCompanies((prevCompanies) =>
-      prevCompanies.map((company) =>
-        company.id === selectedCompany.id
-          ? { ...company, ...formData }
-          : company
-      )
-    );
+    // setCompanies((prevCompanies) =>
+    //   prevCompanies.map((company) =>
+    //     company.id === selectedCompany.id
+    //       ? { ...company, ...formData }
+    //       : company
+    //   )
+    // );
     closeModalHandler();
   };
 
   // Add new company
-  const addCompanyHandler = () => {
-    setCompanies((prevCompanies) => [
-      ...prevCompanies,
-      { ...formData, id: Date.now() },
-    ]);
+  const addCompanyHandler = async () => {
+    const formD = new FormData();
+    formD.append("motto", formData?.motto);
+    formD.append("logo", image);
+    formD.append("name", formData?.name);
+
+    await addOwner(formD).unwrap();
+    refetchData();
     closeModalHandler();
   };
 
@@ -123,28 +132,29 @@ const CompaniesStore = () => {
         </Button>
       </div>
       <div className="flex flex-wrap gap-6">
-        {companies.map((company) => (
+        {companies?.map((company) => (
           <Card
             key={company.id}
-            className="w-80 cursor-pointer hover:shadow-lg"
+            className="w-80 cursor-pointer"
             onClick={() => openEditModalHandler(company)}
           >
             <CardHeader
               floated={false}
+              shadow={false}
               className="h-40 flex justify-center items-center bg-gray-100"
             >
               <img
-                src={company.logo}
-                alt={`${company.name} Logo`}
+                src={company?.logo}
+                alt={`${company?.name} Logo`}
                 className="w-24 h-24 rounded-full"
               />
             </CardHeader>
             <CardBody className="text-center">
               <Typography variant="h5" color="blue-gray" className="mb-2">
-                {company.name}
+                {company?.name}
               </Typography>
               <Typography variant="small" className="text-gray-600">
-                {company.motto}
+                {company?.motto}
               </Typography>
             </CardBody>
           </Card>
