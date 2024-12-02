@@ -10,6 +10,8 @@ import { BuildingStorefrontIcon } from "@heroicons/react/24/solid";
 import Modal from "../../../components/Modal"; // Reusable modal
 import Products from "./Products";
 import AddProductForm from "./AddProductForm";
+import { useCreateStoreMutation, useGetStoresQuery } from "../api/store";
+import { useParams } from "react-router-dom";
 
 const Store = () => {
   const [cards, setCards] = useState([
@@ -24,7 +26,11 @@ const Store = () => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedStore, setSelectedStore] = useState(null);
   const [openAddProductModal, setOpenAddProductModal] = useState(false);
+  const params = useParams();
 
+  const { data: Stores } = useGetStoresQuery();
+
+  const [addStore] = useCreateStoreMutation();
   // Open "Products" modal
   const openProductsModal = (store) => {
     setSelectedStore(store);
