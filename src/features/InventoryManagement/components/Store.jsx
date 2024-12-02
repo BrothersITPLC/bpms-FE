@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -7,11 +8,9 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { BuildingStorefrontIcon } from "@heroicons/react/24/solid";
-import Modal from "../../../components/Modal"; // Reusable modal
-import Products from "./Products";
-import AddProductForm from "./AddProductForm";
 
 const Store = () => {
+  const navigate = useNavigate();
   const [cards, setCards] = useState([
     {
       id: 1,
@@ -21,31 +20,9 @@ const Store = () => {
     },
   ]);
 
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedStore, setSelectedStore] = useState(null);
-  const [openAddProductModal, setOpenAddProductModal] = useState(false);
-
-  // Open "Products" modal
-  const openProductsModal = (store) => {
-    setSelectedStore(store);
-    setOpenModal(true);
-  };
-
-  // Open "Add Product" modal
-  const openAddProductModalHandler = () => {
-    setOpenAddProductModal(true);
-  };
-
-  // Close "Add Product" modal
-  const closeAddProductModalHandler = () => {
-    setOpenAddProductModal(false);
-  };
-
-  // Handle adding a new product
-  const handleAddProduct = (newProduct) => {
-    console.log("Adding product to:", selectedStore?.name);
-    console.log("New Product Details:", newProduct);
-    closeAddProductModalHandler();
+  // Navigate to ProductsPage
+  const openProductsPage = (store) => {
+    navigate(`/store-products`, { state: { store } });
   };
 
   return (
@@ -54,7 +31,7 @@ const Store = () => {
         {cards.map((card) => (
           <div
             key={card.id}
-            onClick={() => openProductsModal(card)}
+            onClick={() => openProductsPage(card)}
             className="cursor-pointer w-96 h-fit"
           >
             <Card className="w-full h-full">
@@ -77,37 +54,6 @@ const Store = () => {
           </div>
         ))}
       </div>
-
-      <Modal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        title={`${selectedStore?.name} Products`}
-        size="xxl"
-      >
-        <div className="space-y-4">
-          <div className="flex justify-end">
-            <Button
-              variant="gradient"
-              color="green"
-              onClick={openAddProductModalHandler}
-            >
-              Add Product
-            </Button>
-          </div>
-          {selectedStore && <Products store={selectedStore} />}
-        </div>
-      </Modal>
-
-      {/* Add Product Modal */}
-      <Modal
-        open={openAddProductModal}
-        onClose={closeAddProductModalHandler}
-        title="Add Product"
-        confirmText="Add Product"
-        onConfirm={handleAddProduct}
-      >
-        <AddProductForm onSubmit={handleAddProduct} />
-      </Modal>
     </div>
   );
 };

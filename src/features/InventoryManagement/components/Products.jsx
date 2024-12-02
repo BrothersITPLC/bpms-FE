@@ -8,7 +8,7 @@ const TABLE_HEAD = [
   "Product Type",
   "Product Model",
   "Quantity",
-  "Price", // New price column
+  "Opening Stock", // New opening_stock column
   "Actions", // Actions column moved to the end
 ];
 
@@ -18,35 +18,35 @@ const TABLE_ROWS = [
     type: "Router",
     model: "Router X",
     quantity: 10,
-    price: 150,
+    opening_stock: 8,
   },
   {
     id: 2,
     type: "Switch",
     model: "Switch Y",
     quantity: 5,
-    price: 300,
+    opening_stock: 30,
   },
   {
     id: 3,
     type: "Patch Cord",
     model: "Patch Cord Z",
     quantity: 50,
-    price: 20,
+    opening_stock: 200,
   },
   {
     id: 4,
     type: "Firewall",
     model: "Firewall A",
     quantity: 20,
-    price: 500,
+    opening_stock: 5,
   },
   {
     id: 5,
     type: "Server",
     model: "Server B",
     quantity: 2,
-    price: 2000,
+    opening_stock: 20,
   },
 ];
 
@@ -118,7 +118,7 @@ const Products = ({ store }) => {
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(({ id, type, model, quantity, price }) => (
+            {TABLE_ROWS.map(({ id, type, model, quantity, opening_stock }) => (
               <tr key={id} className="even:bg-blue-gray-50/50">
                 <td className="p-4">
                   <Typography
@@ -162,7 +162,7 @@ const Products = ({ store }) => {
                     color="blue-gray"
                     className="font-normal"
                   >
-                    ${price.toFixed(2)}
+                    {opening_stock.toFixed()}
                   </Typography>
                 </td>
                 <td className="p-4">
@@ -177,7 +177,7 @@ const Products = ({ store }) => {
                           type,
                           model,
                           quantity,
-                          price,
+                          opening_stock,
                         })
                       }
                     >
@@ -193,7 +193,7 @@ const Products = ({ store }) => {
                           type,
                           model,
                           quantity,
-                          price,
+                          opening_stock,
                         })
                       }
                     >
