@@ -12,15 +12,31 @@ const Modal = ({
   onClose,
   title,
   children,
-  confirmText,
+  confirmText = "Confirm", // Default text for the confirm button
   onConfirm,
   size = "md", // Default to 'md' size
   showDelete,
   onConfirmDelete,
+  onAddProduct, // Button handler for "Add Product"
 }) => {
   return (
     <Dialog open={open} handler={onClose} size={size}>
-      <DialogHeader>{title}</DialogHeader>
+      <DialogHeader>
+        <div className="flex justify-between items-center w-full">
+          <h2 className="text-lg font-semibold">{title}</h2>
+          {/* Render "Add Product" button only if onAddProduct is passed */}
+          {onAddProduct && (
+            <Button
+              variant="gradient"
+              color="green"
+              onClick={onAddProduct}
+              className="ml-4"
+            >
+              Add Product
+            </Button>
+          )}
+        </div>
+      </DialogHeader>
       <DialogBody className="overflow-y-auto max-h-[60vh]">
         {children}
       </DialogBody>
@@ -35,8 +51,7 @@ const Modal = ({
             <span>Delete</span>
           </Button>
         )}
-        <div className=" justify-self-end">
-          {" "}
+        <div className="justify-self-end">
           <Button
             variant="text"
             color="black"
