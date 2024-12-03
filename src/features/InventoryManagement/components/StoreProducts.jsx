@@ -8,7 +8,10 @@ import {
   TabsBody,
   Tab,
   TabPanel,
+  Button,
 } from "@material-tailwind/react";
+import StockOutModal from "./StockOutModal"; // Stock-Out Modal
+import StockInModal from "./StockInModal"; // New Stock-In Modal
 
 const STOCK_OUT_HISTORY = [
   { id: 1, date: "2024-12-01", stockedOutTo: "Dashen Bank", quantity: 2 },
@@ -38,6 +41,8 @@ const StoreProducts = () => {
   const location = useLocation();
   const { store } = location.state || {};
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [openStockOutModal, setOpenStockOutModal] = useState(false);
+  const [openStockInModal, setOpenStockInModal] = useState(false);
 
   if (!store) {
     return (
@@ -60,11 +65,31 @@ const StoreProducts = () => {
     (entry) => entry.id === selectedProduct?.id
   );
 
+  const openStockOutModalHandler = (product) => {
+    setSelectedProduct(product);
+    setOpenStockOutModal(true);
+  };
+
+  const openStockInModalHandler = (product) => {
+    setSelectedProduct(product);
+    setOpenStockInModal(true);
+  };
+
+  const closeStockOutModalHandler = () => {
+    setOpenStockOutModal(false);
+    setSelectedProduct(null);
+  };
+
+  const closeStockInModalHandler = () => {
+    setOpenStockInModal(false);
+    setSelectedProduct(null);
+  };
+
   return (
     <div className="p-6 space-y-10 w-full flex-1">
       <div className="flex flex-col w-full lg:flex-row gap-8">
         {/* Products Table */}
-        <div className="h-fit w-1/2">
+        <div className="h-fit w-fit">
           <Typography variant="h4" color="blue-gray" className="mb-4">
             {store.name} Products
           </Typography>
@@ -84,6 +109,9 @@ const StoreProducts = () => {
                   <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                     Quantity
                   </th>
+                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -97,6 +125,26 @@ const StoreProducts = () => {
                     <td className="p-4">{product.model}</td>
                     <td className="p-4">{product.type}</td>
                     <td className="p-4">{product.stock}</td>
+                    <td className="p-4">
+                      <div className="flex gap-2">
+                        <Button
+                          variant="gradient"
+                          color="green"
+                          size="sm"
+                          onClick={() => openStockInModalHandler(product)}
+                        >
+                          Stock-In
+                        </Button>
+                        <Button
+                          variant="gradient"
+                          color="purple"
+                          size="sm"
+                          onClick={() => openStockOutModalHandler(product)}
+                        >
+                          Stock-Out
+                        </Button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -186,6 +234,18 @@ const StoreProducts = () => {
           </div>
         )}
       </div>
+
+      {/* Modals */}
+      <StockOutModal
+        open={openStockOutModal}
+        onClose={closeStockOutModalHandler}
+        product={selectedProduct}
+      />
+      <StockInModal
+        open={openStockInModal}
+        onClose={closeStockInModalHandler}
+        product={selectedProduct}
+      />
     </div>
   );
 };
