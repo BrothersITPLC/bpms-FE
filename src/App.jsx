@@ -34,6 +34,7 @@ import BidDetail from "./features/Bids/components/BidDetail";
 import "react-toastify/dist/ReactToastify.css";
 import CompaniesStore from "./features/InventoryManagement/components/CompaniesStore";
 import BidAnalytics from "./features/Bids/components/BidAnalytics";
+import StoreProducts from "./features/InventoryManagement/components/StoreProducts";
 
 const App = () => {
   return (
