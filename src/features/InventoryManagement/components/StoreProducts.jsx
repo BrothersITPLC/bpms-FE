@@ -13,13 +13,16 @@ import {
 import StockOutModal from "./StockOutModal"; // Stock-Out Modal
 import StockInModal from "./StockInModal"; // New Stock-In Modal
 
+// Updated stock-out and stock-in history with more data
 const STOCK_OUT_HISTORY = [
   { id: 1, date: "2024-12-01", stockedOutTo: "Dashen Bank", quantity: 2 },
   { id: 1, date: "2024-12-03", stockedOutTo: "Ethio Telecom", quantity: 5 },
   { id: 1, date: "2024-12-05", stockedOutTo: "Commercial Bank", quantity: 3 },
   { id: 2, date: "2024-12-02", stockedOutTo: "Civil Aviation", quantity: 3 },
+  { id: 2, date: "2024-12-07", stockedOutTo: "Abyssinia Bank", quantity: 7 },
   { id: 3, date: "2024-12-01", stockedOutTo: "Et Switch", quantity: 10 },
   { id: 3, date: "2024-12-04", stockedOutTo: "Awash Bank", quantity: 6 },
+  { id: 3, date: "2024-12-06", stockedOutTo: "Zemen Bank", quantity: 4 },
 ];
 
 const STOCK_IN_HISTORY = [
@@ -27,15 +30,32 @@ const STOCK_IN_HISTORY = [
   { id: 1, date: "2024-12-03", stockedInFrom: "Supplier B", quantity: 8 },
   { id: 1, date: "2024-12-06", stockedInFrom: "Supplier C", quantity: 12 },
   { id: 2, date: "2024-12-02", stockedInFrom: "Supplier C", quantity: 20 },
+  { id: 2, date: "2024-12-04", stockedInFrom: "Supplier A", quantity: 10 },
+  { id: 2, date: "2024-12-06", stockedInFrom: "Supplier B", quantity: 15 },
   { id: 3, date: "2024-12-02", stockedInFrom: "Supplier B", quantity: 15 },
   { id: 3, date: "2024-12-05", stockedInFrom: "Supplier A", quantity: 25 },
+  { id: 3, date: "2024-12-07", stockedInFrom: "Supplier C", quantity: 30 },
 ];
 
 const PRODUCTS = [
   { id: 1, model: "Router X", type: "Router", stock: 10 },
   { id: 2, model: "Switch Y", type: "Switch", stock: 5 },
   { id: 3, model: "Patch Cord Z", type: "Accessories", stock: 20 },
+  { id: 4, model: "Router A", type: "Router", stock: 15 },
+  { id: 5, model: "Switch B", type: "Switch", stock: 8 },
+  { id: 6, model: "Patch Cord D", type: "Accessories", stock: 25 },
 ];
+
+// Stock balance data, assuming the opening stock is calculated or comes from DB
+const stockBalanceData = PRODUCTS.map((product) => ({
+  productId: `P00${product.id}`,
+  productName: product.type,
+  productModel: product.model,
+  openingStock: 100, // Assuming the opening stock is fixed or comes from DB
+  stockBalance: product.stock,
+  stockStatus:
+    product.stock <= 5 ? "Low" : product.stock <= 10 ? "In Stock" : "Critical",
+}));
 
 const StoreProducts = () => {
   const location = useLocation();
@@ -99,21 +119,6 @@ const StoreProducts = () => {
     }
   };
 
-  // Stock Balance Data
-  const stockBalanceData = PRODUCTS.map((product) => ({
-    productId: `P00${product.id}`,
-    productName: product.type,
-    productModel: product.model,
-    openingStock: 100, // Assuming the opening stock is fixed or comes from a DB
-    stockBalance: product.stock,
-    stockStatus:
-      product.stock <= 5
-        ? "Low"
-        : product.stock <= 10
-        ? "In Stock"
-        : "Critical",
-  }));
-
   return (
     <div className="p-6 space-y-10 w-full flex-1">
       <div className="flex w-full flex-row gap-8">
@@ -150,7 +155,7 @@ const StoreProducts = () => {
                     className="even:bg-blue-gray-50/50 cursor-pointer hover:bg-blue-gray-100"
                     onClick={() => handleProductClick(product)}
                   >
-                    <td className="p-4">{product.id}</td>
+                    <td className="p-4">{`P00${product.id}`}</td>
                     <td className="p-4">{product.model}</td>
                     <td className="p-4">{product.type}</td>
                     <td className="p-4">{product.stock}</td>
