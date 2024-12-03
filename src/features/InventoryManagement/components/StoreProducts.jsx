@@ -87,7 +87,7 @@ const StoreProducts = () => {
 
   return (
     <div className="p-6 space-y-10 w-full flex-1">
-      <div className="flex flex-col w-full lg:flex-row gap-8">
+      <div className="flex w-full flex-row gap-8">
         {/* Products Table */}
         <div className="h-fit w-fit">
           <Typography variant="h4" color="blue-gray" className="mb-4">
@@ -234,6 +234,7 @@ const StoreProducts = () => {
           </div>
         )}
       </div>
+      <Typography>Here</Typography>
 
       {/* Modals */}
       <StockOutModal
