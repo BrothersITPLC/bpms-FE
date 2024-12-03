@@ -40,10 +40,10 @@ export const OwnerAPI = createApi({
       ],
     }),
     ///////////////////////////////////////////////////////// Workspace members
-    deleteOwner: builder.query({
+    deleteOwner: builder.mutation({
       query: (id) => ({
-        url: `/space/workspace-member/${id}`,
-        method: "GET",
+        url: `/owner/${id}/`,
+        method: "DELETE",
       }),
       providesTags: (result) =>
         result
@@ -123,6 +123,7 @@ export const {
   useCreateOwnerMutation,
   useGetOwnersQuery,
   useUpdateWorkspaceByIdMutation,
+  useDeleteOwnerMutation,
   //   useCreateWorkspaceMemberMutation,
   //   useCreateSpaceMutation,
   //   useListSpaceQuery,

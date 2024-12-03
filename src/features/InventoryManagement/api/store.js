@@ -7,8 +7,8 @@ export const StoreAPI = createApi({
 
   endpoints: (builder) => ({
     getStores: builder.query({
-      query: () => ({
-        url: "/store/",
+      query: (id) => ({
+        url: `/store/?owner_id=${id}`,
         method: "GET",
       }),
       providesTags: (result) =>
@@ -30,7 +30,7 @@ export const StoreAPI = createApi({
 
     updateStore: builder.mutation({
       query: ({ id, ...data }) => ({
-        url: `/owner/${id}/`,
+        url: `/store/${id}/?owner_id=${data?.owner}`,
         method: "PUT",
         body: data,
       }),
@@ -40,10 +40,10 @@ export const StoreAPI = createApi({
       ],
     }),
     ///////////////////////////////////////////////////////// Workspace members
-    deleteStore: builder.query({
-      query: (id) => ({
-        url: `/space/workspace-member/${id}`,
-        method: "GET",
+    deleteStore: builder.mutation({
+      query: ({ id, owner }) => ({
+        url: `/store/${id}/?owner_id=${owner}`,
+        method: "DELETE",
       }),
       providesTags: (result) =>
         result
@@ -122,7 +122,8 @@ export const StoreAPI = createApi({
 export const {
   useGetStoresQuery,
   useCreateStoreMutation,
-  useDeleteStoreQuery,
+  useDeleteStoreMutation,
+  useUpdateStoreMutation,
   //   useCreateWorkspaceMemberMutation,
   //   useCreateSpaceMutation,
   //   useListSpaceQuery,

@@ -4,59 +4,40 @@ import {
   CardHeader,
   CardBody,
   Typography,
-  Input,
   Button,
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
-import logoImage from "../../../assets/images/logo.png";
-import nhyLogo from "../../../assets/images/nhy.png"; // Import the static logo
-import { BuildingOfficeIcon } from "@heroicons/react/24/solid";
-import { useCreateOwnerMutation, useGetOwnersQuery } from "../api/owner";
+import OwnerForm from "./OwnerForm";
+import {
+  BuildingOfficeIcon,
+  EllipsisVerticalIcon,
+} from "@heroicons/react/24/solid";
+import {
+  useCreateOwnerMutation,
+  useGetOwnersQuery,
+  useDeleteOwnerMutation,
+} from "../api/owner";
 
 const CompaniesStore = () => {
-  // const [companies, setCompanies] = useState([
-  //   {
-  //     id: 1,
-  //     name: "Brothers IT PLC",
-  //     motto: "Expanding success!",
-  //     logo: logoImage, // Use the imported static logo
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "NHY Trading",
-  //     motto: "Sustainability First",
-  //     logo: nhyLogo, // Reuse the same logo or provide a different one if needed
-  //   },
-  // ]);
-
   const { data: companies, refetch: refetchData } = useGetOwnersQuery();
-  const [addOwner] = useCreateOwnerMutation();
+  const [deleteOwner] = useDeleteOwnerMutation();
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  const [image, setImage] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    motto: "",
-    logo: "",
-  });
-
   const [isAdding, setIsAdding] = useState(false);
 
   // Open modal for editing
   const openEditModalHandler = (company) => {
     setSelectedCompany(company);
-    setFormData({
-      name: company.name,
-      motto: company.motto,
-      logo: company.logo,
-    });
     setIsAdding(false);
     setOpenModal(true);
   };
 
   // Open modal for adding
   const openAddModalHandler = () => {
-    setFormData({ name: "", motto: "", logo: "" });
     setSelectedCompany(null);
     setIsAdding(true);
     setOpenModal(true);
@@ -65,57 +46,27 @@ const CompaniesStore = () => {
   // Close modal
   const closeModalHandler = () => {
     setSelectedCompany(null);
-    setFormData({ name: "", motto: "", logo: "" });
     setOpenModal(false);
   };
 
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  // Handle file upload
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prevData) => ({
-          ...prevData,
-          logo: reader.result, // Base64 string for image preview
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Save changes to the company
-  const saveChangesHandler = () => {
-    // setCompanies((prevCompanies) =>
-    //   prevCompanies.map((company) =>
-    //     company.id === selectedCompany.id
-    //       ? { ...company, ...formData }
-    //       : company
-    //   )
-    // );
-    closeModalHandler();
-  };
-
   // Add new company
-  const addCompanyHandler = async () => {
-    const formD = new FormData();
-    formD.append("motto", formData?.motto);
-    formD.append("logo", image);
-    formD.append("name", formData?.name);
-
+  const addCompanyHandler = async (formD) => {
     await addOwner(formD).unwrap();
     refetchData();
     closeModalHandler();
+  };
+
+  // Save changes to the company
+  const saveChangesHandler = async (formD) => {
+    // Logic to update company goes here
+    refetchData(); // Refetch data after updating
+    closeModalHandler();
+  };
+
+  // Delete company
+  const deleteCompanyHandler = async (companyId) => {
+    await deleteOwner(companyId).unwrap();
+    refetchData();
   };
 
   return (
@@ -125,7 +76,7 @@ const CompaniesStore = () => {
         <Button
           className="flex bg-primary1 items-center gap-3"
           size="sm"
-          onClick={openAddModalHandler} // Opens modal for adding a new company
+          onClick={openAddModalHandler}
         >
           <BuildingOfficeIcon strokeWidth={2} className="h-4 w-4" />
           Add Company
@@ -133,11 +84,7 @@ const CompaniesStore = () => {
       </div>
       <div className="flex flex-wrap gap-6">
         {companies?.map((company) => (
-          <Card
-            key={company.id}
-            className="w-80 cursor-pointer"
-            onClick={() => openEditModalHandler(company)}
-          >
+          <Card key={company.id} className="w-80 relative">
             <CardHeader
               floated={false}
               shadow={false}
@@ -157,50 +104,42 @@ const CompaniesStore = () => {
                 {company?.motto}
               </Typography>
             </CardBody>
+            <div className="absolute top-4 right-4">
+              <Menu>
+                <MenuHandler>
+                  <Button className="flex items-center p-2 rounded-full bg-gray-100 hover:bg-gray-200">
+                    <EllipsisVerticalIcon className="h-5 w-5 text-gray-500" />
+                  </Button>
+                </MenuHandler>
+                <MenuList>
+                  <MenuItem onClick={() => openEditModalHandler(company)}>
+                    Edit
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => deleteCompanyHandler(company.id)}
+                    className="text-red-600"
+                  >
+                    Delete
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </div>
           </Card>
         ))}
       </div>
 
-      {/* Modal for editing or adding company details */}
+      {/* Modal for adding/editing company */}
       <Modal
         open={openModal}
         onClose={closeModalHandler}
         title={isAdding ? "Add Company" : "Edit Company Details"}
-        confirmText={isAdding ? "Add" : "Save"}
-        onConfirm={isAdding ? addCompanyHandler : saveChangesHandler}
       >
-        <div className="space-y-4">
-          <Input
-            label="Company Name"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-          />
-          <Input
-            label="Motto"
-            name="motto"
-            value={formData.motto}
-            onChange={handleInputChange}
-          />
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Company Logo
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileUpload}
-              className="mt-2"
-            />
-            {formData.logo && (
-              <img
-                src={formData.logo}
-                alt="Logo Preview"
-                className="mt-4 w-24 h-24 rounded-full"
-              />
-            )}
-          </div>
-        </div>
+        <OwnerForm
+          initialData={selectedCompany}
+          isAdding={isAdding}
+          onConfirm={isAdding ? addCompanyHandler : saveChangesHandler}
+          onClose={closeModalHandler}
+        />
       </Modal>
     </div>
   );
