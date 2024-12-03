@@ -1,229 +1,229 @@
-import React, { useState } from "react";
-import { Card, Button, Typography } from "@material-tailwind/react";
-import StockOutModal from "./StockOutModal"; // Stock-Out Modal
-import StockInModal from "./StockInModal"; // New Stock-In Modal
+// import React, { useState } from "react";
+// import { Card, Button, Typography } from "@material-tailwind/react";
+// import StockOutModal from "./StockOutModal"; // Stock-Out Modal
+// import StockInModal from "./StockInModal"; // New Stock-In Modal
 
-const TABLE_HEAD = [
-  "Product ID",
-  "Product Type",
-  "Product Model",
-  "Quantity",
-  "Opening Stock", // New opening_stock column
-  "Actions", // Actions column moved to the end
-];
+// const TABLE_HEAD = [
+//   "Product ID",
+//   "Product Type",
+//   "Product Model",
+//   "Quantity",
+//   "Opening Stock", // New opening_stock column
+//   "Actions", // Actions column moved to the end
+// ];
 
-const TABLE_ROWS = [
-  {
-    id: 1,
-    type: "Router",
-    model: "Router X",
-    quantity: 10,
-    opening_stock: 8,
-  },
-  {
-    id: 2,
-    type: "Switch",
-    model: "Switch Y",
-    quantity: 5,
-    opening_stock: 30,
-  },
-  {
-    id: 3,
-    type: "Patch Cord",
-    model: "Patch Cord Z",
-    quantity: 50,
-    opening_stock: 200,
-  },
-  {
-    id: 4,
-    type: "Firewall",
-    model: "Firewall A",
-    quantity: 20,
-    opening_stock: 5,
-  },
-  {
-    id: 5,
-    type: "Server",
-    model: "Server B",
-    quantity: 2,
-    opening_stock: 20,
-  },
-];
+// const TABLE_ROWS = [
+//   {
+//     id: 1,
+//     type: "Router",
+//     model: "Router X",
+//     quantity: 10,
+//     opening_stock: 8,
+//   },
+//   {
+//     id: 2,
+//     type: "Switch",
+//     model: "Switch Y",
+//     quantity: 5,
+//     opening_stock: 30,
+//   },
+//   {
+//     id: 3,
+//     type: "Patch Cord",
+//     model: "Patch Cord Z",
+//     quantity: 50,
+//     opening_stock: 200,
+//   },
+//   {
+//     id: 4,
+//     type: "Firewall",
+//     model: "Firewall A",
+//     quantity: 20,
+//     opening_stock: 5,
+//   },
+//   {
+//     id: 5,
+//     type: "Server",
+//     model: "Server B",
+//     quantity: 2,
+//     opening_stock: 20,
+//   },
+// ];
 
-const Products = ({ store }) => {
-  const [openStockOutModal, setOpenStockOutModal] = useState(false);
-  const [openStockInModal, setOpenStockInModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+// const Products = ({ store }) => {
+//   const [openStockOutModal, setOpenStockOutModal] = useState(false);
+//   const [openStockInModal, setOpenStockInModal] = useState(false);
+//   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Open the Stock-Out Modal
-  const openStockOutModalHandler = (product) => {
-    setSelectedProduct(product);
-    setOpenStockOutModal(true);
-  };
+//   // Open the Stock-Out Modal
+//   const openStockOutModalHandler = (product) => {
+//     setSelectedProduct(product);
+//     setOpenStockOutModal(true);
+//   };
 
-  // Open the Stock-In Modal
-  const openStockInModalHandler = (product) => {
-    setSelectedProduct(product);
-    setOpenStockInModal(true);
-  };
+//   // Open the Stock-In Modal
+//   const openStockInModalHandler = (product) => {
+//     setSelectedProduct(product);
+//     setOpenStockInModal(true);
+//   };
 
-  // Close the Stock-Out Modal
-  const closeStockOutModalHandler = () => {
-    setOpenStockOutModal(false);
-    setSelectedProduct(null);
-  };
+//   // Close the Stock-Out Modal
+//   const closeStockOutModalHandler = () => {
+//     setOpenStockOutModal(false);
+//     setSelectedProduct(null);
+//   };
 
-  // Close the Stock-In Modal
-  const closeStockInModalHandler = () => {
-    setOpenStockInModal(false);
-    setSelectedProduct(null);
-  };
+//   // Close the Stock-In Modal
+//   const closeStockInModalHandler = () => {
+//     setOpenStockInModal(false);
+//     setSelectedProduct(null);
+//   };
 
-  // Handle the Stock-Out action
-  const handleStockOut = ({ stockOutTo, quantity }) => {
-    console.log(
-      `Stocking out ${quantity} of ${selectedProduct.model} to ${stockOutTo}`
-    );
-    // Implement API or state update logic for stock-out
-    closeStockOutModalHandler();
-  };
+//   // Handle the Stock-Out action
+//   const handleStockOut = ({ stockOutTo, quantity }) => {
+//     console.log(
+//       `Stocking out ${quantity} of ${selectedProduct.model} to ${stockOutTo}`
+//     );
+//     // Implement API or state update logic for stock-out
+//     closeStockOutModalHandler();
+//   };
 
-  // Handle the Stock-In action
-  const handleStockIn = ({ quantity }) => {
-    console.log(`Stocking in ${quantity} of ${selectedProduct.model}`);
-    // Implement API or state update logic for stock-in
-    closeStockInModalHandler();
-  };
+//   // Handle the Stock-In action
+//   const handleStockIn = ({ quantity }) => {
+//     console.log(`Stocking in ${quantity} of ${selectedProduct.model}`);
+//     // Implement API or state update logic for stock-in
+//     closeStockInModalHandler();
+//   };
 
-  return (
-    <div>
-      <Card className="h-full w-full overflow-scroll">
-        <table className="w-full min-w-max table-auto text-left">
-          <thead>
-            <tr>
-              {TABLE_HEAD.map((head) => (
-                <th
-                  key={head}
-                  className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
-                >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >
-                    {head}
-                  </Typography>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {TABLE_ROWS.map(({ id, type, model, quantity, opening_stock }) => (
-              <tr key={id} className="even:bg-blue-gray-50/50">
-                <td className="p-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {id}
-                  </Typography>
-                </td>
-                <td className="p-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {type}
-                  </Typography>
-                </td>
-                <td className="p-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {model}
-                  </Typography>
-                </td>
-                <td className="p-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {quantity}
-                  </Typography>
-                </td>
-                <td className="p-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {opening_stock.toFixed()}
-                  </Typography>
-                </td>
-                <td className="p-4">
-                  <div className="flex gap-2">
-                    <Button
-                      variant="gradient"
-                      color="green"
-                      size="sm"
-                      onClick={() =>
-                        openStockInModalHandler({
-                          id,
-                          type,
-                          model,
-                          quantity,
-                          opening_stock,
-                        })
-                      }
-                    >
-                      Stock-In
-                    </Button>
-                    <Button
-                      variant="gradient"
-                      color="purple"
-                      size="sm"
-                      onClick={() =>
-                        openStockOutModalHandler({
-                          id,
-                          type,
-                          model,
-                          quantity,
-                          opening_stock,
-                        })
-                      }
-                    >
-                      Stock-Out
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
+//   return (
+//     <div>
+//       <Card className="h-full w-full overflow-scroll">
+//         <table className="w-full min-w-max table-auto text-left">
+//           <thead>
+//             <tr>
+//               {TABLE_HEAD.map((head) => (
+//                 <th
+//                   key={head}
+//                   className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+//                 >
+//                   <Typography
+//                     variant="small"
+//                     color="blue-gray"
+//                     className="font-normal leading-none opacity-70"
+//                   >
+//                     {head}
+//                   </Typography>
+//                 </th>
+//               ))}
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {TABLE_ROWS.map(({ id, type, model, quantity, opening_stock }) => (
+//               <tr key={id} className="even:bg-blue-gray-50/50">
+//                 <td className="p-4">
+//                   <Typography
+//                     variant="small"
+//                     color="blue-gray"
+//                     className="font-normal"
+//                   >
+//                     {id}
+//                   </Typography>
+//                 </td>
+//                 <td className="p-4">
+//                   <Typography
+//                     variant="small"
+//                     color="blue-gray"
+//                     className="font-normal"
+//                   >
+//                     {type}
+//                   </Typography>
+//                 </td>
+//                 <td className="p-4">
+//                   <Typography
+//                     variant="small"
+//                     color="blue-gray"
+//                     className="font-normal"
+//                   >
+//                     {model}
+//                   </Typography>
+//                 </td>
+//                 <td className="p-4">
+//                   <Typography
+//                     variant="small"
+//                     color="blue-gray"
+//                     className="font-normal"
+//                   >
+//                     {quantity}
+//                   </Typography>
+//                 </td>
+//                 <td className="p-4">
+//                   <Typography
+//                     variant="small"
+//                     color="blue-gray"
+//                     className="font-normal"
+//                   >
+//                     {opening_stock.toFixed()}
+//                   </Typography>
+//                 </td>
+//                 <td className="p-4">
+//                   <div className="flex gap-2">
+//                     <Button
+//                       variant="gradient"
+//                       color="green"
+//                       size="sm"
+//                       onClick={() =>
+//                         openStockInModalHandler({
+//                           id,
+//                           type,
+//                           model,
+//                           quantity,
+//                           opening_stock,
+//                         })
+//                       }
+//                     >
+//                       Stock-In
+//                     </Button>
+//                     <Button
+//                       variant="gradient"
+//                       color="purple"
+//                       size="sm"
+//                       onClick={() =>
+//                         openStockOutModalHandler({
+//                           id,
+//                           type,
+//                           model,
+//                           quantity,
+//                           opening_stock,
+//                         })
+//                       }
+//                     >
+//                       Stock-Out
+//                     </Button>
+//                   </div>
+//                 </td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       </Card>
 
-      {/* StockOutModal */}
-      <StockOutModal
-        open={openStockOutModal}
-        onClose={closeStockOutModalHandler}
-        onConfirm={handleStockOut}
-        product={selectedProduct}
-      />
+//       {/* StockOutModal */}
+//       <StockOutModal
+//         open={openStockOutModal}
+//         onClose={closeStockOutModalHandler}
+//         onConfirm={handleStockOut}
+//         product={selectedProduct}
+//       />
 
-      {/* StockInModal */}
-      <StockInModal
-        open={openStockInModal}
-        onClose={closeStockInModalHandler}
-        onConfirm={handleStockIn}
-        product={selectedProduct}
-      />
-    </div>
-  );
-};
+//       {/* StockInModal */}
+//       <StockInModal
+//         open={openStockInModal}
+//         onClose={closeStockInModalHandler}
+//         onConfirm={handleStockIn}
+//         product={selectedProduct}
+//       />
+//     </div>
+//   );
+// };
 
-export default Products;
+// export default Products;
