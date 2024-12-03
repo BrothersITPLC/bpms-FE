@@ -35,7 +35,6 @@ import "react-toastify/dist/ReactToastify.css";
 import CompaniesStore from "./features/InventoryManagement/components/CompaniesStore";
 import BidAnalytics from "./features/Bids/components/BidAnalytics";
 import StoreProducts from "./features/InventoryManagement/components/StoreProducts";
-import StockBalance from "./features/InventoryManagement/components/StockBalance";
 
 const App = () => {
   return (
@@ -82,7 +81,6 @@ const App = () => {
             <Route path="/store-products" element={<StoreProducts />} />
             <Route path="products-table" element={<ProductsTable />} />
             <Route path="companies-store" element={<CompaniesStore />} />
-            <Route path="/stock-balance" element={<StockBalance />} />
 
             <Route
               path="user-resource-requests"
