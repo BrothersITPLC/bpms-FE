@@ -19,6 +19,12 @@ export const OwnerAPI = createApi({
             ]
           : [{ type: "owner", id: "LIST" }],
     }),
+    getOwner: builder.query({
+      query: (id) => ({
+        url: `/owner/${id}/`,
+        method: "GET",
+      }),
+    }),
     createOwner: builder.mutation({
       query: (data) => ({
         url: "/owner/",
@@ -29,9 +35,9 @@ export const OwnerAPI = createApi({
     }),
 
     updateOwner: builder.mutation({
-      query: ({ id, ...data }) => ({
+      query: ({ id, data }) => ({
         url: `/owner/${id}/`,
-        method: "PUT",
+        method: "PATCH",
         body: data,
       }),
       invalidatesTags: (result, error, { id }) => [
@@ -122,8 +128,9 @@ export const OwnerAPI = createApi({
 export const {
   useCreateOwnerMutation,
   useGetOwnersQuery,
-  useUpdateWorkspaceByIdMutation,
+  useUpdateOwnerMutation,
   useDeleteOwnerMutation,
+  useGetOwnerQuery,
   //   useCreateWorkspaceMemberMutation,
   //   useCreateSpaceMutation,
   //   useListSpaceQuery,

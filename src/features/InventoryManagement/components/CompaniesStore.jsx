@@ -15,12 +15,16 @@ import OwnerForm from "./OwnerForm";
 import {
   BuildingOfficeIcon,
   EllipsisVerticalIcon,
+  CalendarIcon,
+  BuildingStorefrontIcon,
 } from "@heroicons/react/24/solid";
 import {
   useCreateOwnerMutation,
   useGetOwnersQuery,
   useDeleteOwnerMutation,
 } from "../api/owner";
+import { useNavigate } from "react-router-dom";
+import { formatFriendlyDate } from "../../../../helpers/formatingDateUserFreindly";
 
 const CompaniesStore = () => {
   const { data: companies, refetch: refetchData } = useGetOwnersQuery();
@@ -28,42 +32,25 @@ const CompaniesStore = () => {
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const navigate = useNavigate();
 
-  // Open modal for editing
   const openEditModalHandler = (company) => {
     setSelectedCompany(company);
     setIsAdding(false);
     setOpenModal(true);
   };
 
-  // Open modal for adding
   const openAddModalHandler = () => {
     setSelectedCompany(null);
     setIsAdding(true);
     setOpenModal(true);
   };
 
-  // Close modal
   const closeModalHandler = () => {
     setSelectedCompany(null);
     setOpenModal(false);
   };
 
-  // Add new company
-  const addCompanyHandler = async (formD) => {
-    await addOwner(formD).unwrap();
-    refetchData();
-    closeModalHandler();
-  };
-
-  // Save changes to the company
-  const saveChangesHandler = async (formD) => {
-    // Logic to update company goes here
-    refetchData(); // Refetch data after updating
-    closeModalHandler();
-  };
-
-  // Delete company
   const deleteCompanyHandler = async (companyId) => {
     await deleteOwner(companyId).unwrap();
     refetchData();
@@ -82,41 +69,74 @@ const CompaniesStore = () => {
           Add Company
         </Button>
       </div>
-      <div className="flex flex-wrap gap-6">
+      <div className="flex flex-wrap gap-6 px-5">
         {companies?.map((company) => (
-          <Card key={company.id} className="w-80 relative">
+          <Card
+            key={company.id}
+            shadow={false}
+            className="w-full max-w-[30rem] relative hover:cursor-pointer flex flex-col py-6 border  transition-shadow"
+            onClick={() => navigate(`/owner/${company?.id}/store`)}
+          >
             <CardHeader
               floated={false}
               shadow={false}
-              className="h-40 flex justify-center items-center bg-gray-100"
+              className="h-40 flex justify-center items-center "
             >
               <img
                 src={company?.logo}
                 alt={`${company?.name} Logo`}
-                className="w-24 h-24 rounded-full"
+                className="w-[10rem] h-full object-cover object-center rounded"
               />
             </CardHeader>
-            <CardBody className="text-center">
-              <Typography variant="h5" color="blue-gray" className="mb-2">
-                {company?.name}
-              </Typography>
-              <Typography variant="small" className="text-gray-600">
-                {company?.motto}
-              </Typography>
+            <CardBody className="flex flex-col gap-4 px-6">
+              <div className="flex flex-col gap-1">
+                <Typography
+                  variant="h5"
+                  color="blue-gray"
+                  className="font-semibold"
+                >
+                  {company?.name}
+                </Typography>
+                <Typography variant="small" className="text-gray-600">
+                  {company?.motto}
+                </Typography>
+              </div>
+              <div className="flex justify-between items-center text-gray-600">
+                <div className="flex items-center gap-2">
+                  <BuildingStorefrontIcon className="h-5 w-5 text-primary1" />
+                  <Typography variant="small">
+                    {company?.store_count} Stores
+                  </Typography>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CalendarIcon className="h-5 w-5 text-primary1" />
+                  <Typography variant="small">
+                    {formatFriendlyDate(company?.created_at)}
+                  </Typography>
+                </div>
+              </div>
             </CardBody>
             <div className="absolute top-4 right-4">
               <Menu>
                 <MenuHandler>
-                  <Button className="flex items-center p-2 rounded-full bg-gray-100 hover:bg-gray-200">
-                    <EllipsisVerticalIcon className="h-5 w-5 text-gray-500" />
+                  <Button className="flex items-center p-2 shadow-none bg-white ">
+                    <EllipsisVerticalIcon className="h-5 w-5 text-primary1" />
                   </Button>
                 </MenuHandler>
                 <MenuList>
-                  <MenuItem onClick={() => openEditModalHandler(company)}>
+                  <MenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openEditModalHandler(company);
+                    }}
+                  >
                     Edit
                   </MenuItem>
                   <MenuItem
-                    onClick={() => deleteCompanyHandler(company.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteCompanyHandler(company.id);
+                    }}
                     className="text-red-600"
                   >
                     Delete
@@ -128,19 +148,16 @@ const CompaniesStore = () => {
         ))}
       </div>
 
-      {/* Modal for adding/editing company */}
-      <Modal
+      <OwnerForm
+        ownerId={selectedCompany?.id}
+        isAdding={isAdding}
         open={openModal}
+        onConfirm={() => {
+          refetchData();
+          closeModalHandler();
+        }}
         onClose={closeModalHandler}
-        title={isAdding ? "Add Company" : "Edit Company Details"}
-      >
-        <OwnerForm
-          initialData={selectedCompany}
-          isAdding={isAdding}
-          onConfirm={isAdding ? addCompanyHandler : saveChangesHandler}
-          onClose={closeModalHandler}
-        />
-      </Modal>
+      />
     </div>
   );
 };
