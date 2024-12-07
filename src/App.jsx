@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";
 import Tasks from "./features/TaskManagement/components/Tasks";
 import Analytics from "./features/Dashboard/components/Analytics";
-import Companies from "./features/Companies/components/companies";
+import Companies from "./features/Companies/components/Companies";
 import Kanban from "./features/TaskManagement/components/Kanban/components/Kanban";
 import Workspace from "./features/TaskManagement/components/Workspace";
 import Space from "./features/TaskManagement/components/Space";
@@ -99,17 +99,3 @@ const App = () => {
 };
 
 export default App;
-
-<style>{`
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f0f0f0;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: #10b981; /* Tailwind green-500 */
-      border-radius: 10px;
-      border: 2px solid #f0f0f0;
-    }
-  `}</style>;
