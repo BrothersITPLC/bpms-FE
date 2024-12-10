@@ -27,9 +27,20 @@ export const ProductAPI = createApi({
       }),
       invalidatesTags: [{ type: "product", id: "LIST" }],
     }),
-
+    getProduct: builder.query({
+      query: (id) => ({
+        url: `/product/${id}/`,
+        method: "GET",
+      }),
+    }),
+    getCategories: builder.query({
+      query: () => ({
+        url: `/category/`,
+        method: "GET",
+      }),
+    }),
     updateProduct: builder.mutation({
-      query: ({ id, ...data }) => ({
+      query: ({ id, data }) => ({
         url: `/product/${id}/?owner_id=${data?.owner}`,
         method: "PUT",
         body: data,
@@ -124,6 +135,8 @@ export const {
   useCreateProductMutation,
   useDeleteProductsMutation,
   useUpdateProductMutation,
+  useGetProductQuery,
+  useGetCategoriesQuery,
   //   useCreateWorkspaceMemberMutation,
   //   useCreateSpaceMutation,
   //   useListSpaceQuery,

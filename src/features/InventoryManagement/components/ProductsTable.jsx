@@ -1,7 +1,10 @@
 import { Button, Card, Typography } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
+import ProductForm from "./ProductForm";
+import { useState } from "react";
+import { useGetProductsQuery } from "../api/product";
 
-const TABLE_HEAD = ["ID", "Type", "Model", "Quantity", "Actions"];
+const TABLE_HEAD = ["ID", "Type", "Model", "description", "Actions"];
 
 const TABLE_ROWS = [
   { id: 1, type: "Router", model: "Router X", quantity: 10 },
@@ -14,10 +17,22 @@ const TABLE_ROWS = [
 const ProductsTable = () => {
   const params = useParams();
   const owner_id = params?.owner_id;
-
+  const [open, setOpen] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const { data: products, refetch: refechProduct } = useGetProductsQuery();
+  const [selectedID, setSelectedID] = useState(null);
   return (
     <Card className="flex-1 gap-2 pt-4 h-full w-fit overflow-x-auto">
-      <Button className="w-fit bg-primary1 ">Add product</Button>
+      <Button
+        className="w-fit bg-primary1 "
+        onClick={() => {
+          setOpen(true);
+          setAdding(true);
+          setSelectedID(null);
+        }}
+      >
+        Add product
+      </Button>
       <table className="w-full min-w-max table-auto text-left">
         <caption className="sr-only">Product Inventory Table</caption>
         <thead>
@@ -40,15 +55,15 @@ const ProductsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {TABLE_ROWS.map(({ id, type, model, quantity }) => (
-            <tr key={id} className="even:bg-blue-gray-50/50">
+          {products?.map((product) => (
+            <tr key={product?.id} className="even:bg-blue-gray-50/50">
               <td className="p-4">
                 <Typography
                   variant="small"
                   color="blue-gray"
                   className="font-normal"
                 >
-                  {id}
+                  {product?.id}
                 </Typography>
               </td>
               <td className="p-4">
@@ -57,7 +72,7 @@ const ProductsTable = () => {
                   color="blue-gray"
                   className="font-normal"
                 >
-                  {type}
+                  {product?.category_name}
                 </Typography>
               </td>
               <td className="p-4">
@@ -66,7 +81,7 @@ const ProductsTable = () => {
                   color="blue-gray"
                   className="font-normal"
                 >
-                  {model}
+                  {product?.model_number}
                 </Typography>
               </td>
               <td className="p-4">
@@ -75,12 +90,21 @@ const ProductsTable = () => {
                   color="blue-gray"
                   className="font-normal"
                 >
-                  {quantity}
+                  {product?.description}
                 </Typography>
               </td>
               <td className="p-4">
                 <div className="flex gap-2">
-                  <Button className="bg-secondary1">Edit</Button>
+                  <Button
+                    className="bg-secondary1"
+                    onClick={() => {
+                      setAdding(false);
+                      setOpen(true);
+                      setSelectedID(product?.id);
+                    }}
+                  >
+                    Edit
+                  </Button>
                   <Button className="bg-primary1">delete</Button>{" "}
                 </div>
               </td>
@@ -88,6 +112,18 @@ const ProductsTable = () => {
           ))}
         </tbody>
       </table>
+      <ProductForm
+        open={open}
+        isAdding={adding}
+        ownerId={owner_id}
+        onClose={() => setOpen(false)}
+        onConfirm={() => {
+          refechProduct();
+
+          setOpen(false);
+        }}
+        product_id={selectedID}
+      ></ProductForm>
     </Card>
   );
 };
