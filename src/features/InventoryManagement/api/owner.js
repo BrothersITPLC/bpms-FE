@@ -1,37 +1,43 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { baseQuery } from "../baseQuery";
+import { baseQuery } from "../../baseQuery";
 
-export const WorkspaceApiSlice = createApi({
-  reducerPath: "Workspaceapi",
+export const OwnerAPI = createApi({
+  reducerPath: "OwnerAPI",
   baseQuery: baseQuery,
-  tagTypes: ["Workspace", "Workspace_members", "space", "folder"],
+
   endpoints: (builder) => ({
-    listWorkspaces: builder.query({
+    getOwners: builder.query({
       query: () => ({
-        url: "/space/workspace/",
+        url: "/owner/",
         method: "GET",
       }),
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: "Workspace", id })),
-              { type: "Workspace", id: "LIST" },
+              ...result.map(({ id }) => ({ type: "owner", id })),
+              { type: "owner", id: "LIST" },
             ]
-          : [{ type: "Workspace", id: "LIST" }],
+          : [{ type: "owner", id: "LIST" }],
     }),
-    createWorkspace: builder.mutation({
+    getOwner: builder.query({
+      query: (id) => ({
+        url: `/owner/${id}/`,
+        method: "GET",
+      }),
+    }),
+    createOwner: builder.mutation({
       query: (data) => ({
-        url: "/space/workspace/",
+        url: "/owner/",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: [{ type: "Workspace", id: "LIST" }],
+      invalidatesTags: [{ type: "owner", id: "LIST" }],
     }),
 
-    updateWorkspaceById: builder.mutation({
-      query: ({ id, ...data }) => ({
-        url: `/space/workspace/${id}/`,
-        method: "PUT",
+    updateOwner: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/owner/${id}/`,
+        method: "PATCH",
         body: data,
       }),
       invalidatesTags: (result, error, { id }) => [
@@ -40,10 +46,10 @@ export const WorkspaceApiSlice = createApi({
       ],
     }),
     ///////////////////////////////////////////////////////// Workspace members
-    listWorkspacesNonWorkspacesMembers: builder.query({
+    deleteOwner: builder.mutation({
       query: (id) => ({
-        url: `/space/workspace-member/${id}`,
-        method: "GET",
+        url: `/owner/${id}/`,
+        method: "DELETE",
       }),
       providesTags: (result) =>
         result
@@ -116,46 +122,21 @@ export const WorkspaceApiSlice = createApi({
       }),
       invalidatesTags: [{ type: "task", id: "LIST" }],
     }),
-    listTasks: builder.query({
-      query: (id) => ({
-        url: `/space/task/`,
-        method: "GET",
-      }),
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ id }) => ({ type: "task", id })),
-              { type: "task", id: "LIST" },
-            ]
-          : [{ type: "task", id: "LIST" }],
-    }),
-    listFolder: builder.query({
-      query: (id) => ({
-        url: `/space/folders/?space_id=${id}`,
-        method: "GET",
-      }),
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ id }) => ({ type: "folder", id })),
-              { type: "folder", id: "LIST" },
-            ]
-          : [{ type: "folder", id: "LIST" }],
-    }),
   }),
 });
 
 export const {
-  useLazyListWorkspacesNonWorkspacesMembersQuery,
-  useListWorkspacesQuery,
-  useCreateWorkspaceMutation,
-  useUpdateWorkspaceByIdMutation,
-  useCreateWorkspaceMemberMutation,
-  useCreateSpaceMutation,
-  useListSpaceQuery,
-  useUpdateSpaceByIdMutation,
-  useCreateFolderMutation,
-  useListFolderQuery,
-  useListTasksQuery,
-  useCreateTaskMutation,
-} = WorkspaceApiSlice;
+  useCreateOwnerMutation,
+  useGetOwnersQuery,
+  useUpdateOwnerMutation,
+  useDeleteOwnerMutation,
+  useGetOwnerQuery,
+  //   useCreateWorkspaceMemberMutation,
+  //   useCreateSpaceMutation,
+  //   useListSpaceQuery,
+  //   useUpdateSpaceByIdMutation,
+  //   useCreateFolderMutation,
+  //   useListFolderQuery,
+  //   useListTasksQuery,
+  //   useCreateTaskMutation,
+} = OwnerAPI;

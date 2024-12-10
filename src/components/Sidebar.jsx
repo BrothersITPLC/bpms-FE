@@ -87,6 +87,11 @@ const Sidebar = () => {
                     </div>
                   </ListItem>
                 </Link>
+                <Link to="/monthly-plan">
+                  <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
+                    <div className="flex gap-8">Monthly Plan</div>
+                  </ListItem>
+                </Link>
               </List>
             </AccordionBody>
           </Accordion>
@@ -191,6 +196,16 @@ const Sidebar = () => {
               User Management
             </ListItem>
           </Link>
+
+          <Link to="/departments">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Departments{" "}
+            </ListItem>
+          </Link>
+
           <Link to="/resource-requests">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
@@ -215,6 +230,14 @@ const Sidebar = () => {
               Companies{" "}
             </ListItem>
           </Link>
+          <Link to="/role-management">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Role Management{" "}
+            </ListItem>
+          </Link>
           <Link to="/Bids">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
@@ -237,8 +260,70 @@ const Sidebar = () => {
             </ListItemPrefix>
             Customers
           </ListItem>
+          <Link to="/monthly-plan">
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <UserGroupIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Work Plan
+            </ListItem>
+          </Link>
         </List>
         <hr className="my-2 border-gray-200" />
+        {/* <Link to="/store">
+          <List>
+            <ListItem className={LIST_ITEM_STYLES}>
+              <ListItemPrefix>
+                <ChatBubbleLeftEllipsisIcon className="text-primary1 h-5 w-5" />
+              </ListItemPrefix>
+              Inventory Management{" "}
+            </ListItem>
+          </List>
+        </Link> */}
+
+        <Accordion open={open === 4}>
+          <ListItem
+            selected={open === 4}
+            data-selected={open === 4}
+            onClick={() => handleOpen(4)}
+            className="px-3 py-[9px] select-none hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 hover:text-gray-900 focus:text-gray-900 active:text-gray-900 data-[selected=true]:text-gray-900"
+          >
+            <ListItemPrefix>
+              <RectangleGroupIcon className="text-primary1 h-5 w-5" />
+            </ListItemPrefix>
+            <Typography className="mr-auto font-normal text-inherit">
+              Inventory Management
+            </Typography>
+            <ChevronDownIcon
+              strokeWidth={3}
+              className={`ml-auto h-4 w-4 text-gray-500 transition-transform ${
+                open === 4 ? "rotate-180" : ""
+              }`}
+            />
+          </ListItem>
+          <AccordionBody className="py-1">
+            <List className="p-0">
+              <Link to="/companies-store">
+                <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                  Companies{" "}
+                </ListItem>
+              </Link>
+              <Link to="/store">
+                <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                  Stores
+                </ListItem>
+              </Link>
+              <Link to="/products-table">
+                <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                  Products{" "}
+                </ListItem>
+              </Link>
+            </List>
+          </AccordionBody>
+        </Accordion>
+
+        <hr className="my-2 border-gray-200" />
+
         <List>
           <ListItem className={LIST_ITEM_STYLES}>
             <ListItemPrefix>

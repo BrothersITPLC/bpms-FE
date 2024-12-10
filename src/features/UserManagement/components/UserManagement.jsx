@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, TrashIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   CardHeader,
@@ -9,7 +9,6 @@ import {
   Button,
   CardBody,
   Chip,
-  CardFooter,
   Tabs,
   TabsHeader,
   Tab,
@@ -18,69 +17,65 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
-import { useState } from "react";
-import { useRegisterEmployeeMutation } from "../apiSlice";
+import {
+  useDeleteEmployeeMutation,
+  useGetEmployeeQuery,
+  useRegisterEmployeeMutation,
+  useUpdateEmployeeMutation,
+} from "../userAPI";
+import { useGetDepartmentQuery } from "../../Department/api/department";
+import { toast } from "react-toastify";
+import { formatFriendlyDate } from "../../../../helpers/formatingDateUserFreindly";
 const TABS = [
-  {
-    label: "All",
-    value: "all",
-  },
-  {
-    label: "Active",
-    value: "active",
-  },
-  {
-    label: "Inactive",
-    value: "inactive",
-  },
+  { label: "All", value: "all" },
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
 ];
 
 const TABLE_HEAD = ["Member", "Position", "Status", "Employed", ""];
-const TABLE_HEAD1 = ["", "Department", "", "", ""];
-
 const TABLE_ROWS = [
   {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-    name: "John Michael",
-    email: "john@creative-tim.com",
-    job: "Manager",
-    org: "Organization",
-    active: true,
-    date: "23/04/18",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-    name: "Alexa Liras",
-    email: "alexa@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
-    active: false,
-    date: "23/04/18",
-  },
-  {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-    name: "Laurent Perrier",
-    email: "laurent@creative-tim.com",
-    job: "Executive",
-    org: "Projects",
+    name: "Helen Tesfaye",
+    email: "helen.tesfaye@brothersitplc.com",
+    job: "Manager",
+    org: "Technical",
     active: false,
     date: "19/09/17",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg",
-    name: "Michael Levi",
-    email: "michael@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
+    name: "Yordanos Mengist",
+    email: "yordanos.mengist@brothersitplc.com",
+    job: "Deputy Manager",
+    org: "Technical",
     active: true,
     date: "24/12/08",
   },
   {
+    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
+    name: "Yohannes Assefa",
+    email: "yohannes.assefa@brothersitplc.com",
+    job: "Engineer",
+    org: "Presale Engineer",
+    active: true,
+    date: "23/04/18",
+  },
+  {
+    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
+    name: "Seblewongel Hailu",
+    email: "seblewongel.hailu@brothersitplc.com",
+    job: "Engineer",
+    org: "Presale Engineer",
+    active: false,
+    date: "23/04/18",
+  },
+  {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
-    name: "Richard Gran",
-    email: "richard@creative-tim.com",
-    job: "Manager",
-    org: "Executive",
+    name: "Kbruysfa Desalegn",
+    email: "kbruysfa.desalegn@brothersitplc.com",
+    job: "Engineer",
+    org: "Presale Engineer",
     active: false,
     date: "04/10/21",
   },
@@ -93,37 +88,79 @@ const UserManagement = () => {
   const [formData, setFormData] = useState({
     department: "",
     email: "",
-    job_position: "",
+    id: "",
   });
+  const [editingUser, setEditingUser] = useState(null); // New state for the user being edited
+  const [selectedID, setSelectedID] = useState();
+  const handleDeleteUser = async (id) => {
+    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+      console.log("Deleted user:", name);
+      try {
+        await deleteEmployee({ id }).unwrap();
+        refetchEmployee();
+        toast.success("deleted successfully");
+      } catch (error) {
+        toast.error("error please try again");
+      }
+      // Here, you can add your API call to delete the user.
+    }
+  };
 
-  const handleOpenModal = () => {
+  const [deleteEmployee] = useDeleteEmployeeMutation();
+
+  const { data: employees, refetch: refetchEmployee } = useGetEmployeeQuery();
+  const [updateEmployee] = useUpdateEmployeeMutation();
+
+  const handleOpenModal = (user = null) => {
+    if (user) {
+      setFormData({
+        department: user.department || "",
+        email: user.email,
+        id: user.id,
+      });
+      setEditingUser(user); // Set the user to be edited
+    }
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
+    setEditingUser(null); // Reset editing user when closing modal
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleConfirm = async () => {
     try {
-      const result = await registerEmployee(formData).unwrap();
+      if (editingUser) {
+        await updateEmployee({
+          id: formData?.id,
+          data: {
+            email: formData?.email,
+            department: formData?.department,
+          },
+        });
+        // Update logic (you may call an API to update the user)
+        // console.log("Updating user:", formData);
+      } else {
+        await registerEmployee(formData).unwrap();
+      }
       handleCloseModal();
+      refetchEmployee();
     } catch (error) {
-      console.log("error:", error);
+      console.error("Error:", error);
     }
   };
+
   const filteredRows = TABLE_ROWS.filter((row) => {
     if (selectedTab === "active") return row.active === true;
     if (selectedTab === "inactive") return row.active === false;
     return true;
   });
+
+  const { data: departments } = useGetDepartmentQuery({ search: "" });
 
   return (
     <>
@@ -133,7 +170,7 @@ const UserManagement = () => {
             <div className="mb-8 flex items-center justify-between gap-8">
               <div>
                 <Typography variant="h5" color="blue-gray">
-                  Members list
+                  Members List
                 </Typography>
                 <Typography color="gray" className="mt-1 font-normal">
                   See information about all members
@@ -141,23 +178,19 @@ const UserManagement = () => {
               </div>
               <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
                 <Button variant="outlined" size="sm">
-                  view all
+                  View All
                 </Button>
                 <Button
                   className="flex bg-primary1 items-center gap-3"
                   size="sm"
-                  onClick={handleOpenModal}
+                  onClick={() => handleOpenModal()} // Open modal for adding new user
                 >
-                  <UserPlusIcon strokeWidth={2} className=" h-4 w-4" /> Add user
+                  <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add User
                 </Button>
               </div>
             </div>
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-              <Tabs
-                value={selectedTab}
-                className="w-full md:w-max"
-                onChange={setSelectedTab}
-              >
+              <Tabs value={selectedTab} className="w-full md:w-max">
                 <TabsHeader>
                   {TABS.map(({ label, value }) => (
                     <Tab
@@ -199,134 +232,155 @@ const UserManagement = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredRows.map(
-                  ({ img, name, email, job, org, active, date }, index) => {
-                    const isLast = index === TABLE_ROWS.length - 1;
-                    const classes = isLast
-                      ? "p-4"
-                      : "p-4 border-b border-blue-gray-50";
+                {employees?.map((employee, index) => {
+                  const isLast = index === filteredRows.length - 1;
+                  const classes = isLast
+                    ? "p-4"
+                    : "p-4 border-b border-blue-gray-50";
 
-                    return (
-                      <tr key={name}>
-                        <td className={classes}>
-                          <div className="flex items-center gap-3">
-                            <Avatar src={img} alt={name} size="sm" />
-                            <div className="flex flex-col">
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal"
-                              >
-                                {name}
-                              </Typography>
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal opacity-70"
-                              >
-                                {email}
-                              </Typography>
-                            </div>
-                          </div>
-                        </td>
-                        <td className={classes}>
+                  return (
+                    <tr key={employee?.id}>
+                      <td className={classes}>
+                        <div className="flex items-center gap-3">
+                          <Avatar
+                            src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
+                            alt={name}
+                            size="sm"
+                          />
                           <div className="flex flex-col">
-                            <Typography
+                            {/* <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {job}
-                            </Typography>
+                              {name}
+                            </Typography> */}
+
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-normal opacity-70"
                             >
-                              {org}
+                              {employee?.email}
                             </Typography>
                           </div>
-                        </td>
-                        <td className={classes}>
-                          <div className="w-max">
-                            <Chip
-                              variant="ghost"
-                              size="sm"
-                              value={active ? "active" : "inactive"}
-                              color={active ? "green" : "blue-gray"}
-                            />
-                          </div>
-                        </td>
-                        <td className={classes}>
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <div className="flex flex-col">
                           <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {date}
+                            {employee?.department_name}
                           </Typography>
-                        </td>
-                        <td className={classes}>
-                          <Tooltip content="Edit User">
-                            <IconButton variant="text">
-                              <PencilIcon className="h-4 w-4" />
-                            </IconButton>
+                          {/* <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal opacity-70"
+                          >
+                            {org}
+                          </Typography> */}
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <div className="w-max">
+                          <Chip
+                            variant="ghost"
+                            size="sm"
+                            // value={active ? "active" : "inactive"}
+                            // color={active ? "green" : "blue-gray"}
+                          />
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {formatFriendlyDate(employee?.date_joined)}
+                        </Typography>
+                      </td>
+                      <td className={classes}>
+                        <div className="flex justify-end gap-2">
+                          <Tooltip content="Edit">
+                            <div className="flex flex-row">
+                              <IconButton
+                                variant="text"
+                                onClick={() =>
+                                  handleOpenModal({
+                                    email: employee?.email,
+                                    department: employee?.department,
+                                    id: employee?.id,
+                                    // org,
+                                    // active,
+                                    // date,
+                                  })
+                                }
+                              >
+                                <PencilIcon className="h-4 w-4" />
+                              </IconButton>
+                            </div>
                           </Tooltip>
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
+                          <Tooltip content="Delete">
+                            <div className="flex flex-row">
+                              <IconButton
+                                variant="text"
+                                onClick={() => handleDeleteUser(employee?.id)} // Add the delete logic here
+                              >
+                                <TrashIcon className="h-4 w-4" />
+                              </IconButton>
+                            </div>
+                          </Tooltip>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </CardBody>
-          <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-            <Typography
-              variant="small"
-              color="blue-gray"
-              className="font-normal"
-            >
-              Page 1 of 10
-            </Typography>
-            <div className="flex gap-2">
-              <Button variant="outlined" size="sm">
-                Previous
-              </Button>
-              <Button variant="outlined" size="sm">
-                Next
-              </Button>
-            </div>
-          </CardFooter>
         </Card>
       </div>
+
+      {/* Modal for Adding/Editing User */}
       <Modal
         open={modalOpen}
         onClose={handleCloseModal}
-        title="Add Member"
-        confirmText={isLoading ? "Adding..." : "Add"}
+        title={editingUser ? "Edit User" : "Add User"}
+        confirmText={isLoading ? "Loading..." : editingUser ? "Update" : "Add"}
         onConfirm={handleConfirm}
-        disabled={isLoading}
+        onCancel={handleCloseModal}
+        confirmDisabled={isLoading}
       >
-        <div className="flex flex-col gap-4">
+        <form className="flex flex-col gap-6 w-full" onChange={handleChange}>
+          <select
+            value={formData?.department}
+            className="h-[3rem] rounded border-primary1 border"
+            name="department"
+            onChange={handleChange}
+          >
+            {" "}
+            <option value="" disabled>
+              Select Department
+            </option>
+            {departments?.map((department) => (
+              <option key={department?.id} value={department?.id}>
+                {department?.name}
+              </option>
+            ))}
+          </select>
+
           <Input
+            type="email"
             label="Email"
             name="email"
-            value={formData.email}
-            onChange={handleChange}
+            required
+            defaultValue={formData.email}
           />
-          <Input
-            label="Department"
-            name="department"
-            value={formData.department}
-            onChange={handleChange}
-          />
-          <Input
-            label="Job Position"
-            name="job_position"
-            value={formData.job_position}
-            onChange={handleChange}
-          />
-        </div>
+        </form>
       </Modal>
     </>
   );

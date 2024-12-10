@@ -21,6 +21,7 @@ import Card from "../../../components/Card";
 import Modal from "../../../components/Modal";
 import BidsCard from "./BidsCard";
 import DatePicker from "../../../components/DatePicker";
+import { Outlet } from "react-router-dom";
 import {
   useAddRFPMutation,
   useDeleteRFPMutation,
@@ -33,6 +34,7 @@ import { useGetCompanyQuery } from "../../Companies/companyApi";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import CusstomSpinner from "../../../components/Spinner";
+import { useParams } from "react-router-dom";
 
 const Bids = () => {
   const [activeTab, setActiveTab] = useState("floated_bids");
@@ -84,6 +86,7 @@ const Bids = () => {
     setIsEditing(false);
     setSelectedRFP(null);
   };
+  const params = useParams();
 
   const handleConfirm = async () => {
     try {
@@ -128,39 +131,52 @@ const Bids = () => {
   };
 
   return (
-    <div className="w-1/2 flex-1 m-4 px-9 py-[2rem]">
-      <div className="flex flex-row justify-between w-full items-center">
-        <div>
-          <Typography variant="h5" color="blue-gray">
-            Bids
-          </Typography>
-          <Typography color="gray" className="mt-1 font-normal">
-            You can view the statuses of different bids and propose purchases.
-          </Typography>
-        </div>
-        <Button
-          onClick={() => openModal("Create RFP")}
-          className="bg-primary1 w-[10rem] h-[3rem]"
-        >
-          Create
-        </Button>
-      </div>
-
-      <div className="w-full flex gap-5 flex-wrap py-[2rem]">
-        {rfps?.map((rfp) => (
-          <div key={rfp.id} className=" gap-4 flex flex-wrap">
-            <BidsCard
-              id={rfp?.id}
-              companyName={rfp.client_name}
-              bidTitle={rfp.name}
-              rfqNo={rfp.rfp_number}
-              client={rfp.client_name}
-              created_by={rfp.created_by}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
+    <div className="w-1/2 flex-1 m-4 px-9 py-[2rem] max-h-[calc(100vh-2rem)] overflow-hidden ">
+      <div className="flex flex-row gap-5">
+        <div className="flex gap-5 ">
+          <div className="flex flex-col gap-2  h-[80vh]">
+            <div className="flex flex-row justify-between border-b border-primary1/10 pb-3 w-full items-center">
+              <div>
+                <Typography variant="h5" color="blue-gray">
+                  Bids
+                </Typography>
+                <Typography color="gray" className="mt-1 font-normal">
+                  You can view the statuses of different bids and propose
+                  purchases.
+                </Typography>
+              </div>
+              <Button
+                onClick={() => openModal("Create RFP")}
+                className="bg-primary1 w-[10rem] h-[3rem]"
+              >
+                Create RFP
+              </Button>
+            </div>
+            <div className="md:w-full flex flex-col   gap-5 max-h-[calc(100vh-10rem)] overflow-y-auto px-3  py-[2rem]">
+              {rfps?.map((rfp) => (
+                <div key={rfp.id} className=" gap-4 flex flex-wrap">
+                  <BidsCard
+                    id={rfp?.id}
+                    is_active={params?.id == rfp?.id}
+                    companyName={rfp.client_name}
+                    bidTitle={rfp.name}
+                    rfqNo={rfp.rfp_number}
+                    url={rfp.url}
+                    lot_count={rfp?.lot_count}
+                    created_by={rfp.created_by}
+                    onDelete={handleDelete}
+                    onEdit={handleEdit}
+                    created_at={rfp?.created_at}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
+          <div className="w-[0.15rem] rounded-full  h-full bg-primary1"></div>
+        </div>
+        <div className="flex w-full">
+          <Outlet />
+        </div>
       </div>
 
       <Modal
@@ -188,8 +204,8 @@ const Bids = () => {
               required
             >
               {clients?.map((client) => (
-                <Option key={client.id} value={client.id}>
-                  {client.name}
+                <Option key={client?.id} value={client?.id}>
+                  {client?.name}
                 </Option>
               ))}
             </Select>

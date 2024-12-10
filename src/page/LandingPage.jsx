@@ -102,10 +102,12 @@ const LandingPage = () => {
         <Collapse open={open}>
           <div className="container mx-auto mt-3 border-t border-blue-gray-50 px-2 pt-4">
             <ul className="flex flex-col gap-4">
-              <NavItem>
-                <RectangleStackIcon className="h-5 w-5" />
-                Pages
-              </NavItem>
+              <Link to="./analytics">
+                <NavItem>
+                  <RectangleStackIcon className="h-5 w-5" />
+                  Pages
+                </NavItem>
+              </Link>
               <NavItem>
                 <UserCircleIcon className="h-5 w-5" />
                 Account

@@ -25,7 +25,6 @@ import {
   AccordionHeader,
   AccordionBody,
 } from "@material-tailwind/react";
-import Modal from "../../../components/Modal";
 import {
   useListWorkspacesQuery,
   useCreateWorkspaceMutation,
@@ -34,6 +33,7 @@ import {
   useCreateWorkspaceMemberMutation,
 } from "../apiSlice";
 import MultipleWorkspacesComponent from "./MultipleWorkspacesComponent";
+import Modal from "../../../components/Modal";
 
 const Workspace = () => {
   // RTK Query hooks for fetching and creating workspaces
@@ -146,15 +146,15 @@ const Workspace = () => {
   const handleInputChange = (e) => setQuery(e.target.value);
 
   return (
-    <div className="flex w-full">
+    <div className="flex-1 w-full">
       {/* Table for Displaying a Workspace */}
-      <Card className="h-full w-fit flex-1">
+      <Card className="h-full w-full ">
         <CardHeader
           floated={false}
           shadow={false}
-          className="mb-2 rounded-none p-2"
+          className="mb-2 rounded-none "
         >
-          <div className="flex justify-between">
+          <div className="flex w-full ">
             <div className="w-fit">
               <Input
                 label="Search WorkSpace"
@@ -163,7 +163,7 @@ const Workspace = () => {
             </div>
             {/* Button to open "Add Task" modal */}
             <Button
-              className="bg-primary1 flex items-center gap-3"
+              className="bg-primary1 flex items-center mx-auto"
               size="sm"
               onClick={handleWorkspaceOpen}
             >

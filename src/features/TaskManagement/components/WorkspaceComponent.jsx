@@ -18,13 +18,13 @@ import {
   PlusIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/solid";
-import SpaceComponent from "./SpaceComponent";
-import Modal from "../../../components/Modal";
 import {
   useUpdateWorkspaceByIdMutation,
   useCreateSpaceMutation,
   useListSpaceQuery,
 } from "../apiSlice";
+import SpaceComponent from "./SpaceComponent";
+import Modal from "../../../components/Modal";
 const WorkspaceComponent = ({ workspace }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -122,7 +122,7 @@ const WorkspaceComponent = ({ workspace }) => {
 
   return (
     <div>
-      <Card className="w-full max-w-[90%] mx-auto mb-4">
+      <Card className="w-full max-w-[90%]  mb-4">
         <CardBody>
           <div className="flex items-center justify-between mb-2 gap-4">
             <Typography variant="h6">
