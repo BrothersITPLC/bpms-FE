@@ -18,13 +18,13 @@ import {
   PlusIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/solid";
-import SpaceComponent from "./SpaceComponent";
-import Modal from "../../../components/Modal";
 import {
   useUpdateWorkspaceByIdMutation,
   useCreateSpaceMutation,
   useListSpaceQuery,
 } from "../apiSlice";
+import SpaceComponent from "./SpaceComponent";
+import Modal from "../../../components/Modal";
 const WorkspaceComponent = ({ workspace }) => {
   const [isOpen, setIsOpen] = useState(false);
 

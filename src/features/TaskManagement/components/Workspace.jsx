@@ -25,7 +25,6 @@ import {
   AccordionHeader,
   AccordionBody,
 } from "@material-tailwind/react";
-import Modal from "../../../components/Modal";
 import {
   useListWorkspacesQuery,
   useCreateWorkspaceMutation,
@@ -34,6 +33,7 @@ import {
   useCreateWorkspaceMemberMutation,
 } from "../apiSlice";
 import MultipleWorkspacesComponent from "./MultipleWorkspacesComponent";
+import Modal from "../../../components/Modal";
 
 const Workspace = () => {
   // RTK Query hooks for fetching and creating workspaces

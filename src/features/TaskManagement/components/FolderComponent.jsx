@@ -13,6 +13,7 @@ import {
   FolderPlusIcon,
   DocumentPlusIcon,
 } from "@heroicons/react/24/solid";
+
 import TaskComponent from "./TaskComponent";
 
 const FolderComponent = ({ folder, level }) => {
