@@ -34,7 +34,7 @@ const Store = () => {
   const [addStore] = useCreateStoreMutation();
   const [deleteStore] = useDeleteStoreMutation();
   const [updateStore] = useUpdateStoreMutation();
-
+  const navigate = useNavigate();
   const openAddModalHandler = () => {
     setOpenAddModal(true);
     setFormData({ name: "", address: "" });
@@ -103,8 +103,9 @@ const Store = () => {
       <div className="flex flex-wrap gap-6 px-10">
         {stores?.map((store) => (
           <div
-            key={store.id}
+            key={store?.id}
             className="relative w-96 transition-transform transform"
+            onClick={() => navigate(`/store/${store?.id}/products`)}
           >
             <Card
               className="w-full border hover:border hover:border-primary1  duration-300  transition-all "

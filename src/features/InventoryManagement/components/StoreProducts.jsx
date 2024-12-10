@@ -12,8 +12,8 @@ import {
 } from "@material-tailwind/react";
 import StockOutModal from "./StockOutModal"; // Stock-Out Modal
 import StockInModal from "./StockInModal"; // New Stock-In Modal
+import { useParams } from "react-router-dom";
 
-// Updated stock-out and stock-in history with more data
 const STOCK_OUT_HISTORY = [
   { id: 1, date: "2024-12-01", stockedOutTo: "Dashen Bank", quantity: 2 },
   { id: 1, date: "2024-12-03", stockedOutTo: "Ethio Telecom", quantity: 5 },
@@ -63,8 +63,8 @@ const StoreProducts = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openStockOutModal, setOpenStockOutModal] = useState(false);
   const [openStockInModal, setOpenStockInModal] = useState(false);
-
-  if (!store) {
+  const params = useParams();
+  if (!params?.store_id) {
     return (
       <div className="p-6">
         <Typography variant="h5" color="red">
@@ -123,9 +123,15 @@ const StoreProducts = () => {
     <div className="p-6 space-y-10 w-full flex-1">
       <div className="flex w-full flex-row gap-8">
         {/* Products Table */}
-        <div className="h-fit w-fit">
-          <Typography variant="h4" color="blue-gray" className="mb-4">
-            {store.name} Products
+
+        <div className="h-fit w-fit pt-10">
+          <Typography
+            variant="h4"
+            color="blue-gray"
+            className="mb-4 flex w-full justify-between"
+          >
+            {store?.name} Products
+            <Button color="blue">Open Stock</Button>
           </Typography>
           <Card className="h-full w-full overflow-scroll">
             <table className="w-full min-w-max table-auto text-left">

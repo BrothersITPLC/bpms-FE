@@ -79,6 +79,10 @@ const App = () => {
             <Route path="resource-requests" element={<ResourceRequests />} />
             <Route path="/owner/:owner_id/store" element={<Store />} />
             <Route
+              path="/store/:store_id/products"
+              element={<StoreProducts />}
+            />
+            <Route
               path="/owner/:owner_id/products-table"
               element={<ProductsTable />}
             />
