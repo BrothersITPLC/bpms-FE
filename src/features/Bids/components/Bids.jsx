@@ -162,9 +162,11 @@ const Bids = () => {
                     bidTitle={rfp.name}
                     rfqNo={rfp.rfp_number}
                     url={rfp.url}
+                    lot_count={rfp?.lot_count}
                     created_by={rfp.created_by}
                     onDelete={handleDelete}
                     onEdit={handleEdit}
+                    created_at={rfp?.created_at}
                   />
                 </div>
               ))}
