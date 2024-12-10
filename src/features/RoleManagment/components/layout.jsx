@@ -9,7 +9,7 @@ export default function RoleLayout() {
     return location.pathname == path;
   };
   return (
-    <div className=" w-full px-[10%]  py-10">
+    <div className="flex-1 ml-64 p-6">
       {/* Navigation Header */}
       <Card shadow={false} className="w-full border mb-8">
         <CardBody className="flex space-x-6">

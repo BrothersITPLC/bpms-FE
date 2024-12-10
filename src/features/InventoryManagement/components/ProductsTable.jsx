@@ -12,7 +12,7 @@ const TABLE_ROWS = [
 
 const ProductsTable = () => {
   return (
-    <Card className="flex-1 gap-2 pt-4 h-full w-fit overflow-x-auto">
+    <Card className="flex-1 gap-2 pt-4 h-full ml-64 p-6 overflow-x-auto">
       <Button className="w-fit bg-primary1 ">Add product</Button>
       <table className="w-full min-w-max table-auto text-left">
         <caption className="sr-only">Product Inventory Table</caption>

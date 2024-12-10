@@ -12,7 +12,7 @@ const BidDetail = () => {
   });
 
   return (
-    <div className="w-full mt-8">
+    <div className="flex-1 ml-64 p-6">
       <div className="w-full flex justify-end"></div>
       <div className="w-full  py-4   ">
         <div className="w-full  mx-auto bg-white  rounded-lg border-primary1/10 border overflow-hidden">

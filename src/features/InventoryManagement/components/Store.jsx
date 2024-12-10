@@ -26,7 +26,7 @@ const Store = () => {
   };
 
   return (
-    <div className="flex flex-wrap space-y-6">
+    <div className="flex-1 ml-64 p-6">
       <div className="flex flex-wrap gap-6">
         {cards.map((card) => (
           <div

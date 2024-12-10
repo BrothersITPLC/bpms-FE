@@ -11,7 +11,7 @@ import {
 
 const BidAnalytics = () => {
   return (
-    <div className="flex-1 p-8 space-y-8">
+    <div className="flex-1 ml-64 p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div className="bg-white p-6 rounded-xl border">
           <div className="flex items-center justify-between">

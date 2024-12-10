@@ -3,7 +3,7 @@ import Board from "./Board";
 
 const Kanban = () => {
   return (
-    <div className="h-screen w-full bg-neutral-900 text-neutral-50">
+    <div className="flex-1 ml-64 p-6 h-screen w-full bg-neutral-900 text-neutral-50">
       <Board />
     </div>
   );

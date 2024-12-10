@@ -27,7 +27,7 @@ const BidsCard = ({
       onClick={() => {
         navigate(`/bids/${id}`);
       }}
-      className={`relative p-6 w-80 bg-white border rounded-lg hover:border-blue-900 transition-shadow duration-300 ease-in-out${
+      className={`relative flex-1 ml-64 p-6 bg-white border rounded-lg hover:border-blue-900 transition-shadow duration-300 ease-in-out${
         is_active ? " border-primary1" : ""
       }`}
     >
