@@ -33,6 +33,25 @@ export const ProductAPI = createApi({
         method: "GET",
       }),
     }),
+    addProductStore: builder.mutation({
+      query: (data) => ({
+        url: `/product_store/`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getProduct_in_owner_store: builder.query({
+      query: (id) => ({
+        url: `/products/${id}/not-in-store/`,
+        method: "GET",
+      }),
+    }),
+    getProduct_in_store: builder.query({
+      query: (id) => ({
+        url: `/products/${id}/in-store/`,
+        method: "GET",
+      }),
+    }),
     getCategories: builder.query({
       query: () => ({
         url: `/category/`,
@@ -137,6 +156,9 @@ export const {
   useUpdateProductMutation,
   useGetProductQuery,
   useGetCategoriesQuery,
+  useGetProduct_in_storeQuery,
+  useAddProductStoreMutation,
+  useGetProduct_in_owner_storeQuery,
   //   useCreateWorkspaceMemberMutation,
   //   useCreateSpaceMutation,
   //   useListSpaceQuery,

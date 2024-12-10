@@ -6,12 +6,15 @@ import {
   useGetProductQuery,
   useUpdateProductMutation,
   useGetCategoriesQuery,
+  useGetProduct_in_storeQuery,
+  useAddProductStoreMutation,
+  useGetProduct_in_owner_storeQuery,
 } from "../api/product";
 import { Textarea } from "@material-tailwind/react";
-
+import { toast } from "react-toastify";
+import { FaPlus } from "react-icons/fa";
 const ProductStoreForm = ({
-  ownerId,
-  isAdding,
+  store_id,
   open,
   onClose,
   onConfirm,
@@ -22,41 +25,22 @@ const ProductStoreForm = ({
       skip: !product_id, // Skip fetching if no ownerId is provided
     });
 
-  const [addProduct] = useCreateProductMutation();
+  const [addProductStore] = useAddProductStoreMutation();
   const [updateProduct] = useUpdateProductMutation();
   const [formData, setFormData] = useState({
-    name: "",
-    model_number: "",
-    description: "",
-    category: "",
-    owner: ownerId,
-    unit: "pcs",
+    quantity: "",
+    price: "",
+    max_level: "",
+    min_level: "",
   });
 
-  const { data: categories } = useGetCategoriesQuery();
+  const [openStock, setOpen] = useState(false);
+  const [selectedID, setSelectedID] = useState(null);
+
+  const { data: products, refetch: refetchData } =
+    useGetProduct_in_owner_storeQuery(store_id);
 
   // Load data into form when fetchedProduct is available
-  useEffect(() => {
-    if (fetchedProduct && !isAdding) {
-      setFormData({
-        name: fetchedProduct.name || "",
-        model_number: fetchedProduct.model_number || "",
-        description: fetchedProduct.description || "",
-        category: fetchedProduct.category || "",
-        owner: ownerId,
-        unit: "pcs",
-      });
-    } else {
-      setFormData({
-        name: "",
-        model_number: "",
-        description: "",
-        category: "",
-        owner: ownerId,
-        unit: "pcs",
-      });
-    }
-  }, [fetchedProduct, isAdding, ownerId]);
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -70,75 +54,96 @@ const ProductStoreForm = ({
   // Handle form submission for both adding and editing
   const handleSubmit = async () => {
     try {
-      if (isAdding) {
-        await addProduct(formData).unwrap();
-      } else {
-        await updateProduct({ id: ownerId, data: formData }).unwrap();
-      }
-      onConfirm(); // Notify parent component of successful submission
+      // if (isAdding) {
+      await addProductStore({
+        quantity: formData.quantity,
+        min_stock_level: formData.min_level,
+        store: store_id,
+        product: selectedID,
+        cost_price: formData.price,
+      }).unwrap();
+      refetchData();
+      setOpen(false);
+      toast.success("success");
+      // onConfirm();
+      // Notify parent component of successful submission
     } catch (error) {
       console.error("Error saving owner:", error);
+      toast.error("error please try again");
     }
   };
 
-  if (!isAdding && isLoadingProduct) {
+  if (isLoadingProduct) {
     return (
       <Modal open={open} onClose={onClose} title="Loading...">
-        <div>Loading owner details...</div>
+        <div>Loading Product details...</div>
       </Modal>
     );
   }
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      onConfirm={handleSubmit}
-      size="xl"
-      title={isAdding ? "Add Product" : "Edit Product Details"}
-    >
-      <div className="space-y-4 flex flex-row gap-5">
-        <div className="flex flex-col gap-2">
-          <label>Category</label>
-          <select
-            className="w-full h-[3rem] border rounded"
-            value={formData.category}
-            name="category"
-            onChange={handleInputChange}
-          >
-            {" "}
-            <option key="" value="" disabled>
-              select Category
-            </option>
-            {categories?.map((category) => {
-              return (
-                <option key={category?.id} value={category?.id}>
-                  {category?.name}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <Input
-          label="Name"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-        />
-        <Input
-          label="model_number"
-          name="model_number"
-          value={formData.model_number}
-          onChange={handleInputChange}
-        />
+    <Modal open={open} onClose={onClose} onConfirm={handleSubmit} size="lg">
+      <div className="w-full min-h-[15rem] bg-white shadow rounded-lg p-4">
+        <ol className="flex items-center justify-center flex-wrap gap-4">
+          {products?.map((product) => (
+            <li
+              key={product?.id}
+              className="flex flex-col items-start gap-2 p-4 border rounded-lg bg-gray-50 hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => {
+                setOpen(true);
+                setSelectedID(product?.id);
+              }}
+            >
+              <span className="text-lg font-semibold text-gray-800">
+                {product?.name}
+              </span>
+              <span className="text-sm text-gray-500">
+                {product?.model_number}
+              </span>
+            </li>
+          ))}
+          {products?.length == 0 && (
+            <div className="border-[3px] border-primary1/40 hover:border-primary1 cursor-pointer rounded max-auto border-dashed h-[10rem] w-[11rem]">
+              <div className="w-full flex items-center justify-center flex-col gap-3 px-3 py-2 h-full">
+                <FaPlus className="text-3xl text-primary1"></FaPlus>
 
-        <Textarea
-          label="Description"
-          name="description"
-          value={formData.description}
-          onChange={handleInputChange}
-        />
+                <p className="text-sm ">
+                  No Product Found in this Store Owner which is outside of this
+                  store
+                </p>
+              </div>
+            </div>
+          )}
+        </ol>
       </div>
+
+      <Modal
+        open={openStock}
+        onClose={() => setOpen(false)}
+        onConfirm={handleSubmit}
+        size="lg"
+      >
+        <div className="space-y-4 flex flex-col gap-5">
+          <Input
+            label="quantity"
+            name="quantity"
+            value={formData.quantity}
+            onChange={handleInputChange}
+          />
+          <Input
+            label="price"
+            name="price"
+            value={formData.price}
+            onChange={handleInputChange}
+          />
+          <Input
+            label="Min Quantity"
+            name="min_level"
+            value={formData.min_level}
+            onChange={handleInputChange}
+          />
+        </div>
+      </Modal>
     </Modal>
   );
 };
