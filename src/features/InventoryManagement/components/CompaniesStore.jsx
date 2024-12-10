@@ -4,109 +4,56 @@ import {
   CardHeader,
   CardBody,
   Typography,
-  Input,
   Button,
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
-import logoImage from "../../../assets/images/logo.png";
-import nhyLogo from "../../../assets/images/nhy.png"; // Import the static logo
-import { BuildingOfficeIcon } from "@heroicons/react/24/solid";
+import OwnerForm from "./OwnerForm";
+import {
+  BuildingOfficeIcon,
+  EllipsisVerticalIcon,
+  CalendarIcon,
+  BuildingStorefrontIcon,
+} from "@heroicons/react/24/solid";
+import {
+  useCreateOwnerMutation,
+  useGetOwnersQuery,
+  useDeleteOwnerMutation,
+} from "../api/owner";
+import { useNavigate } from "react-router-dom";
+import { formatFriendlyDate } from "../../../../helpers/formatingDateUserFreindly";
 
 const CompaniesStore = () => {
-  const [companies, setCompanies] = useState([
-    {
-      id: 1,
-      name: "Brothers IT PLC",
-      motto: "Expanding success!",
-      logo: logoImage, // Use the imported static logo
-    },
-    {
-      id: 2,
-      name: "NHY Trading",
-      motto: "Sustainability First",
-      logo: nhyLogo, // Reuse the same logo or provide a different one if needed
-    },
-  ]);
-
+  const { data: companies, refetch: refetchData } = useGetOwnersQuery();
+  const [deleteOwner] = useDeleteOwnerMutation();
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    motto: "",
-    logo: "",
-  });
   const [isAdding, setIsAdding] = useState(false);
+  const navigate = useNavigate();
 
-  // Open modal for editing
   const openEditModalHandler = (company) => {
     setSelectedCompany(company);
-    setFormData({
-      name: company.name,
-      motto: company.motto,
-      logo: company.logo,
-    });
     setIsAdding(false);
     setOpenModal(true);
   };
 
-  // Open modal for adding
   const openAddModalHandler = () => {
-    setFormData({ name: "", motto: "", logo: "" });
     setSelectedCompany(null);
     setIsAdding(true);
     setOpenModal(true);
   };
 
-  // Close modal
   const closeModalHandler = () => {
     setSelectedCompany(null);
-    setFormData({ name: "", motto: "", logo: "" });
     setOpenModal(false);
   };
 
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  // Handle file upload
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prevData) => ({
-          ...prevData,
-          logo: reader.result, // Base64 string for image preview
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Save changes to the company
-  const saveChangesHandler = () => {
-    setCompanies((prevCompanies) =>
-      prevCompanies.map((company) =>
-        company.id === selectedCompany.id
-          ? { ...company, ...formData }
-          : company
-      )
-    );
-    closeModalHandler();
-  };
-
-  // Add new company
-  const addCompanyHandler = () => {
-    setCompanies((prevCompanies) => [
-      ...prevCompanies,
-      { ...formData, id: Date.now() },
-    ]);
-    closeModalHandler();
+  const deleteCompanyHandler = async (companyId) => {
+    await deleteOwner(companyId).unwrap();
+    refetchData();
   };
 
   return (
@@ -116,82 +63,101 @@ const CompaniesStore = () => {
         <Button
           className="flex bg-primary1 items-center gap-3"
           size="sm"
-          onClick={openAddModalHandler} // Opens modal for adding a new company
+          onClick={openAddModalHandler}
         >
           <BuildingOfficeIcon strokeWidth={2} className="h-4 w-4" />
           Add Company
         </Button>
       </div>
-      <div className="flex flex-wrap gap-6">
-        {companies.map((company) => (
+      <div className="flex flex-wrap gap-6 px-5">
+        {companies?.map((company) => (
           <Card
             key={company.id}
-            className="w-80 cursor-pointer hover:shadow-lg"
-            onClick={() => openEditModalHandler(company)}
+            shadow={false}
+            className="w-full max-w-[30rem] relative hover:cursor-pointer flex flex-col py-6 border  transition-shadow"
+            onClick={() => navigate(`/owner/${company?.id}/store`)}
           >
             <CardHeader
               floated={false}
-              className="h-40 flex justify-center items-center bg-gray-100"
+              shadow={false}
+              className="h-40 flex justify-center items-center "
             >
               <img
-                src={company.logo}
-                alt={`${company.name} Logo`}
-                className="w-24 h-24 rounded-full"
+                src={company?.logo}
+                alt={`${company?.name} Logo`}
+                className="w-[10rem] h-full object-cover object-center rounded"
               />
             </CardHeader>
-            <CardBody className="text-center">
-              <Typography variant="h5" color="blue-gray" className="mb-2">
-                {company.name}
-              </Typography>
-              <Typography variant="small" className="text-gray-600">
-                {company.motto}
-              </Typography>
+            <CardBody className="flex flex-col gap-4 px-6">
+              <div className="flex flex-col gap-1">
+                <Typography
+                  variant="h5"
+                  color="blue-gray"
+                  className="font-semibold"
+                >
+                  {company?.name}
+                </Typography>
+                <Typography variant="small" className="text-gray-600">
+                  {company?.motto}
+                </Typography>
+              </div>
+              <div className="flex justify-between items-center text-gray-600">
+                <div className="flex items-center gap-2">
+                  <BuildingStorefrontIcon className="h-5 w-5 text-primary1" />
+                  <Typography variant="small">
+                    {company?.store_count} Stores
+                  </Typography>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CalendarIcon className="h-5 w-5 text-primary1" />
+                  <Typography variant="small">
+                    {formatFriendlyDate(company?.created_at)}
+                  </Typography>
+                </div>
+              </div>
             </CardBody>
+            <div className="absolute top-4 right-4">
+              <Menu>
+                <MenuHandler>
+                  <Button className="flex items-center p-2 shadow-none bg-white ">
+                    <EllipsisVerticalIcon className="h-5 w-5 text-primary1" />
+                  </Button>
+                </MenuHandler>
+                <MenuList>
+                  <MenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openEditModalHandler(company);
+                    }}
+                  >
+                    Edit
+                  </MenuItem>
+                  <MenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteCompanyHandler(company.id);
+                    }}
+                    className="text-red-600"
+                  >
+                    Delete
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </div>
           </Card>
         ))}
       </div>
 
-      {/* Modal for editing or adding company details */}
-      <Modal
+      <OwnerForm
+        ownerId={selectedCompany?.id}
+        isAdding={isAdding}
         open={openModal}
+        onConfirm={() => {
+          refetchData();
+          closeModalHandler();
+        }}
         onClose={closeModalHandler}
-        title={isAdding ? "Add Company" : "Edit Company Details"}
-        confirmText={isAdding ? "Add" : "Save"}
-        onConfirm={isAdding ? addCompanyHandler : saveChangesHandler}
-      >
-        <div className="space-y-4">
-          <Input
-            label="Company Name"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-          />
-          <Input
-            label="Motto"
-            name="motto"
-            value={formData.motto}
-            onChange={handleInputChange}
-          />
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Company Logo
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileUpload}
-              className="mt-2"
-            />
-            {formData.logo && (
-              <img
-                src={formData.logo}
-                alt="Logo Preview"
-                className="mt-4 w-24 h-24 rounded-full"
-              />
-            )}
-          </div>
-        </div>
-      </Modal>
+      />
     </div>
   );
 };

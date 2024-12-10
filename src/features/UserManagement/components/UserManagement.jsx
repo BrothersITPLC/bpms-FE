@@ -25,6 +25,7 @@ import {
 } from "../userAPI";
 import { useGetDepartmentQuery } from "../../Department/api/department";
 import { toast } from "react-toastify";
+import { formatFriendlyDate } from "../../../../helpers/formatingDateUserFreindly";
 const TABS = [
   { label: "All", value: "all" },
   { label: "Active", value: "active" },
@@ -241,7 +242,11 @@ const UserManagement = () => {
                     <tr key={employee?.id}>
                       <td className={classes}>
                         <div className="flex items-center gap-3">
-                          {/* <Avatar src={img} alt={name} size="sm" /> */}
+                          <Avatar
+                            src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
+                            alt={name}
+                            size="sm"
+                          />
                           <div className="flex flex-col">
                             {/* <Typography
                               variant="small"
@@ -250,6 +255,7 @@ const UserManagement = () => {
                             >
                               {name}
                             </Typography> */}
+
                             <Typography
                               variant="small"
                               color="blue-gray"
@@ -294,7 +300,7 @@ const UserManagement = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {/* {date} */}
+                          {formatFriendlyDate(employee?.date_joined)}
                         </Typography>
                       </td>
                       <td className={classes}>
