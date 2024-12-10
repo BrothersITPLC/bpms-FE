@@ -141,7 +141,7 @@ const Bids = () => {
                   Bids
                 </Typography>
                 <Typography color="gray" className="mt-1 font-normal">
-                  You can view the statuses of different bids and propose
+                  You can view the statuses of different bids and propose thier
                   purchases.
                 </Typography>
               </div>
