@@ -1,4 +1,5 @@
 import { Button, Card, Typography } from "@material-tailwind/react";
+import { useParams } from "react-router-dom";
 
 const TABLE_HEAD = ["ID", "Type", "Model", "Quantity", "Actions"];
 
@@ -11,6 +12,9 @@ const TABLE_ROWS = [
 ];
 
 const ProductsTable = () => {
+  const params = useParams();
+  const owner_id = params?.owner_id;
+
   return (
     <Card className="flex-1 gap-2 pt-4 h-full w-fit overflow-x-auto">
       <Button className="w-fit bg-primary1 ">Add product</Button>

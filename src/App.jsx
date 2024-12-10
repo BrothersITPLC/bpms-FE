@@ -78,7 +78,11 @@ const App = () => {
             <Route path="notifications" element={<Notifications />} />
             <Route path="resource-requests" element={<ResourceRequests />} />
             <Route path="/owner/:owner_id/store" element={<Store />} />
-            <Route path="products-table" element={<ProductsTable />} />
+            <Route
+              path="/owner/:owner_id/products-table"
+              element={<ProductsTable />}
+            />
+            {/* <Route path="products-table" element={<ProductsTable />} /> */}
             <Route path="companies-store" element={<CompaniesStore />} />
 
             <Route
