@@ -34,7 +34,7 @@ const Store = () => {
   const [addStore] = useCreateStoreMutation();
   const [deleteStore] = useDeleteStoreMutation();
   const [updateStore] = useUpdateStoreMutation();
-
+  const navigate = useNavigate();
   const openAddModalHandler = () => {
     setOpenAddModal(true);
     setFormData({ name: "", address: "" });
@@ -89,11 +89,25 @@ const Store = () => {
 
   return (
     <div className="flex-1 ml-64 p-6">
-      <div className="flex flex-wrap gap-6">
-        {cards.map((card) => (
+      <div className="flex w-full justify-end">
+        {" "}
+        <Button
+          className="px-3 h-[3rem] w-[10rem] py-2"
+          color="blue"
+          size="lg"
+          onClick={() => {
+            setOpenAddModal(true);
+          }}
+        >
+          Add Store
+        </Button>
+      </div>
+      <div className="flex flex-wrap gap-6 ">
+        {stores?.map((store) => (
           <div
-            key={store.id}
+            key={store?.id}
             className="relative w-96 transition-transform transform"
+            onClick={() => navigate(`/store/${store?.id}/products`)}
           >
             <Card
               className="w-full border hover:border hover:border-primary1  duration-300  transition-all "
@@ -103,22 +117,31 @@ const Store = () => {
                 <IconButton
                   variant="text"
                   color="blue-gray"
-                  onClick={() =>
-                    setDropdownOpen(dropdownOpen === store.id ? null : store.id)
-                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDropdownOpen(
+                      dropdownOpen === store.id ? null : store.id
+                    );
+                  }}
                 >
                   <FaEllipsisV className="text-lg" />
                 </IconButton>
                 {dropdownOpen === store.id && (
                   <div className="absolute right-0 z-10 w-40 bg-white rounded-lg shadow-lg">
                     <button
-                      onClick={() => openEditModalHandler(store)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openEditModalHandler(store);
+                      }}
                       className="flex items-center w-full px-4 py-2 text-left hover:bg-blue-100"
                     >
                       <FaEdit className="mr-2 text-blue-500" /> Edit
                     </button>
                     <button
-                      onClick={() => handleDeleteStore(store.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteStore(store.id);
+                      }}
                       className="flex items-center w-full px-4 py-2 text-left text-red-600 hover:bg-red-100"
                     >
                       <FaTrash className="mr-2" /> Delete
