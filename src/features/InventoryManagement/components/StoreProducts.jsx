@@ -17,6 +17,7 @@ import ProductStoreForm from "./ProductToStoreForm";
 import { useGetProduct_in_storeQuery } from "../api/product";
 import { useGetStockinQuery } from "../api/stockin";
 import { useGetStockOutQuery } from "../api/stockout";
+import StockBalance from "./StockBalance";
 
 const STOCK_OUT_HISTORY = [
   { id: 1, date: "2024-12-01", stockedOutTo: "Dashen Bank", quantity: 2 },
@@ -292,64 +293,7 @@ const StoreProducts = () => {
 
       {/* Stock Balance Table */}
       <div className="w-full mt-8">
-        <Typography variant="h5" color="blue-gray" className="mb-4">
-          Stock Balance
-        </Typography>
-        <Card className="flex-1 h-full w-full overflow-scroll">
-          <table className="w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  Product ID
-                </th>
-                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  Product Name
-                </th>
-                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  Product Model
-                </th>
-                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  Opening Stock
-                </th>
-                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  Stock Balance
-                </th>
-                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  Stock Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {stockBalanceData.map(
-                ({
-                  productId,
-                  productName,
-                  productModel,
-                  openingStock,
-                  stockBalance,
-                  stockStatus,
-                }) => (
-                  <tr key={productId} className="even:bg-blue-gray-50/50">
-                    <td className="p-4">{productId}</td>
-                    <td className="p-4">{productName}</td>
-                    <td className="p-4">{productModel}</td>
-                    <td className="p-4">{openingStock}</td>
-                    <td className="p-4">{stockBalance}</td>
-                    <td className="p-4">
-                      <button
-                        className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusButtonClass(
-                          stockStatus
-                        )}`}
-                      >
-                        {stockStatus}
-                      </button>
-                    </td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
-        </Card>
+        <StockBalance stockBalanceData={stockBalanceData} />;
       </div>
 
       {/* Modals */}
