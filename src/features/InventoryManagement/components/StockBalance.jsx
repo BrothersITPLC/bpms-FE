@@ -1,5 +1,7 @@
 import React from "react";
 import { Typography, Card } from "@material-tailwind/react";
+import { useGetStoresBalanceQuery } from "../api/store";
+import { useParams } from "react-router-dom";
 const PRODUCTS = [
   { id: 1, model: "Router X", type: "Router", stock: 10 },
   { id: 2, model: "Switch Y", type: "Switch", stock: 5 },
@@ -33,6 +35,10 @@ const StockBalance = ({ stockBalanceData }) => {
         return "bg-gray-500 text-white"; // Default case
     }
   };
+  const params = useParams();
+  const { data: StockBalances } = useGetStoresBalanceQuery(params?.store_id, {
+    skip: !params?.store_id,
+  });
 
   return (
     <div className="w-full mt-8">
@@ -56,6 +62,12 @@ const StockBalance = ({ stockBalanceData }) => {
                 Opening Stock
               </th>
               <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                StockIn
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                StockOut
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                 Stock Balance
               </th>
               <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
@@ -64,33 +76,30 @@ const StockBalance = ({ stockBalanceData }) => {
             </tr>
           </thead>
           <tbody>
-            {stockBalanceData.map(
-              ({
-                productId,
-                productName,
-                productModel,
-                openingStock,
-                stockBalance,
-                stockStatus,
-              }) => (
-                <tr key={productId} className="even:bg-blue-gray-50/50">
-                  <td className="p-4">{productId}</td>
-                  <td className="p-4">{productName}</td>
-                  <td className="p-4">{productModel}</td>
-                  <td className="p-4">{openingStock}</td>
-                  <td className="p-4">{stockBalance}</td>
-                  <td className="p-4">
-                    <button
-                      className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusButtonClass(
-                        stockStatus
-                      )}`}
-                    >
-                      {stockStatus}
-                    </button>
-                  </td>
-                </tr>
-              )
-            )}
+            {StockBalances?.map((stockBalance) => (
+              <tr key={stockBalance?.id} className="even:bg-blue-gray-50/50">
+                <td className="p-4">{stockBalance?.id}</td>
+                <td className="p-4">{stockBalance?.product_details?.name}</td>
+                <td className="p-4">
+                  {stockBalance?.product_details?.model_number}
+                </td>
+                <td className="p-4">{stockBalance?.quantity}</td>
+                <td className="p-4">{stockBalance?.stock_in_total}</td>
+                <td className="p-4">{stockBalance?.stock_out_total}</td>
+                <td className="p-4">
+                  {stockBalance?.current_stock_balance + stockBalance?.quantity}
+                </td>
+                <td className="p-4">
+                  {/* <button
+                    className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusButtonClass(
+                      stockStatus
+                    )}`}
+                  >
+                    {stockStatus}
+                  </button> */}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </Card>

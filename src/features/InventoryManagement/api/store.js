@@ -19,6 +19,19 @@ export const StoreAPI = createApi({
             ]
           : [{ type: "store", id: "LIST" }],
     }),
+    getStoresBalance: builder.query({
+      query: (id) => ({
+        url: `/stores/${id}/product-stock-balance/`,
+        method: "GET",
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "store", id })),
+              { type: "store", id: "LIST" },
+            ]
+          : [{ type: "store", id: "LIST" }],
+    }),
     createStore: builder.mutation({
       query: (data) => ({
         url: "/store/",
@@ -124,12 +137,5 @@ export const {
   useCreateStoreMutation,
   useDeleteStoreMutation,
   useUpdateStoreMutation,
-  //   useCreateWorkspaceMemberMutation,
-  //   useCreateSpaceMutation,
-  //   useListSpaceQuery,
-  //   useUpdateSpaceByIdMutation,
-  //   useCreateFolderMutation,
-  //   useListFolderQuery,
-  //   useListTasksQuery,
-  //   useCreateTaskMutation,
+  useGetStoresBalanceQuery,
 } = StoreAPI;
