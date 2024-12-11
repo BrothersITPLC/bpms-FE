@@ -131,7 +131,7 @@ const Bids = () => {
   };
 
   return (
-    <div className="w-1/2 flex-1 m-4 px-9 py-[2rem] max-h-[calc(100vh-2rem)] overflow-hidden ">
+    <div className="flex-1 ml-64 p-6">
       <div className="flex flex-row gap-5">
         <div className="flex gap-5 ">
           <div className="flex flex-col gap-2  h-[80vh]">
@@ -141,7 +141,7 @@ const Bids = () => {
                   Bids
                 </Typography>
                 <Typography color="gray" className="mt-1 font-normal">
-                  You can view the statuses of different bids and propose
+                  You can view the statuses of different bids and propose thier
                   purchases.
                 </Typography>
               </div>

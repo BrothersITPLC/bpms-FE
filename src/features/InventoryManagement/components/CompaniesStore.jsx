@@ -57,7 +57,7 @@ const CompaniesStore = () => {
   };
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 ml-64 p-6">
       <div className="flex justify-between items-center p-4">
         <Typography className="text-2xl font-bold">Companies</Typography>
         <Button

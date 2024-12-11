@@ -72,7 +72,7 @@ const ResourceRequestHistory = () => {
   console.log("Selected Tab:", selectedTab);
 
   return (
-    <Card className="flex-1 w-full">
+    <Card className="flex-1 ml-64 p-6">
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>

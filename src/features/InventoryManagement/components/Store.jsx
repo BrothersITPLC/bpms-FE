@@ -88,19 +88,21 @@ const Store = () => {
   };
 
   return (
-    <div className="flex flex-col w-full px-8 py-9 space-y-6">
+    <div className="flex-1 ml-64 p-6">
       <div className="flex w-full justify-end">
+        {" "}
         <Button
-          variant="gradient"
+          className="px-3 h-[3rem] w-[10rem] py-2"
           color="blue"
-          onClick={openAddModalHandler}
-          className="rounded-full px-6 py-3 text-lg  transition-transform transform "
+          size="lg"
+          onClick={() => {
+            setOpenAddModal(true);
+          }}
         >
           Add Store
         </Button>
       </div>
-
-      <div className="flex flex-wrap gap-6 px-10">
+      <div className="flex flex-wrap gap-6 ">
         {stores?.map((store) => (
           <div
             key={store?.id}
@@ -115,22 +117,31 @@ const Store = () => {
                 <IconButton
                   variant="text"
                   color="blue-gray"
-                  onClick={() =>
-                    setDropdownOpen(dropdownOpen === store.id ? null : store.id)
-                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDropdownOpen(
+                      dropdownOpen === store.id ? null : store.id
+                    );
+                  }}
                 >
                   <FaEllipsisV className="text-lg" />
                 </IconButton>
                 {dropdownOpen === store.id && (
                   <div className="absolute right-0 z-10 w-40 bg-white rounded-lg shadow-lg">
                     <button
-                      onClick={() => openEditModalHandler(store)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openEditModalHandler(store);
+                      }}
                       className="flex items-center w-full px-4 py-2 text-left hover:bg-blue-100"
                     >
                       <FaEdit className="mr-2 text-blue-500" /> Edit
                     </button>
                     <button
-                      onClick={() => handleDeleteStore(store.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteStore(store.id);
+                      }}
                       className="flex items-center w-full px-4 py-2 text-left text-red-600 hover:bg-red-100"
                     >
                       <FaTrash className="mr-2" /> Delete

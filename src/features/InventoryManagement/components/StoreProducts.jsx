@@ -125,7 +125,7 @@ const StoreProducts = () => {
   };
 
   return (
-    <div className="p-6 space-y-10 w-full flex-1">
+    <div className="flex-1 ml-64 p-6">
       <div className="flex w-full flex-row gap-8">
         {/* Products Table */}
 

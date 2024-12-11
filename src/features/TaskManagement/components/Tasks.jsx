@@ -109,7 +109,7 @@ const Tasks = () => {
 
   return (
     <>
-      <Card className="h-full w-fit flex-1">
+      <Card className="flex-1 ml-64 p-6">
         <CardHeader
           floated={false}
           shadow={false}

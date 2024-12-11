@@ -22,7 +22,7 @@ const ProductsTable = () => {
   const { data: products, refetch: refechProduct } = useGetProductsQuery();
   const [selectedID, setSelectedID] = useState(null);
   return (
-    <Card className="flex-1 gap-2 pt-4 h-full w-fit overflow-x-auto">
+    <Card className="flex-1 gap-2 pt-4 ml-64 h-full w-fit overflow-x-auto">
       <Button
         className="w-fit bg-primary1 "
         onClick={() => {
