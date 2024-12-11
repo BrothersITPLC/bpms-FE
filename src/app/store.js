@@ -9,6 +9,7 @@ import { departmentApi } from "../features/Department/api/department";
 import { userAPI } from "../features/UserManagement/userAPI";
 import { OwnerAPI } from "../features/InventoryManagement/api/owner";
 import { StoreAPI } from "../features/InventoryManagement/api/store";
+import { ProductAPI } from "../features/InventoryManagement/api/product";
 import {
   persistStore,
   persistReducer,
@@ -46,6 +47,7 @@ export const store = configureStore({
         userAPI.middleware,
         OwnerAPI.middleware,
         StoreAPI.middleware,
+        ProductAPI.middleware,
       ],
       WorkspaceApiSlice.middleware
     ),

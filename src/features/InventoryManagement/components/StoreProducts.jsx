@@ -12,8 +12,10 @@ import {
 } from "@material-tailwind/react";
 import StockOutModal from "./StockOutModal"; // Stock-Out Modal
 import StockInModal from "./StockInModal"; // New Stock-In Modal
+import { useParams } from "react-router-dom";
+import ProductStoreForm from "./ProductToStoreForm";
+import { useGetProduct_in_storeQuery } from "../api/product";
 
-// Updated stock-out and stock-in history with more data
 const STOCK_OUT_HISTORY = [
   { id: 1, date: "2024-12-01", stockedOutTo: "Dashen Bank", quantity: 2 },
   { id: 1, date: "2024-12-03", stockedOutTo: "Ethio Telecom", quantity: 5 },
@@ -63,8 +65,11 @@ const StoreProducts = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openStockOutModal, setOpenStockOutModal] = useState(false);
   const [openStockInModal, setOpenStockInModal] = useState(false);
+  const [openingStock, setOpeningStock] = useState(false);
+  const params = useParams();
+  const { data: products } = useGetProduct_in_storeQuery(params?.store_id);
 
-  if (!store) {
+  if (!params?.store_id) {
     return (
       <div className="p-6">
         <Typography variant="h5" color="red">
@@ -123,9 +128,17 @@ const StoreProducts = () => {
     <div className="flex-1 ml-64 p-6">
       <div className="flex w-full flex-row gap-8">
         {/* Products Table */}
-        <div className="h-fit w-fit">
-          <Typography variant="h4" color="blue-gray" className="mb-4">
-            {store.name} Products
+
+        <div className="h-fit w-fit pt-10">
+          <Typography
+            variant="h4"
+            color="blue-gray"
+            className="mb-4 flex w-full justify-between"
+          >
+            {store?.name} Products
+            <Button color="blue" onClick={() => setOpeningStock(true)}>
+              Open Stock
+            </Button>
           </Typography>
           <Card className="h-full w-full overflow-scroll">
             <table className="w-full min-w-max table-auto text-left">
@@ -149,16 +162,16 @@ const StoreProducts = () => {
                 </tr>
               </thead>
               <tbody>
-                {PRODUCTS.map((product) => (
+                {products?.map((product) => (
                   <tr
-                    key={product.id}
+                    key={product?.id}
                     className="even:bg-blue-gray-50/50 cursor-pointer hover:bg-blue-gray-100"
-                    onClick={() => handleProductClick(product)}
+                    onClick={() => handleProductClick(product?.product)}
                   >
-                    <td className="p-4">{`P00${product.id}`}</td>
-                    <td className="p-4">{product.model}</td>
-                    <td className="p-4">{product.type}</td>
-                    <td className="p-4">{product.stock}</td>
+                    <td className="p-4">{`P00${product?.product?.id}`}</td>
+                    <td className="p-4">{product?.product?.model_number}</td>
+                    <td className="p-4">{product?.product?.category_name}</td>
+                    <td className="p-4">{product?.quantity}</td>
                     <td className="p-4">
                       <div className="flex gap-2">
                         <Button
@@ -190,7 +203,7 @@ const StoreProducts = () => {
         {selectedProduct && (
           <div className="w-1/2">
             <Typography variant="h5" color="blue-gray" className="mb-4">
-              Stock History for: {selectedProduct.model}
+              Stock History for: {selectedProduct?.model}
             </Typography>
 
             {/* Tabs */}
@@ -342,6 +355,14 @@ const StoreProducts = () => {
         onClose={closeStockInModalHandler}
         product={selectedProduct}
       />
+
+      {openingStock && (
+        <ProductStoreForm
+          open={openingStock}
+          store_id={params?.store_id}
+          onClose={() => setOpeningStock(false)}
+        ></ProductStoreForm>
+      )}
     </div>
   );
 };
