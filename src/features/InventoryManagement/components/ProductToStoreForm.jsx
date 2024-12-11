@@ -13,6 +13,7 @@ import {
 import { Textarea } from "@material-tailwind/react";
 import { toast } from "react-toastify";
 import { FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 const ProductStoreForm = ({
   store_id,
   open,
@@ -36,7 +37,7 @@ const ProductStoreForm = ({
 
   const [openStock, setOpen] = useState(false);
   const [selectedID, setSelectedID] = useState(null);
-
+  const navigate = useNavigate();
   const { data: products, refetch: refetchData } =
     useGetProduct_in_owner_storeQuery(store_id);
 
@@ -103,7 +104,10 @@ const ProductStoreForm = ({
             </li>
           ))}
           {products?.length == 0 && (
-            <div className="border-[3px] border-primary1/40 hover:border-primary1 cursor-pointer rounded max-auto border-dashed h-[10rem] w-[11rem]">
+            <div
+              onClick={() => navigate("/products-table")}
+              className="border-[3px] border-primary1/40 hover:border-primary1 cursor-pointer rounded max-auto border-dashed h-[10rem] w-[11rem]"
+            >
               <div className="w-full flex items-center justify-center flex-col gap-3 px-3 py-2 h-full">
                 <FaPlus className="text-3xl text-primary1"></FaPlus>
 
