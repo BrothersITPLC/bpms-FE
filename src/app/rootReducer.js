@@ -10,6 +10,8 @@ import { userAPI } from "../features/UserManagement/userAPI";
 import { OwnerAPI } from "../features/InventoryManagement/api/owner";
 import { StoreAPI } from "../features/InventoryManagement/api/store";
 import { ProductAPI } from "../features/InventoryManagement/api/product";
+import { StockinAPI } from "../features/InventoryManagement/api/stockin";
+import { StockOutAPI } from "../features/InventoryManagement/api/stockout";
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
   [WorkspaceApiSlice.reducerPath]: WorkspaceApiSlice.reducer,
@@ -21,6 +23,8 @@ const rootReducer = combineReducers({
   [OwnerAPI.reducerPath]: OwnerAPI.reducer,
   [StoreAPI.reducerPath]: StoreAPI.reducer,
   [ProductAPI.reducerPath]: ProductAPI.reducer,
+  [StockinAPI.reducerPath]: StockinAPI.reducer,
+  [StockOutAPI.reducerPath]: StockOutAPI.reducer,
   auth: authReducer,
 });
 
