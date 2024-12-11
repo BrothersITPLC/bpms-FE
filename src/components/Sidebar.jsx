@@ -269,7 +269,6 @@ const Sidebar = () => {
             </ListItem>
           </Link>
         </List>
-        <hr className="my-2 border-gray-200" />
         {/* <Link to="/store">
           <List>
             <ListItem className={LIST_ITEM_STYLES}>
@@ -321,8 +320,6 @@ const Sidebar = () => {
             </List>
           </AccordionBody>
         </Accordion>
-
-        <hr className="my-2 border-gray-200" />
 
         <List>
           <ListItem className={LIST_ITEM_STYLES}>
