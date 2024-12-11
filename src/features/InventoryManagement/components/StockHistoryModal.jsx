@@ -11,6 +11,7 @@ import {
 import Modal from "../../../components/Modal";
 import { useGetStockinQuery } from "../api/stockin";
 import { useGetStockOutQuery } from "../api/stockout";
+import { formatFriendlyDate } from "../../../../helpers/formatingDateUserFreindly";
 
 const StockHistoryModal = ({ open, onClose, product }) => {
   if (!product) return null;
@@ -47,7 +48,9 @@ const StockHistoryModal = ({ open, onClose, product }) => {
                 <tbody>
                   {stockins?.map((stockin, index) => (
                     <tr key={stockin?.id}>
-                      <td className="p-4">{stockin.created_at}</td>
+                      <td className="p-4">
+                        {formatFriendlyDate(stockin.created_at)}
+                      </td>
                       <td className="p-4">{stockin.remark}</td>
                       <td className="p-4">{stockin.quantity}</td>
                     </tr>
@@ -67,7 +70,9 @@ const StockHistoryModal = ({ open, onClose, product }) => {
                 <tbody>
                   {stockOuts?.map((stockout, index) => (
                     <tr key={index}>
-                      <td className="p-4">{stockout?.created_at}</td>
+                      <td className="p-4">
+                        {formatFriendlyDate(stockout?.created_at)}
+                      </td>
                       <td className="p-4">{stockout?.client_name}</td>
                       <td className="p-4">{stockout?.quantity}</td>
                     </tr>

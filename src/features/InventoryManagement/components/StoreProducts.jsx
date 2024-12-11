@@ -145,7 +145,10 @@ const StoreProducts = () => {
                       Product Type
                     </th>
                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                      Quantity
+                      Opening Stock
+                    </th>
+                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                      Min Quantity in Stock
                     </th>
                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                       Actions
@@ -159,6 +162,7 @@ const StoreProducts = () => {
                       <td className="p-4">{product?.product?.model_number}</td>
                       <td className="p-4">{product?.product?.category_name}</td>
                       <td className="p-4">{product?.quantity}</td>
+                      <td className="p-4">{product?.min_stock_level}</td>
                       <td className="p-4">
                         <div className="flex gap-2">
                           <Button
