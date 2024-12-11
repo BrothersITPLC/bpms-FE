@@ -82,10 +82,7 @@ const App = () => {
               path="/store/:store_id/products"
               element={<StoreProducts />}
             />
-            <Route
-              path="/owner/:owner_id/products-table"
-              element={<ProductsTable />}
-            />
+            <Route path="/products-table" element={<ProductsTable />} />
             {/* <Route path="products-table" element={<ProductsTable />} /> */}
             <Route path="companies-store" element={<CompaniesStore />} />
 
