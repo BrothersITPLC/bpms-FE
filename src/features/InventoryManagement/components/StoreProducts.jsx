@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
 import {
   Card,
   Typography,
@@ -12,11 +11,10 @@ import {
 } from "@material-tailwind/react";
 import StockOutModal from "./StockOutModal"; // Stock-Out Modal
 import StockInModal from "./StockInModal"; // New Stock-In Modal
-import { useParams } from "react-router-dom";
+import StockHistoryModal from "./StockHistoryModal"; // New Modal for Stock History
 import ProductStoreForm from "./ProductToStoreForm";
 import { useGetProduct_in_storeQuery } from "../api/product";
-import { useGetStockinQuery } from "../api/stockin";
-import { useGetStockOutQuery } from "../api/stockout";
+import { useParams } from "react-router-dom";
 import StockBalance from "./StockBalance";
 
 const STOCK_OUT_HISTORY = [
@@ -63,20 +61,14 @@ const stockBalanceData = PRODUCTS.map((product) => ({
 }));
 
 const StoreProducts = () => {
-  const location = useLocation();
-  const { store } = location.state || {};
+  const params = useParams();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [openStockOutModal, setOpenStockOutModal] = useState(false);
   const [openStockInModal, setOpenStockInModal] = useState(false);
   const [openingStock, setOpeningStock] = useState(false);
-  const params = useParams();
+  const [openHistoryModal, setOpenHistoryModal] = useState(false);
+
   const { data: products } = useGetProduct_in_storeQuery(params?.store_id);
-  const { data: stockins } = useGetStockinQuery(selectedProduct?.id, {
-    skip: !selectedProduct?.id,
-  });
-  const { data: stockOuts } = useGetStockOutQuery(selectedProduct?.id, {
-    skip: !selectedProduct?.id,
-  });
 
   if (!params?.store_id) {
     return (
@@ -88,17 +80,6 @@ const StoreProducts = () => {
     );
   }
 
-  const handleProductClick = (product) => {
-    setSelectedProduct(product);
-  };
-
-  const stockOutHistory = STOCK_OUT_HISTORY.filter(
-    (entry) => entry.id === selectedProduct?.id
-  );
-  const stockInHistory = STOCK_IN_HISTORY.filter(
-    (entry) => entry.id === selectedProduct?.id
-  );
-
   const openStockOutModalHandler = (product) => {
     setSelectedProduct(product);
     setOpenStockOutModal(true);
@@ -107,6 +88,11 @@ const StoreProducts = () => {
   const openStockInModalHandler = (product) => {
     setSelectedProduct(product);
     setOpenStockInModal(true);
+  };
+
+  const openHistoryModalHandler = (product) => {
+    setSelectedProduct(product);
+    setOpenHistoryModal(true);
   };
 
   const closeStockOutModalHandler = () => {
@@ -119,182 +105,104 @@ const StoreProducts = () => {
     setSelectedProduct(null);
   };
 
-  // Define the getStatusButtonClass function
-  const getStatusButtonClass = (status) => {
-    switch (status) {
-      case "Low":
-        return "bg-red-500 text-white"; // Red for low stock
-      case "In Stock":
-        return "bg-green-500 text-white"; // Green for in stock
-      case "Critical":
-        return "bg-yellow-500 text-black"; // Yellow for critical
-      default:
-        return "bg-gray-500 text-white"; // Default case
-    }
+  const closeHistoryModalHandler = () => {
+    setOpenHistoryModal(false);
+    setSelectedProduct(null);
   };
 
   return (
     <div className="flex-1 ml-64 p-6">
-      <div className="flex w-full flex-row gap-8">
-        {/* Products Table */}
+      <Typography
+        variant="h4"
+        color="blue-gray"
+        className="mb-4 flex w-full justify-between"
+      >
+        Store Products
+        <Button color="blue" onClick={() => setOpeningStock(true)}>
+          Open Stock
+        </Button>
+      </Typography>
 
-        <div className="h-fit w-fit pt-10">
-          <Typography
-            variant="h4"
-            color="blue-gray"
-            className="mb-4 flex w-full justify-between"
-          >
-            {store?.name} Products
-            <Button color="blue" onClick={() => setOpeningStock(true)}>
-              Open Stock
-            </Button>
-          </Typography>
-          <Card className="h-full w-full overflow-scroll">
-            <table className="w-full min-w-max table-auto text-left">
-              <thead>
-                <tr>
-                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                    Product ID
-                  </th>
-                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                    Model
-                  </th>
-                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                    Product Type
-                  </th>
-                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                    Quantity
-                  </th>
-                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {products?.map((product) => (
-                  <tr
-                    key={product?.id}
-                    className="even:bg-blue-gray-50/50 cursor-pointer hover:bg-blue-gray-100"
-                    onClick={() => handleProductClick(product?.product)}
-                  >
-                    <td className="p-4">{`P00${product?.product?.id}`}</td>
-                    <td className="p-4">{product?.product?.model_number}</td>
-                    <td className="p-4">{product?.product?.category_name}</td>
-                    <td className="p-4">{product?.quantity}</td>
-                    <td className="p-4">
-                      <div className="flex gap-2">
-                        <Button
-                          variant="gradient"
-                          color="green"
-                          size="sm"
-                          onClick={() => openStockInModalHandler(product)}
-                        >
-                          Stock-In
-                        </Button>
-                        <Button
-                          variant="gradient"
-                          color="purple"
-                          size="sm"
-                          onClick={() => openStockOutModalHandler(product)}
-                        >
-                          Stock-Out
-                        </Button>
-                      </div>
-                    </td>
+      <Tabs value="products" className="w-full">
+        <TabsHeader>
+          <Tab value="products">Products</Tab>
+          <Tab value="stock-balance">Stock Balance</Tab>
+        </TabsHeader>
+        <TabsBody>
+          {/* Products Tab */}
+          <TabPanel value="products">
+            <Card className="h-full w-full overflow-scroll">
+              <table className="w-full min-w-max table-auto text-left">
+                <thead>
+                  <tr>
+                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                      Product ID
+                    </th>
+                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                      Model
+                    </th>
+                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                      Product Type
+                    </th>
+                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                      Quantity
+                    </th>
+                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </Card>
-        </div>
+                </thead>
+                <tbody>
+                  {products?.map((product) => (
+                    <tr
+                      key={product?.id}
+                      className="even:bg-blue-gray-50/50 cursor-pointer hover:bg-blue-gray-100"
+                    >
+                      <td className="p-4">{`P00${product?.product?.id}`}</td>
+                      <td className="p-4">{product?.product?.model_number}</td>
+                      <td className="p-4">{product?.product?.category_name}</td>
+                      <td className="p-4">{product?.quantity}</td>
+                      <td className="p-4">
+                        <div className="flex gap-2">
+                          <Button
+                            variant="gradient"
+                            color="green"
+                            size="sm"
+                            onClick={() => openStockInModalHandler(product)}
+                          >
+                            Stock-In
+                          </Button>
+                          <Button
+                            variant="gradient"
+                            color="purple"
+                            size="sm"
+                            onClick={() => openStockOutModalHandler(product)}
+                          >
+                            Stock-Out
+                          </Button>
+                          <Button
+                            variant="gradient"
+                            color="blue"
+                            size="sm"
+                            onClick={() => openHistoryModalHandler(product)}
+                          >
+                            View History
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Card>
+          </TabPanel>
 
-        {/* Stock History Section */}
-        {selectedProduct && (
-          <div className="w-1/2">
-            <Typography variant="h5" color="blue-gray" className="mb-4">
-              Stock History for: {selectedProduct?.model}
-            </Typography>
-
-            {/* Tabs */}
-            <Tabs value="stock-in" className="mb-4">
-              <TabsHeader>
-                <Tab value="stock-in">Stock-In History</Tab>
-                <Tab value="stock-out">Stock-Out History</Tab>
-              </TabsHeader>
-              <TabsBody>
-                {/* Stock-In Tab */}
-                <TabPanel value="stock-in">
-                  <Card className="h-full w-full overflow-scroll">
-                    <table className="w-full min-w-max table-auto text-left">
-                      <thead>
-                        <tr>
-                          <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                            Date
-                          </th>
-                          <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                            remark
-                          </th>
-                          <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                            Stockin By
-                          </th>
-                          <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                            Quantity
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {stockins?.map((stockin, index) => (
-                          <tr key={index} className="even:bg-blue-gray-50/50">
-                            <td className="p-4">{stockin?.created_at}</td>
-                            <td className="p-4">{stockin?.remark}</td>
-                            <td className="p-4">{stockin?.user}</td>
-                            <td className="p-4">{stockin?.quantity}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </Card>
-                </TabPanel>
-
-                {/* Stock-Out Tab */}
-                <TabPanel value="stock-out">
-                  <Card className="h-full w-full overflow-scroll">
-                    <table className="w-full min-w-max table-auto text-left">
-                      <thead>
-                        <tr>
-                          <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                            Date
-                          </th>
-                          <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                            Stocked Out To
-                          </th>
-                          <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                            Quantity
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {stockOuts?.map((stockOut, index) => (
-                          <tr key={index} className="even:bg-blue-gray-50/50">
-                            <td className="p-4">{stockOut?.created_at}</td>
-                            <td className="p-4">{stockOut?.client_name}</td>
-                            <td className="p-4">{stockOut?.quantity}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </Card>
-                </TabPanel>
-              </TabsBody>
-            </Tabs>
-          </div>
-        )}
-      </div>
-
-      {/* Stock Balance Table */}
-      <div className="w-full mt-8">
-        <StockBalance stockBalanceData={stockBalanceData} />;
-      </div>
+          {/* Stock Balance Tab */}
+          <TabPanel value="stock-balance">
+            <StockBalance stockBalanceData={stockBalanceData} />
+          </TabPanel>
+        </TabsBody>
+      </Tabs>
 
       {/* Modals */}
       {openStockOutModal && (
@@ -313,13 +221,19 @@ const StoreProducts = () => {
           onConfirm={closeStockInModalHandler}
         />
       )}
-
       {openingStock && (
         <ProductStoreForm
           open={openingStock}
           store_id={params?.store_id}
           onClose={() => setOpeningStock(false)}
         ></ProductStoreForm>
+      )}
+      {openHistoryModal && (
+        <StockHistoryModal
+          open={openHistoryModal}
+          onClose={closeHistoryModalHandler}
+          product={selectedProduct}
+        />
       )}
     </div>
   );
