@@ -90,13 +90,13 @@ const StockBalance = ({ stockBalanceData }) => {
                   {stockBalance?.current_stock_balance + stockBalance?.quantity}
                 </td>
                 <td className="p-4">
-                  {/* <button
-                    className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusButtonClass(
-                      stockStatus
-                    )}`}
-                  >
-                    {stockStatus}
-                  </button> */}
+                  <span>
+                    {stockBalance?.current_stock_balance +
+                      stockBalance?.quantity >
+                    stockBalance?.min_stock_level
+                      ? "sufficient"
+                      : "insufficient"}
+                  </span>
                 </td>
               </tr>
             ))}
