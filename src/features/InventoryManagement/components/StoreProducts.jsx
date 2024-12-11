@@ -154,10 +154,7 @@ const StoreProducts = () => {
                 </thead>
                 <tbody>
                   {products?.map((product) => (
-                    <tr
-                      key={product?.id}
-                      className="even:bg-blue-gray-50/50 cursor-pointer hover:bg-blue-gray-100"
-                    >
+                    <tr key={product?.id} className="even:bg-blue-gray-50/50">
                       <td className="p-4">{`P00${product?.product?.id}`}</td>
                       <td className="p-4">{product?.product?.model_number}</td>
                       <td className="p-4">{product?.product?.category_name}</td>
