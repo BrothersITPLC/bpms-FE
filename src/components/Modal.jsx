@@ -17,10 +17,11 @@ const Modal = ({
   size = "md", // Default to 'md' size
   showDelete,
   onConfirmDelete,
-  onAddProduct, // Button handler for "Add Product"
+  onAddProduct,
+  className, // Button handler for "Add Product"
 }) => {
   return (
-    <Dialog open={open} handler={onClose} size={size}>
+    <Dialog open={open} handler={onClose} size={size} className={className}>
       <DialogHeader>
         <div className="flex justify-between items-center w-full">
           <h2 className="text-lg font-semibold">{title}</h2>
