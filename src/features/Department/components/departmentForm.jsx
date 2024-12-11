@@ -44,13 +44,13 @@ const DepartmentForm = ({
     try {
       if (!id) {
         await addDepartment({
-          name: newDepartmentData?.department_name?.toLowerCase(),
+          name: newDepartmentData?.department_name?.toUpperCase(),
         });
       } else {
         await editDepartment({
           id,
           data: {
-            name: newDepartmentData?.department_name?.toLowerCase(),
+            name: newDepartmentData?.department_name?.toUpperCase(),
           },
         }).unwrap();
       }
