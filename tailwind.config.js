@@ -9,6 +9,7 @@ export default withMT({
       colors: {
         primary1: "#8E24AA",
         secondary1: "#58B05C",
+        delete1: "#dc2626",
       },
     },
   },

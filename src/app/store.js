@@ -1,6 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/Auth/apiSlice";
-import authReducer from "../features/Auth/authSlice";
+import { WorkspaceApiSlice } from "../features/TaskManagement/apiSlice";
+import rootReducer from "./rootReducer";
+import { companyAPI } from "../features/Companies/companyApi";
+import { bidApi } from "../features/Bids/bidApi";
+import { roleApi } from "../features/RoleManagment/api";
+import { departmentApi } from "../features/Department/api/department";
+import { userAPI } from "../features/UserManagement/userAPI";
+import { OwnerAPI } from "../features/InventoryManagement/api/owner";
+import { StoreAPI } from "../features/InventoryManagement/api/store";
+import { ProductAPI } from "../features/InventoryManagement/api/product";
 import {
   persistStore,
   persistReducer,
@@ -12,26 +21,40 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-
+import { StockinAPI } from "../features/InventoryManagement/api/stockin";
+import { StockOutAPI } from "../features/InventoryManagement/api/stockout";
 const persistConfig = {
   key: "auth",
   storage,
   whitelist: ["auth"],
 };
 
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+const persistedAuthReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: {
-    [apiSlice.reducerPath]: apiSlice.reducer,
-    auth: persistedAuthReducer,
-  },
+  reducer: persistedAuthReducer,
+
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(apiSlice.middleware),
+    }).concat(
+      [
+        apiSlice.middleware,
+        companyAPI.middleware,
+        bidApi.middleware,
+        roleApi.middleware,
+        departmentApi.middleware,
+        userAPI.middleware,
+        OwnerAPI.middleware,
+        StoreAPI.middleware,
+        ProductAPI.middleware,
+        StockinAPI.middleware,
+        StockOutAPI.middleware,
+      ],
+      WorkspaceApiSlice.middleware
+    ),
 });
 
 export const persistor = persistStore(store);

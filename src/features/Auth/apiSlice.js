@@ -1,10 +1,10 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseQueryWithReauth } from "../baseQuery";
+import { baseQuery } from "../baseQuery";
+import { setUser } from "./authSlice";
 
 export const apiSlice = createApi({
-  reducerPath: "api",
-  baseQuery: baseQueryWithReauth,
-  tagTypes: ["User"],
+  reducerPath: "apiAuth",
+  baseQuery: baseQuery,
   endpoints: (builder) => ({
     loginUser: builder.mutation({
       query: (credentials) => ({
@@ -12,6 +12,24 @@ export const apiSlice = createApi({
         method: "POST",
         body: credentials,
       }),
+      async onQueryStarted(credentials, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled;
+        const userData = data.data?.user || data.user;
+        if (!userData) {
+          throw new Error("User data is missing from the response.");
+        }
+        dispatch(
+          setUser({
+            user: {
+              id: userData.id,
+              username: userData.username,
+              email: userData.email,
+              first_name: userData.first_name,
+              last_name: userData.last_name,
+            },
+          })
+        );
+      },
     }),
     logoutUser: builder.mutation({
       query: () => ({

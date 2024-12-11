@@ -20,6 +20,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [apiError, setApiError] = useState("");
+
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.auth.user);
@@ -29,24 +30,13 @@ const Login = () => {
     e.preventDefault();
     try {
       const credentials = { email, password };
-      const response = await loginUser(credentials).unwrap();
-      dispatch(
-        setUser({
-          user: {
-            id: response.user_id,
-            username: response.username,
-            email: response.email,
-          },
-          accessToken: response.access,
-          refreshToken: response.refresh,
-        })
-      );
-      navigate("/user-management");
+      await loginUser(credentials).unwrap();
+      navigate("/analytics");
     } catch (err) {
+      console.error("Error in login:", err);
       setApiError(err?.data?.detail || "Login failed. Please try again.");
     }
   };
-
   return (
     <div className="flex justify-center items-center min-h-screen">
       <Card

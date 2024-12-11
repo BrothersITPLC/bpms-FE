@@ -14,15 +14,18 @@ import {
   Select,
   Option,
 } from "@material-tailwind/react";
+import Sidebar from "../../../components/Sidebar";
 import Modal from "../../../components/Modal";
+import { useCreateTaskMutation, useListTasksQuery } from "../apiSlice";
+import { Textarea } from "@material-tailwind/react";
 
 const TABLE_HEAD = [
   {
-    head: "Task ID",
+    head: "Task Name",
     icon: <Checkbox />,
   },
   {
-    head: "Task Name",
+    head: "Task Description",
   },
 ];
 
@@ -49,11 +52,12 @@ const Tasks = () => {
   // Modal states for "Add Task" and PlusCircleIcon (task details)
   const [addTaskOpen, setAddTaskOpen] = useState(false);
   const [taskDetailsOpen, setTaskDetailsOpen] = useState(false);
-
+  const { data: tasks, refetch: refetchTask } = useListTasksQuery();
+  const [createTask] = useCreateTaskMutation();
   // Form states
   const [newTaskData, setNewTaskData] = useState({
-    task_id: "",
     task_name: "",
+    description: "",
   });
   const [taskDetailsData, setTaskDetailsData] = useState({
     task_name: "",
@@ -78,9 +82,15 @@ const Tasks = () => {
   };
 
   // Handle "Add Task" form submission
-  const handleNewTaskSubmit = (event) => {
+  const handleNewTaskSubmit = async (event) => {
     event.preventDefault();
-    console.log("New Task Added:", newTaskData);
+    // console.log("New Task Added:", newTaskData);
+    await createTask({
+      name: newTaskData?.task_name,
+      description: newTaskData?.description,
+      folder: 1,
+    }).unwrap();
+    refetchTask();
     handleAddTaskOpen(); // Close modal after submission
   };
 
@@ -98,8 +108,8 @@ const Tasks = () => {
   };
 
   return (
-    <div className="flex w-full">
-      <Card className="h-full w-fit flex-1">
+    <>
+      <Card className="flex-1 ml-64 p-6">
         <CardHeader
           floated={false}
           shadow={false}
@@ -143,12 +153,12 @@ const Tasks = () => {
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(({ task_id, task_name }, index) => {
+            {tasks?.map((task, index) => {
               const isLast = index === TABLE_ROWS.length - 1;
               const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
               return (
-                <tr key={task_id}>
+                <tr key={task?.id}>
                   <td className={classes}>
                     <div className="flex items-center gap-1">
                       <Checkbox />
@@ -157,16 +167,16 @@ const Tasks = () => {
                         color="blue-gray"
                         className="font-bold"
                       >
-                        {task_id}
+                        {task?.name}
                       </Typography>
                     </div>
                   </td>
                   <td className={classes}>
                     <Typography
                       variant="small"
-                      className="font-normal text-gray-600"
+                      className="font-normal text-gray-600 truncate max-w-[150px] overflow-hidden whitespace-nowrap"
                     >
-                      {task_name}
+                      {task?.description}
                     </Typography>
                   </td>
 
@@ -176,7 +186,7 @@ const Tasks = () => {
                       <IconButton
                         variant="text"
                         size="sm"
-                        onClick={() => handleIconClick(task_name)}
+                        onClick={() => handleIconClick(task?.name)}
                       >
                         <PlusCircleIcon
                           strokeWidth={3}
@@ -203,24 +213,25 @@ const Tasks = () => {
         <form onSubmit={handleNewTaskSubmit}>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Task ID
-            </Typography>
-            <Input
-              size="lg"
-              placeholder="Enter Task ID"
-              name="task_id"
-              onChange={handleNewTaskChange}
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <Typography variant="small" color="blue-gray" className="mb-2">
               Task Name
             </Typography>
             <Input
               size="lg"
               placeholder="Enter Task Name"
               name="task_name"
+              onChange={handleNewTaskChange}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Task Description
+            </Typography>
+            <Textarea
+              size="lg"
+              placeholder="Enter Task Description"
+              name="description"
+              className=""
               onChange={handleNewTaskChange}
               required
             />
@@ -280,7 +291,7 @@ const Tasks = () => {
           </div>
         </form>
       </Modal>
-    </div>
+    </>
   );
 };
 

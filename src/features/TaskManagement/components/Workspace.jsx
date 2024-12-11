@@ -3,6 +3,8 @@ import {
   PlusCircleIcon,
   PencilSquareIcon,
   MagnifyingGlassIcon,
+  UserIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline";
 
 import {
@@ -13,203 +15,172 @@ import {
   IconButton,
   Typography,
   Button,
+  Textarea,
   Select,
   Option,
-  Textarea,
+  Popover,
+  PopoverHandler,
+  PopoverContent,
+  Accordion,
+  AccordionHeader,
+  AccordionBody,
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
-
-const TABLE_HEAD = [
-  {
-    head: "Workspace ID",
-    icon: <Checkbox />,
-  },
-  {
-    head: "Workspace Name",
-  },
-  {
-    head: "Workspace discription",
-  },
-];
-
-const TABLE_ROWS = [
-  {
-    task_id: "T-1",
-    task_name: "Technical Document Preparation",
-    discription: "work space discription",
-  },
-  {
-    task_id: "T-2",
-    task_name: "Financial Document Preparation",
-    discription: "work space discription",
-  },
-  {
-    task_id: "T-3",
-    task_name: "Bid Bond Preparation",
-    discription: "work space discription",
-  },
-  {
-    task_id: "T-4",
-    task_name: "Clarification Response",
-    discription: "work space discription",
-  },
-];
+import {
+  useListWorkspacesQuery,
+  useCreateWorkspaceMutation,
+  useUpdateWorkspaceByIdMutation,
+  useLazyListWorkspacesNonWorkspacesMembersQuery,
+  useCreateWorkspaceMemberMutation,
+} from "../apiSlice";
+import MultipleWorkspacesComponent from "./MultipleWorkspacesComponent";
 
 const Workspace = () => {
+  // RTK Query hooks for fetching and creating workspaces
+  const { data: workspaces, error, isLoading } = useListWorkspacesQuery();
+  const [createWorkspace] = useCreateWorkspaceMutation();
+  const [updateWorkspaceById] = useUpdateWorkspaceByIdMutation();
+  const [createWorkspaceMember] = useCreateWorkspaceMemberMutation();
+  //asigne
+  const [query, setQuery] = useState("");
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [open, setOpen] = useState(0);
+
+  const handleOpen = (value) => setOpen(open === value ? 0 : value);
+
+  const [newWorkspaceData, setNewWorkspaceData] = useState({
+    id: null,
+    workspace_name: "",
+    workspace_description: "",
+    is_ative: true,
+    is_archived: false,
+    workspace_id: "",
+  });
+
   // Modal states for "Add Task" and PlusCircleIcon (task details)
   const [WorkspaceOpen, setWorkspaceOpen] = useState(false);
-  const [taskDetailsOpen, setTaskDetailsOpen] = useState(false);
-
-  // Form states
-  const [newTaskData, setNewTaskData] = useState({
-    task_id: "",
-    task_name: "",
-  });
-  const [taskDetailsData, setTaskDetailsData] = useState({
-    task_name: "",
-    assignee: "",
-    due_date: "",
-  });
-
-  // Toggle modals
-  const handleWorkspaceOpen = () => setWorkspaceOpen(!WorkspaceOpen);
-  const handleTaskDetailsOpen = () => setTaskDetailsOpen(!taskDetailsOpen);
-
+  const [WorkspacekDetailsOpen, setWorkspaceDetailsOpen] = useState(false);
+  const [AsignWorkspacekMemberOpen, setAsignWorkspacekMemberOpen] =
+    useState(false);
   // Handle input changes for "Add Task" form
   const handleNewWorkspaceChange = (event) => {
     const { name, value } = event.target;
-    setNewTaskData({ ...newTaskData, [name]: value });
+    setNewWorkspaceData({ ...newWorkspaceData, [name]: value });
   };
+  // Toggle modals
+  const handleWorkspaceOpen = () => setWorkspaceOpen(!WorkspaceOpen);
+  const handleWorkspacekDetailsOpen = () =>
+    setWorkspaceDetailsOpen(!WorkspacekDetailsOpen);
+  const handleWorkspaceMemberOpen = () =>
+    setAsignWorkspacekMemberOpen(!AsignWorkspacekMemberOpen);
 
-  // Handle input changes for task details modal
-  const handleTaskDetailsChange = (event) => {
-    const { name, value } = event.target;
-    setTaskDetailsData({ ...taskDetailsData, [name]: value });
-  };
-
-  // Handle "Add Task" form submission
-  const handleNewWorkspaceSubmit = (event) => {
+  // Handle "Add Workspace" form submission
+  const handleNewWorkspaceSubmit = async (event) => {
     event.preventDefault();
-    console.log("New Task Added:", newTaskData);
-    handleWorkspaceOpen(); // Close modal after submission
+    try {
+      await createWorkspace({
+        name: newWorkspaceData.workspace_name,
+        description: newWorkspaceData.workspace_description,
+      });
+      handleWorkspaceOpen();
+    } catch (error) {
+      console.error("Failed to create workspace:", error);
+    }
   };
 
+  // Handle "Delet Workspace" form submission
+  const handleDeletWorkspace = async (id) => {
+    try {
+      await updateWorkspaceById({
+        id: newWorkspaceData.id,
+        is_archived: !newWorkspaceData.is_archived,
+      }).unwrap();
+    } catch (error) {
+      console.error("Failed to Delet workspace:", error);
+    }
+  };
   // Handle PlusCircleIcon click and populate task details modal
-  const handleIconClick = (taskName) => {
-    setTaskDetailsData({ ...taskDetailsData, task_name: taskName });
-    handleTaskDetailsOpen(); // Open the task details modal
+  const handleEditIconClick = (workspace) => {
+    setNewWorkspaceData({
+      id: workspace.id,
+      workspace_name: workspace.name,
+      workspace_description: workspace.description,
+      is_ative: workspace.is_ative,
+      is_archived: workspace.is_archived,
+      workspace_id: workspace.workspace_id,
+    });
+    handleWorkspacekDetailsOpen();
+  };
+  //asigne
+  const [
+    triggerListWorkspacesNonWorkspacesMembers,
+    {
+      data: workspacesMembers = [],
+      error: membersError,
+      isLoading: isMembersLoading,
+    },
+  ] = useLazyListWorkspacesNonWorkspacesMembersQuery();
+  // Retrieve members based on workspace ID
+  const handleWorkspaceMemberRetrive = async (event, workspace_id) => {
+    event.preventDefault();
+    try {
+      await triggerListWorkspacesNonWorkspacesMembers(workspace_id);
+    } catch (error) {
+      console.error("Failed to retrieve workspace members:", error);
+    }
+  };
+  // Add members based on workspace ID
+  const handleAddMember = async (workspaceId, memberId) => {
+    try {
+      const result = await createWorkspaceMember({
+        workspaceId,
+        memberId,
+      }).unwrap();
+      console.log("Member added successfully:", result);
+    } catch (error) {
+      console.error("Failed to add member:", error);
+    }
   };
 
-  // Handle task details form submission
-  const handleTaskDetailsSubmit = (event) => {
-    event.preventDefault();
-    console.log("Task Details Submitted:", taskDetailsData);
-    handleTaskDetailsOpen(); // Close modal after submission
-  };
+  const handleInputFocus = () => setIsDropdownVisible(!isDropdownVisible);
+  const handleInputChange = (e) => setQuery(e.target.value);
 
   return (
-    <div className="flex w-full">
-      <Card className="h-full w-fit flex-1">
+    <div className="flex-1 ml-64 p-6">
+      {/* Table for Displaying a Workspace */}
+      <Card className="h-full w-full ">
         <CardHeader
           floated={false}
           shadow={false}
-          className="mb-2 rounded-none p-2"
+          className="mb-2 rounded-none "
         >
-          <div className="flex justify-between">
+          <div className="flex w-full ">
             <div className="w-fit">
               <Input
-                label="Search Task"
+                label="Search WorkSpace"
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
               />
             </div>
             {/* Button to open "Add Task" modal */}
             <Button
-              className="bg-primary1 flex items-center gap-3"
+              className="bg-primary1 flex items-center mx-auto"
               size="sm"
               onClick={handleWorkspaceOpen}
             >
-              <PlusCircleIcon className="h-5 w-5" /> Add Task
+              <PlusCircleIcon className="h-5 w-5" /> Add Workspace
             </Button>
           </div>
         </CardHeader>
-
-        <table className="w-full min-w-max table-auto text-left">
-          <thead>
-            <tr>
-              {TABLE_HEAD.map(({ head, icon }) => (
-                <th key={head} className="border-b border-gray-300 p-4">
-                  <div className="flex items-center gap-1">
-                    {icon}
-                    <Typography
-                      color="blue-gray"
-                      variant="small"
-                      className="!font-bold"
-                    >
-                      {head}
-                    </Typography>
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {TABLE_ROWS.map(({ task_id, task_name, discription }, index) => {
-              const isLast = index === TABLE_ROWS.length - 1;
-              const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
-
-              return (
-                <tr key={task_id}>
-                  <td className={classes}>
-                    <div className="flex items-center gap-1">
-                      <Checkbox />
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-bold"
-                      >
-                        {task_id}
-                      </Typography>
-                    </div>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      className="font-normal text-gray-600"
-                    >
-                      {task_name}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      className="font-normal text-gray-600"
-                    >
-                      {discription}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <div className="flex items-center gap-2">
-                      {/* Icon button to open task details modal */}
-                      <IconButton
-                        variant="text"
-                        size="sm"
-                        onClick={() => handleIconClick(task_name)}
-                      >
-                        <PencilSquareIcon
-                          strokeWidth={3}
-                          className="h-4 w-4 text-gray-900"
-                        />
-                      </IconButton>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        {isLoading ? (
+          <p>Loading workspaces...</p>
+        ) : error ? (
+          <p>Error fetching workspaces.</p>
+        ) : (
+          <MultipleWorkspacesComponent workspaces={workspaces} />
+        )}
       </Card>
 
-      {/* Modal for Adding a Task */}
+      {/* Modal for Adding a Workspace */}
       <Modal
         open={WorkspaceOpen}
         onClose={handleWorkspaceOpen}
@@ -224,6 +195,7 @@ const Workspace = () => {
             </Typography>
             <Input
               size="lg"
+              label="Name"
               placeholder="Enter Workspace Name"
               name="workspace_name"
               onChange={handleNewWorkspaceChange}
@@ -237,61 +209,9 @@ const Workspace = () => {
             <Textarea
               label="Discription"
               size="lg"
-              name="workspace_discription"
+              className="h-44"
+              name="workspace_description"
               onChange={handleNewWorkspaceChange}
-              required
-            />
-          </div>
-        </form>
-      </Modal>
-
-      {/* Modal for Task Details */}
-      <Modal
-        open={taskDetailsOpen}
-        onClose={handleTaskDetailsOpen}
-        title="Task Details"
-        confirmText="Submit"
-        onConfirm={handleTaskDetailsSubmit}
-      >
-        <form onSubmit={handleTaskDetailsSubmit}>
-          <div className="mb-6">
-            <Typography variant="small" color="blue-gray" className="mb-2">
-              Task Name
-            </Typography>
-            <Input
-              size="lg"
-              name="task_name"
-              value={taskDetailsData.task_name} // Pre-populate task name
-              readOnly
-            />
-          </div>
-          <div className="mb-6">
-            <Typography variant="small" color="blue-gray" className="mb-2">
-              Assignee
-            </Typography>
-            <Select
-              size="lg"
-              name="assignee"
-              value={taskDetailsData.assignee}
-              onChange={(value) =>
-                setTaskDetailsData({ ...taskDetailsData, assignee: value })
-              }
-              required
-            >
-              <Option value="User1">User1</Option>
-              <Option value="User2">User2</Option>
-              <Option value="User3">User3</Option>
-            </Select>
-          </div>
-          <div className="mb-6">
-            <Typography variant="small" color="blue-gray" className="mb-2">
-              Due Date
-            </Typography>
-            <Input
-              size="lg"
-              type="date"
-              name="due_date"
-              onChange={handleTaskDetailsChange}
               required
             />
           </div>
@@ -302,3 +222,148 @@ const Workspace = () => {
 };
 
 export default Workspace;
+
+//  {
+//    isLoading ? (
+//      <p>Loading workspaces...</p>
+//    ) : error ? (
+//      <p>Error fetching workspaces.</p>
+//    ) : (
+//      <table className="w-full min-w-max table-auto text-left">
+//        <thead>
+//          <tr>
+//            {TABLE_HEAD.map(({ head }) => (
+//              <th key={head} className="border-b border-gray-300 p-4">
+//                <Typography
+//                  color="blue-gray"
+//                  variant="small"
+//                  className="!font-bold"
+//                >
+//                  {head}
+//                </Typography>
+//              </th>
+//            ))}
+//          </tr>
+//        </thead>
+//        <tbody>
+//          {workspaces.map((workspace) => (
+//            <tr key={workspace.id}>
+//              <Accordion open={open === 1}>
+//                <AccordionHeader onClick={() => handleOpen(1)}>
+//                  <td className="p-4 border-b border-gray-300">
+//                    <Typography
+//                      variant="small"
+//                      color="blue-gray"
+//                      className="font-bold"
+//                    >
+//                      {workspace.workspace_id}
+//                    </Typography>
+//                  </td>
+//                  <td className="p-4 border-b border-gray-300">
+//                    <Typography
+//                      variant="small"
+//                      className="font-normal text-gray-600"
+//                    >
+//                      {workspace.name}
+//                    </Typography>
+//                  </td>
+//                  <td className="p-4 border-b border-gray-300">
+//                    <Typography
+//                      variant="small"
+//                      className="font-normal text-gray-600"
+//                    >
+//                      {workspace.description.length > 50
+//                        ? `${workspace.description.substring(0, 50)}...`
+//                        : workspace.description}
+//                    </Typography>
+//                  </td>
+//                  <td className="p-4 border-b border-gray-300 flex gap-16">
+//                    <div>
+//                      <Popover>
+//                        <PopoverHandler
+//                          onClick={(event) => {
+//                            handleWorkspaceMemberRetrive(event, workspace.id);
+//                          }}
+//                        >
+//                          <UserIcon
+//                            strokeWidth={3}
+//                            className="h-4 w-4 text-gray-900 cursor-pointer"
+//                          />
+//                        </PopoverHandler>
+//                        <PopoverContent className="w-96">
+//                          <div className="relative w-full max-w-xs mx-auto">
+//                            <Input
+//                              type="text"
+//                              value={query}
+//                              onChange={handleInputChange}
+//                              onFocus={handleInputFocus}
+//                              placeholder="Type a member's name"
+//                              className="py-3 px-4 w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+//                            />
+
+//                            {isDropdownVisible && (
+//                              <div className="absolute z-50 w-full max-h-72 p-1 bg-white border border-gray-200 rounded-lg overflow-y-auto">
+//                                {workspacesMembers ? (
+//                                  workspacesMembers.map((member) => (
+//                                    <div
+//                                      key={member.id}
+//                                      className="flex items-center justify-between cursor-pointer py-2 px-4 w-full text-sm text-gray-800 hover:bg-gray-100 rounded-lg"
+//                                    >
+//                                      <span>{member.first_name}</span>
+//                                      <div className="flex items-center space-x-2 gap-4">
+//                                        {member.type === "member" ? (
+//                                          <button className="text-red-500 hover:text-red-700">
+//                                            x
+//                                          </button>
+//                                        ) : (
+//                                          <button
+//                                            className="text-green-500 hover:text-green-700"
+//                                            onClick={() =>
+//                                              handleAddMember(
+//                                                workspace.id,
+//                                                member.id
+//                                              )
+//                                            }
+//                                          >
+//                                            +
+//                                          </button>
+//                                        )}
+//                                      </div>
+//                                    </div>
+//                                  ))
+//                                ) : (
+//                                  <h1>no</h1>
+//                                )}
+//                              </div>
+//                            )}
+//                          </div>
+//                        </PopoverContent>
+//                      </Popover>
+//                    </div>
+//                    <div>
+//                      <IconButton
+//                        variant="text"
+//                        size="sm"
+//                        onClick={() => handleEditIconClick(workspace)}
+//                      >
+//                        <PencilSquareIcon
+//                          strokeWidth={3}
+//                          className="h-4 w-4 text-gray-900"
+//                        />
+//                      </IconButton>
+//                    </div>
+//                  </td>{" "}
+//                </AccordionHeader>
+//                <AccordionBody>
+//                  We&apos;re not always in the position that we want to be at.
+//                  We&apos;re constantly growing. We&apos;re constantly making
+//                  mistakes. We&apos;re constantly trying to express ourselves and
+//                  actualize our dreams.
+//                </AccordionBody>
+//              </Accordion>
+//            </tr>
+//          ))}
+//        </tbody>
+//      </table>
+//    );
+//  }

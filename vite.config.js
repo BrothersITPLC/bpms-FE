@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
-  base: "./",
+  base: "/",
   plugins: [react()],
   resolve: {
     alias: {
@@ -12,7 +12,7 @@ export default defineConfig({
     },
   },
   server: {
-    host: "127.0.0.1",
+    host: "localhost",
     port: 5173,
   },
 });

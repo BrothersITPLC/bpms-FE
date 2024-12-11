@@ -59,10 +59,10 @@ const BidPurchaseOrders = () => {
 
   return (
     <div className="w-1/2 flex-1 m-4">
-      <Typography variant="h5" color="blue-gray">
+      <Typography className="flex-1 ml-64 p-6" variant="h5" color="blue-gray">
         Bid Purchase Orders
       </Typography>
-      <Typography color="gray" className="mt-1 font-normal">
+      <Typography color="gray" className="flex-1 ml-64 mt-1 font-normal">
         Here are the sample bid purchase orders.
       </Typography>
 
