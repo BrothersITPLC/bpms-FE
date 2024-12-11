@@ -15,6 +15,8 @@ import StockInModal from "./StockInModal"; // New Stock-In Modal
 import { useParams } from "react-router-dom";
 import ProductStoreForm from "./ProductToStoreForm";
 import { useGetProduct_in_storeQuery } from "../api/product";
+import { useGetStockinQuery } from "../api/stockin";
+import { useGetStockOutQuery } from "../api/stockout";
 
 const STOCK_OUT_HISTORY = [
   { id: 1, date: "2024-12-01", stockedOutTo: "Dashen Bank", quantity: 2 },
@@ -68,6 +70,12 @@ const StoreProducts = () => {
   const [openingStock, setOpeningStock] = useState(false);
   const params = useParams();
   const { data: products } = useGetProduct_in_storeQuery(params?.store_id);
+  const { data: stockins } = useGetStockinQuery(selectedProduct?.id, {
+    skip: !selectedProduct?.id,
+  });
+  const { data: stockOuts } = useGetStockOutQuery(selectedProduct?.id, {
+    skip: !selectedProduct?.id,
+  });
 
   if (!params?.store_id) {
     return (
@@ -223,7 +231,10 @@ const StoreProducts = () => {
                             Date
                           </th>
                           <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                            Stocked In From
+                            remark
+                          </th>
+                          <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                            Stockin By
                           </th>
                           <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                             Quantity
@@ -231,15 +242,14 @@ const StoreProducts = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {stockInHistory.map(
-                          ({ date, stockedInFrom, quantity }, index) => (
-                            <tr key={index} className="even:bg-blue-gray-50/50">
-                              <td className="p-4">{date}</td>
-                              <td className="p-4">{stockedInFrom}</td>
-                              <td className="p-4">{quantity}</td>
-                            </tr>
-                          )
-                        )}
+                        {stockins?.map((stockin, index) => (
+                          <tr key={index} className="even:bg-blue-gray-50/50">
+                            <td className="p-4">{stockin?.created_at}</td>
+                            <td className="p-4">{stockin?.remark}</td>
+                            <td className="p-4">{stockin?.user}</td>
+                            <td className="p-4">{stockin?.quantity}</td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </Card>
@@ -263,15 +273,13 @@ const StoreProducts = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {stockOutHistory.map(
-                          ({ date, stockedOutTo, quantity }, index) => (
-                            <tr key={index} className="even:bg-blue-gray-50/50">
-                              <td className="p-4">{date}</td>
-                              <td className="p-4">{stockedOutTo}</td>
-                              <td className="p-4">{quantity}</td>
-                            </tr>
-                          )
-                        )}
+                        {stockOuts?.map((stockOut, index) => (
+                          <tr key={index} className="even:bg-blue-gray-50/50">
+                            <td className="p-4">{stockOut?.created_at}</td>
+                            <td className="p-4">{stockOut?.client_name}</td>
+                            <td className="p-4">{stockOut?.quantity}</td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </Card>
@@ -345,16 +353,22 @@ const StoreProducts = () => {
       </div>
 
       {/* Modals */}
-      <StockOutModal
-        open={openStockOutModal}
-        onClose={closeStockOutModalHandler}
-        product={selectedProduct}
-      />
-      <StockInModal
-        open={openStockInModal}
-        onClose={closeStockInModalHandler}
-        product={selectedProduct}
-      />
+      {openStockOutModal && (
+        <StockOutModal
+          open={openStockOutModal}
+          onClose={closeStockOutModalHandler}
+          product={selectedProduct}
+          onConfirm={closeStockOutModalHandler}
+        />
+      )}
+      {openStockInModal && (
+        <StockInModal
+          open={openStockInModal}
+          onClose={closeStockInModalHandler}
+          product={selectedProduct}
+          onConfirm={closeStockInModalHandler}
+        />
+      )}
 
       {openingStock && (
         <ProductStoreForm
