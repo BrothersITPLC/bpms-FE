@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/Auth/apiSlice";
 import { WorkspaceApiSlice } from "../features/TaskManagement/apiSlice";
 import rootReducer from "./rootReducer";
-import { companyAPI } from "../features/Companies/companyApi";
+import { clientAPI } from "../features/Clients/clientApi";
 import { bidApi } from "../features/Bids/bidApi";
 import { roleApi } from "../features/RoleManagment/api";
 import { departmentApi } from "../features/Department/api/department";
@@ -42,7 +42,7 @@ export const store = configureStore({
     }).concat(
       [
         apiSlice.middleware,
-        companyAPI.middleware,
+        clientAPI.middleware,
         bidApi.middleware,
         roleApi.middleware,
         departmentApi.middleware,

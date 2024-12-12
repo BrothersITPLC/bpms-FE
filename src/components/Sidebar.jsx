@@ -222,12 +222,12 @@ const Sidebar = () => {
               Request a Resource{" "}
             </ListItem>
           </Link>
-          <Link to="/companies">
+          <Link to="/clients">
             <ListItem className={LIST_ITEM_STYLES}>
               <ListItemPrefix>
                 <UserGroupIcon className="text-primary1 h-5 w-5" />
               </ListItemPrefix>
-              Companies{" "}
+              Clients{" "}
             </ListItem>
           </Link>
           <Link to="/role-management">
@@ -304,7 +304,7 @@ const Sidebar = () => {
             <List className="p-0">
               <Link to="/companies-store">
                 <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
-                  Companies{" "}
+                  Store Owners{" "}
                 </ListItem>
               </Link>
               <Link to="/store">

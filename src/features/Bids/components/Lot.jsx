@@ -34,7 +34,7 @@ import {
   useUpdateLottMutation,
 } from "../bidApi";
 
-import { useGetCompanyQuery } from "../../Companies/companyApi";
+import { useGetClientQuery } from "../../Clients/clientApi";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import CusstomSpinner from "../../../components/Spinner";

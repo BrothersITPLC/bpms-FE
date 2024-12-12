@@ -1,42 +1,42 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "../baseQuery";
 
-export const companyAPI = createApi({
-  reducerPath: "company-api",
+export const clientAPI = createApi({
+  reducerPath: "client-api",
 
   baseQuery: baseQuery,
 
   endpoints: (builder) => ({
-    addCompany: builder.mutation({
+    addClient: builder.mutation({
       query: (data) => ({
-        url: "company/",
+        url: "client/",
         method: "POST",
         body: data,
       }),
     }),
-    updateCompany: builder.mutation({
+    updateClient: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/company/${id}/`,
+        url: `/client/${id}/`,
         method: "PUT",
         body: data,
       }),
     }),
-    deleteCompany: builder.mutation({
+    deleteClient: builder.mutation({
       query: (id) => ({
-        url: `/company/${id}/`,
+        url: `/client/${id}/`,
         method: "DELETE",
       }),
     }),
-    deleteBulkCompany: builder.mutation({
+    deleteBulkClient: builder.mutation({
       query: (data) => ({
-        url: `/company/bulk-delete/`,
+        url: `/client/bulk-delete/`,
         method: "DELETE",
         body: data,
       }),
     }),
-    getCompany: builder.query({
+    getClient: builder.query({
       query: ({ search, ordering }) => ({
-        url: `/company/?search=${search}&ordering=${
+        url: `/client/?search=${search}&ordering=${
           ordering?.direction == "asc" ? ordering?.key : "-" + ordering?.key
         }`,
       }),
@@ -45,9 +45,9 @@ export const companyAPI = createApi({
 });
 
 export const {
-  useAddCompanyMutation,
-  useDeleteCompanyMutation,
-  useUpdateCompanyMutation,
-  useGetCompanyQuery,
-  useDeleteBulkCompanyMutation,
-} = companyAPI;
+  useAddClientMutation,
+  useDeleteClientMutation,
+  useUpdateClientMutation,
+  useGetClientQuery,
+  useDeleteBulkClientMutation,
+} = clientAPI;

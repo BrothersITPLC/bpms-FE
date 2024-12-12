@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";
 import Tasks from "./features/TaskManagement/components/Tasks";
 import Analytics from "./features/Dashboard/components/Analytics";
-import Companies from "./features/Companies/components/Companies";
+import Clients from "./features/Clients/components/clients";
 import Kanban from "./features/TaskManagement/components/Kanban/components/Kanban";
 import Workspace from "./features/TaskManagement/components/Workspace";
 import Space from "./features/TaskManagement/components/Space";
@@ -63,7 +63,7 @@ const App = () => {
             {/* <Route path="bids/" element={<Bids />} /> */}
 
             <Route path="analytics" element={<Analytics />} />
-            <Route path="companies" element={<Companies />} />
+            <Route path="clients" element={<Clients />} />
             <Route path="role-management" element={<RoleLayout />}>
               <Route index element={<Role />} />
               <Route
