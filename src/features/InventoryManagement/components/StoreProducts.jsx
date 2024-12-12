@@ -111,7 +111,7 @@ const StoreProducts = () => {
   };
 
   return (
-    <div className="flex-1 ml-64 p-6 -z-10">
+    <div className="flex-1 ml-64 p-6">
       <Typography
         variant="h4"
         color="blue-gray"
