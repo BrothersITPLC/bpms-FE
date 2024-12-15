@@ -1,26 +1,19 @@
-# Use an official Node.js runtime as a parent image
-FROM node:16
+# Stage 1: Build the React app
+FROM node:20.18-slim AS build
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the container
-COPY package*.json ./
+# Copy the build files into the container
+COPY dist ./dist
 
-# Install dependencies
-RUN npm install
+# Stage 2: Serve the app using Nginx
+FROM nginx:alpine
 
-# Copy the rest of the application code to the container
-COPY . .
+# Copy the built files from the previous stage to the Nginx container
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Build the application
-RUN npm run build
+# Expose port 80 to allow external access
+EXPOSE 80
 
-# Install a lightweight web server to serve the built application
-RUN npm install -g serve
-
-# Expose the port that your application will run on
-EXPOSE 5173
-
-# Start the application
-CMD ["serve", "-s", "dist"]
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]

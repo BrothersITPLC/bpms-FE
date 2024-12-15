@@ -31,6 +31,8 @@ import {
   useUpdateWorkspaceByIdMutation,
   useLazyListWorkspacesNonWorkspacesMembersQuery,
   useCreateWorkspaceMemberMutation,
+  useCreatePriorityMutation,
+  useCreateStatusMutation,
 } from "../apiSlice";
 import MultipleWorkspacesComponent from "./MultipleWorkspacesComponent";
 import Modal from "../../../components/Modal";
@@ -41,6 +43,8 @@ const Workspace = () => {
   const [createWorkspace] = useCreateWorkspaceMutation();
   const [updateWorkspaceById] = useUpdateWorkspaceByIdMutation();
   const [createWorkspaceMember] = useCreateWorkspaceMemberMutation();
+  const [createPriority] = useCreatePriorityMutation();
+  const [createStatus] = useCreateStatusMutation();
   //asigne
   const [query, setQuery] = useState("");
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -59,6 +63,9 @@ const Workspace = () => {
 
   // Modal states for "Add Task" and PlusCircleIcon (task details)
   const [WorkspaceOpen, setWorkspaceOpen] = useState(false);
+  const [priorityOpen, setPriorityOpen] = useState(false);
+  const [statusOpen, setStatusOpen] = useState(false);
+
   const [WorkspacekDetailsOpen, setWorkspaceDetailsOpen] = useState(false);
   const [AsignWorkspacekMemberOpen, setAsignWorkspacekMemberOpen] =
     useState(false);
@@ -69,6 +76,7 @@ const Workspace = () => {
   };
   // Toggle modals
   const handleWorkspaceOpen = () => setWorkspaceOpen(!WorkspaceOpen);
+
   const handleWorkspacekDetailsOpen = () =>
     setWorkspaceDetailsOpen(!WorkspacekDetailsOpen);
   const handleWorkspaceMemberOpen = () =>
@@ -145,6 +153,54 @@ const Workspace = () => {
   const handleInputFocus = () => setIsDropdownVisible(!isDropdownVisible);
   const handleInputChange = (e) => setQuery(e.target.value);
 
+  //////////////////////////////priority and status
+  const handlePriorityOpen = () => setPriorityOpen(!priorityOpen);
+  const handleStateOpen = () => setStatusOpen(!statusOpen);
+  const [newPriorityData, setNewPriorityData] = useState({
+    priority_description: "",
+    color_code: "",
+    priority_name: "",
+  });
+  const [newStatusData, setNewStatusData] = useState({
+    status_description: "",
+    color_code: "",
+    status_name: "",
+  });
+  const handleNewPriorityChange = (event) => {
+    const { name, value } = event.target;
+    setNewPriorityData({ ...newPriorityData, [name]: value });
+  };
+  const handleNewStatusChange = (event) => {
+    const { name, value } = event.target;
+    setNewStatusData({ ...newStatusData, [name]: value });
+  };
+
+  const handleNewPrioritySubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await createPriority({
+        name: newPriorityData.priority_name,
+        description: newPriorityData.priority_description,
+        color_code: newPriorityData.color_code,
+      });
+      handlePriorityOpen();
+    } catch (error) {
+      console.error("Failed to create workspace:", error);
+    }
+  };
+  const handlenewStatusSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await createStatus({
+        name: newStatusData.status_name,
+        description: newStatusData.status_description,
+        color_code: newStatusData.color_code,
+      });
+      handleStateOpen();
+    } catch (error) {
+      console.error("Failed to create workspace:", error);
+    }
+  };
   return (
     <div className="flex-1 w-full">
       {/* Table for Displaying a Workspace */}
@@ -168,6 +224,20 @@ const Workspace = () => {
               onClick={handleWorkspaceOpen}
             >
               <PlusCircleIcon className="h-5 w-5" /> Add Workspace
+            </Button>
+            <Button
+              className="bg-primary1 flex items-center mx-auto"
+              size="sm"
+              onClick={handlePriorityOpen}
+            >
+              <PlusCircleIcon className="h-5 w-5" /> Add Priority
+            </Button>
+            <Button
+              className="bg-primary1 flex items-center mx-auto"
+              size="sm"
+              onClick={handleStateOpen}
+            >
+              <PlusCircleIcon className="h-5 w-5" /> Add Status
             </Button>
           </div>
         </CardHeader>
@@ -217,153 +287,108 @@ const Workspace = () => {
           </div>
         </form>
       </Modal>
+      {/* Modal for Adding a Priority */}
+      <Modal
+        open={priorityOpen}
+        onClose={handlePriorityOpen}
+        title="Add New Priority"
+        confirmText="Submit"
+        onConfirm={handleNewPrioritySubmit}
+      >
+        <form onSubmit={handleNewPrioritySubmit}>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Priority Name
+            </Typography>
+            <Input
+              size="lg"
+              label="Name"
+              placeholder="Enter Priority Name"
+              name="priority_name"
+              onChange={handleNewPriorityChange}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Color Code
+            </Typography>
+            <Input
+              size="lg"
+              label="color"
+              placeholder="Enter Color Code (HEX-code)"
+              name="color_code"
+              onChange={handleNewPriorityChange}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Priority discription
+            </Typography>
+            <Textarea
+              label="Discription"
+              size="lg"
+              className="h-44"
+              name="priority_description"
+              onChange={handleNewPriorityChange}
+              required
+            />
+          </div>
+        </form>
+      </Modal>
+      {/* Modal for Adding a Status */}
+      <Modal
+        open={statusOpen}
+        onClose={handleStateOpen}
+        title="Add New Status"
+        confirmText="Submit"
+        onConfirm={handlenewStatusSubmit}
+      >
+        <form onSubmit={handlenewStatusSubmit}>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Status Name
+            </Typography>
+            <Input
+              size="lg"
+              label="Name"
+              placeholder="Enter Status Name"
+              name="status_name"
+              onChange={handleNewStatusChange}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Color Code
+            </Typography>
+            <Input
+              size="lg"
+              label="color"
+              placeholder="Enter Color Code (HEX-code)"
+              name="color_code"
+              onChange={handleNewStatusChange}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Status discription
+            </Typography>
+            <Textarea
+              label="Discription"
+              size="lg"
+              className="h-44"
+              name="status_description"
+              onChange={handleNewStatusChange}
+              required
+            />
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };
 
 export default Workspace;
-
-//  {
-//    isLoading ? (
-//      <p>Loading workspaces...</p>
-//    ) : error ? (
-//      <p>Error fetching workspaces.</p>
-//    ) : (
-//      <table className="w-full min-w-max table-auto text-left">
-//        <thead>
-//          <tr>
-//            {TABLE_HEAD.map(({ head }) => (
-//              <th key={head} className="border-b border-gray-300 p-4">
-//                <Typography
-//                  color="blue-gray"
-//                  variant="small"
-//                  className="!font-bold"
-//                >
-//                  {head}
-//                </Typography>
-//              </th>
-//            ))}
-//          </tr>
-//        </thead>
-//        <tbody>
-//          {workspaces.map((workspace) => (
-//            <tr key={workspace.id}>
-//              <Accordion open={open === 1}>
-//                <AccordionHeader onClick={() => handleOpen(1)}>
-//                  <td className="p-4 border-b border-gray-300">
-//                    <Typography
-//                      variant="small"
-//                      color="blue-gray"
-//                      className="font-bold"
-//                    >
-//                      {workspace.workspace_id}
-//                    </Typography>
-//                  </td>
-//                  <td className="p-4 border-b border-gray-300">
-//                    <Typography
-//                      variant="small"
-//                      className="font-normal text-gray-600"
-//                    >
-//                      {workspace.name}
-//                    </Typography>
-//                  </td>
-//                  <td className="p-4 border-b border-gray-300">
-//                    <Typography
-//                      variant="small"
-//                      className="font-normal text-gray-600"
-//                    >
-//                      {workspace.description.length > 50
-//                        ? `${workspace.description.substring(0, 50)}...`
-//                        : workspace.description}
-//                    </Typography>
-//                  </td>
-//                  <td className="p-4 border-b border-gray-300 flex gap-16">
-//                    <div>
-//                      <Popover>
-//                        <PopoverHandler
-//                          onClick={(event) => {
-//                            handleWorkspaceMemberRetrive(event, workspace.id);
-//                          }}
-//                        >
-//                          <UserIcon
-//                            strokeWidth={3}
-//                            className="h-4 w-4 text-gray-900 cursor-pointer"
-//                          />
-//                        </PopoverHandler>
-//                        <PopoverContent className="w-96">
-//                          <div className="relative w-full max-w-xs mx-auto">
-//                            <Input
-//                              type="text"
-//                              value={query}
-//                              onChange={handleInputChange}
-//                              onFocus={handleInputFocus}
-//                              placeholder="Type a member's name"
-//                              className="py-3 px-4 w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
-//                            />
-
-//                            {isDropdownVisible && (
-//                              <div className="absolute z-50 w-full max-h-72 p-1 bg-white border border-gray-200 rounded-lg overflow-y-auto">
-//                                {workspacesMembers ? (
-//                                  workspacesMembers.map((member) => (
-//                                    <div
-//                                      key={member.id}
-//                                      className="flex items-center justify-between cursor-pointer py-2 px-4 w-full text-sm text-gray-800 hover:bg-gray-100 rounded-lg"
-//                                    >
-//                                      <span>{member.first_name}</span>
-//                                      <div className="flex items-center space-x-2 gap-4">
-//                                        {member.type === "member" ? (
-//                                          <button className="text-red-500 hover:text-red-700">
-//                                            x
-//                                          </button>
-//                                        ) : (
-//                                          <button
-//                                            className="text-green-500 hover:text-green-700"
-//                                            onClick={() =>
-//                                              handleAddMember(
-//                                                workspace.id,
-//                                                member.id
-//                                              )
-//                                            }
-//                                          >
-//                                            +
-//                                          </button>
-//                                        )}
-//                                      </div>
-//                                    </div>
-//                                  ))
-//                                ) : (
-//                                  <h1>no</h1>
-//                                )}
-//                              </div>
-//                            )}
-//                          </div>
-//                        </PopoverContent>
-//                      </Popover>
-//                    </div>
-//                    <div>
-//                      <IconButton
-//                        variant="text"
-//                        size="sm"
-//                        onClick={() => handleEditIconClick(workspace)}
-//                      >
-//                        <PencilSquareIcon
-//                          strokeWidth={3}
-//                          className="h-4 w-4 text-gray-900"
-//                        />
-//                      </IconButton>
-//                    </div>
-//                  </td>{" "}
-//                </AccordionHeader>
-//                <AccordionBody>
-//                  We&apos;re not always in the position that we want to be at.
-//                  We&apos;re constantly growing. We&apos;re constantly making
-//                  mistakes. We&apos;re constantly trying to express ourselves and
-//                  actualize our dreams.
-//                </AccordionBody>
-//              </Accordion>
-//            </tr>
-//          ))}
-//        </tbody>
-//      </table>
-//    );
-//  }

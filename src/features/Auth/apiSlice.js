@@ -36,8 +36,13 @@ export const apiSlice = createApi({
         url: "/logout/",
         method: "POST",
       }),
-      async onQueryStarted(arg, { dispatch }) {
-        dispatch(clearUser());
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(clearUser());
+        } catch (err) {
+          console.log(err);
+        }
       },
     }),
     completeProfile: builder.mutation({

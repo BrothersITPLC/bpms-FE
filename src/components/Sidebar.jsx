@@ -11,7 +11,8 @@ import {
   Badge,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-
+import { useLogoutUserMutation } from "../features/Auth/apiSlice";
+import { useNavigate } from "react-router-dom";
 import {
   TicketIcon,
   UserGroupIcon,
@@ -28,11 +29,22 @@ import Logo from "../assets/images/logo.png";
 const Sidebar = () => {
   const [open, setOpen] = useState(0);
   const [openAlert, setOpenAlert] = useState(true);
+  const navigate = useNavigate();
 
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
   };
 
+  const [logoutUser] = useLogoutUserMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser().unwrap();
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
   const LIST_ITEM_STYLES =
     "select-none hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 hover:text-gray-900 focus:text-gray-900 active:text-gray-900 data-[selected=true]:text-gray-900";
 
@@ -331,7 +343,7 @@ const Sidebar = () => {
             </ListItemPrefix>
             Help & Support
           </ListItem>
-          <ListItem className={LIST_ITEM_STYLES}>
+          <ListItem className={LIST_ITEM_STYLES} onClick={handleLogout}>
             <ListItemPrefix>
               <ArrowLeftStartOnRectangleIcon
                 strokeWidth={2.5}

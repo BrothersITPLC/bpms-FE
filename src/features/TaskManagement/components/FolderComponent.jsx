@@ -18,17 +18,24 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/solid";
 
-import TaskComponent from "./TaskComponent";
+import TaskCard from "./TaskCard";
 import Modal from "../../../components/Modal";
-import { useCreateFolderMutation } from "../apiSlice";
+import {
+  useCreateFolderMutation,
+  useUpdateFolderByIdMutation,
+  useCreateTaskMutation,
+  useListTaskQuery,
+} from "../apiSlice";
 const FolderComponent = ({ folder }) => {
   const [isOpen, setIsOpen] = useState(false);
   // const [updateSpaceById] = useUpdateSpaceByIdMutation();
 
   const [folderDetailsOpen, setFolderDetailsOpen] = useState(false);
   const [newFolderOpen, setNewFolderOpen] = useState(false);
+  const [newTaskOpen, setNewTaskOpen] = useState(false);
 
   //////////////////////////////////////////////// folder
+  const [updateFolderById] = useUpdateFolderByIdMutation();
 
   const [folderData, setFolderData] = useState({
     id: null,
@@ -101,7 +108,6 @@ const FolderComponent = ({ folder }) => {
 
   const handleAddNestedFolder = async (event) => {
     event.preventDefault();
-
     try {
       await CreateNestedFolder({
         name: newFolderData.nested_folder_name,
@@ -115,25 +121,70 @@ const FolderComponent = ({ folder }) => {
     }
   };
 
-  // task
+  /////////////////////////////////////////// Task
+
+  const [createTask] = useCreateTaskMutation();
+
+  const [newTaskData, setNewTaskData] = useState({
+    new_task_name: "",
+    new_task_description: "",
+    new_task_folder: "",
+  });
+
+  useEffect(() => {
+    if (folder?.id) {
+      setNewTaskData((prevData) => ({
+        ...prevData,
+        new_task_folder: folder.id,
+      }));
+    }
+  }, [folder.id]);
+
+  const handleAddNewTask = async (event) => {
+    event.preventDefault();
+    try {
+      await createTask({
+        name: newTaskData.new_task_name,
+        description: newTaskData.new_task_description,
+        folder: newTaskData.new_task_folder,
+      });
+      handleNewTaskOpen();
+    } catch (error) {
+      console.error("Failed to Add New Task:", error);
+    }
+  };
 
   /////////////////////////////////////// handles
 
   const handleFolderDetailsOpen = () =>
     setFolderDetailsOpen(!folderDetailsOpen);
 
-  const handleNewFolderOpen = () => setNewFolderOpen(!newFolderOpen);
-
   const handleFolderChange = (event) => {
     const { name, value } = event.target;
     setFolderData({ ...folderData, [name]: value });
   };
+  const handleNewFolderOpen = () => setNewFolderOpen(!newFolderOpen);
 
   const handleNewFolderChange = (event) => {
     const { name, value } = event.target;
     setNewFolderData({ ...newFolderData, [name]: value });
   };
+  const handleNewTaskOpen = () => setNewTaskOpen(!newTaskOpen);
+  const handleNewTaskChange = (event) => {
+    const { name, value } = event.target;
+    setNewTaskData({ ...newTaskData, [name]: value });
+  };
 
+  let taskData = [];
+  let taskError = "";
+  let taskIsLoading = false;
+
+  if (folder?.id) {
+    const queryResult = useListTaskQuery(folder.id);
+    taskData = queryResult.data || [];
+    taskError = queryResult.error || "";
+    taskIsLoading = queryResult.isLoading;
+  }
   return (
     <div className={`ml-${3 * 4}`}>
       <Accordion
@@ -153,8 +204,8 @@ const FolderComponent = ({ folder }) => {
         >
           <FolderIcon className="h-5 w-5 text-blue-500 mr-2" />
           <Typography variant="small">{folder.name}</Typography>
-          <div className="ml-auto flex space-x-2">
-            <Tooltip content="Edit Space">
+          <div className="ml-auto flex space-x-2 items-center">
+            <Tooltip content="Edit Folder">
               <IconButton
                 size="sm"
                 color="blue"
@@ -183,7 +234,7 @@ const FolderComponent = ({ folder }) => {
                 className="rounded-full"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleAddTask();
+                  handleNewTaskOpen();
                 }}
               >
                 <DocumentPlusIcon className="h-8 w-8" />
@@ -191,20 +242,15 @@ const FolderComponent = ({ folder }) => {
             </Tooltip>
           </div>
         </AccordionHeader>
-        {/* <AccordionBody>
-          {folder.folders.map((subFolder) => (
-            <FolderComponent
-              key={subFolder.id}
-              folder={subFolder}
-             
-            />
+        <AccordionBody>
+          {folder.subFolders.map((subFolder) => (
+            <FolderComponent key={subFolder.id} folder={subFolder} />
           ))}
-          {folder.tasks.map((task) => (
-            <TaskComponent key={task.id} task={task} />
+          {taskData?.map((task) => (
+            <TaskCard tasks={task} />
           ))}
-        </AccordionBody> */}
+        </AccordionBody>
       </Accordion>
-
       {/*Modal for space Edit*/}
       <Modal
         open={folderDetailsOpen}
@@ -264,7 +310,6 @@ const FolderComponent = ({ folder }) => {
           </div>
         </form>
       </Modal>
-
       {/*Modal for Nested Folder Adding*/}
       <Modal
         open={newFolderOpen}
@@ -297,6 +342,43 @@ const FolderComponent = ({ folder }) => {
               className="h-44"
               name="nested_folder_description"
               onChange={handleNewFolderChange}
+              required
+            />
+          </div>
+        </form>
+      </Modal>
+      {/* *Modal for Adding Task */}
+      <Modal
+        open={newTaskOpen}
+        onClose={handleNewTaskOpen}
+        title="Add New Task"
+        confirmText="Submit"
+        onConfirm={handleAddNewTask}
+      >
+        <form onSubmit={handleAddNewTask}>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Task Name
+            </Typography>
+            <Input
+              size="lg"
+              label="Name"
+              placeholder="Enter Task Name"
+              name="new_task_name"
+              onChange={handleNewTaskChange}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <Typography variant="small" color="blue-gray" className="mb-2">
+              Task discription
+            </Typography>
+            <Textarea
+              label="Task Discription"
+              size="lg"
+              className="h-44"
+              name="new_task_description"
+              onChange={handleNewTaskChange}
               required
             />
           </div>

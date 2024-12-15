@@ -11,10 +11,14 @@ import {
   Checkbox,
   Textarea,
   Tooltip,
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
+  Avatar,
 } from "@material-tailwind/react";
 import {
   PencilIcon,
-  UserPlusIcon,
   PlusIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/solid";
@@ -22,14 +26,19 @@ import {
   useUpdateWorkspaceByIdMutation,
   useCreateSpaceMutation,
   useListSpaceQuery,
+  useListWorkspacesNonWorkspacesMembersQuery,
+  useCreateWorkspaceMemberMutation,
+  useDeleteWorkspaceMemberMutation,
 } from "../apiSlice";
 import SpaceComponent from "./SpaceComponent";
 import Modal from "../../../components/Modal";
+import { use } from "react";
 const WorkspaceComponent = ({ workspace }) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const avatar = "/placeholder.svg";
   const [updateWorkspaceById] = useUpdateWorkspaceByIdMutation();
-
+  const [createWorkspaceMember] = useCreateWorkspaceMemberMutation();
+  const [deleteWorkspaceMember] = useDeleteWorkspaceMemberMutation();
   const [newWorkspaceData, setNewWorkspaceData] = useState({
     id: null,
     workspace_name: "",
@@ -71,6 +80,7 @@ const WorkspaceComponent = ({ workspace }) => {
       console.error("Failed to Delet workspace:", error);
     }
   };
+
   useEffect(() => {
     setNewWorkspaceData({
       id: workspace.id,
@@ -120,9 +130,45 @@ const WorkspaceComponent = ({ workspace }) => {
     isLoading: spaceIsLoading,
   } = useListSpaceQuery(workspace.id);
 
+  ///////////////////////////members
+  const {
+    data: userListData,
+    isLoading: userListIsLoading,
+    error: userListError,
+  } = useListWorkspacesNonWorkspacesMembersQuery(workspace?.id);
+
+  let sortedUsers = [];
+  if (userListData) {
+    sortedUsers = [...userListData].sort((a, b) => b.isMember - a.isMember);
+  }
+
+  const handleAssigneeChange = async (user) => {
+    if (user.isMember) {
+      try {
+        const result = await deleteWorkspaceMember({
+          workspaceId: workspace.id,
+          memberId: user.id,
+        }).unwrap();
+        console.log("Member added successfully:", result);
+      } catch (error) {
+        console.error("Failed to add member:", error);
+      }
+    } else {
+      try {
+        const result = await createWorkspaceMember({
+          workspaceId: workspace.id,
+          memberId: user.id,
+        }).unwrap();
+        console.log("Member added successfully:", result);
+      } catch (error) {
+        console.error("Failed to add member:", error);
+      }
+    }
+  };
+
   return (
     <div>
-      <Card className="w-full max-w-[90%]  mb-4">
+      <Card className="w-full max-w-[90%]  mb-4 ">
         <CardBody>
           <div className="flex items-center justify-between mb-2 gap-4">
             <Typography variant="h6">
@@ -140,11 +186,44 @@ const WorkspaceComponent = ({ workspace }) => {
                   <PencilIcon className="h-4 w-4" />
                 </IconButton>
               </Tooltip>
+
               <Tooltip content="Add Workspace Member">
-                <IconButton size="sm" color="blue" className="rounded-full">
-                  <UserPlusIcon className="h-4 w-4" />
-                </IconButton>
+                <div className="flex items-center gap-5">
+                  <Menu placement="bottom-start">
+                    <MenuHandler>
+                      <Avatar
+                        src={avatar}
+                        alt={avatar}
+                        className="cursor-pointer w-10 h-10"
+                      />
+                    </MenuHandler>
+                    <MenuList className="z-10">
+                      {sortedUsers.map((user, index) => (
+                        <div key={user.id}>
+                          {index > 0 &&
+                            sortedUsers[index - 1].isMember &&
+                            !user.isMember && (
+                              <hr className="my-2 border-t border-gray-300" />
+                            )}
+                          <MenuItem
+                            onClick={() => handleAssigneeChange(user)}
+                            className="flex items-center gap-3"
+                          >
+                            <Avatar src={avatar} alt={avatar} size="sm mx-4" />
+                            <span>{user.username}</span>
+                            {user.isMember ? (
+                              <span className="text-red-600 mx-4">x</span>
+                            ) : (
+                              <span className="text-green-500 mx-4">+</span>
+                            )}
+                          </MenuItem>
+                        </div>
+                      ))}
+                    </MenuList>
+                  </Menu>
+                </div>
               </Tooltip>
+
               <Tooltip content="Add space">
                 <IconButton
                   size="sm"
@@ -186,7 +265,6 @@ const WorkspaceComponent = ({ workspace }) => {
           </Accordion>
         </CardBody>
       </Card>
-
       {/*Modal for Workspace Edit*/}
       <Modal
         open={WorkspacekDetailsOpen}

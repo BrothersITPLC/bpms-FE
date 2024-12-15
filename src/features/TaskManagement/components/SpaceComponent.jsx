@@ -44,7 +44,7 @@ const SpaceComponent = ({ space }) => {
 
   const handlespaceDetailsOpen = () => setSpaceDetailsOpen(!spaceDetailsOpen);
 
-  const handleUpdateWorkspace = async () => {
+  const handleUpdateSpace = async () => {
     try {
       await updateSpaceById({
         id: newSpaceData.id,
@@ -57,14 +57,14 @@ const SpaceComponent = ({ space }) => {
     }
   };
 
-  const handleDeletWorkspace = async (id) => {
+  const handleDeletSpace = async (id) => {
     try {
       await updateSpaceById({
         id: newSpaceData.id,
         is_archived: !newSpaceData.is_archived,
       }).unwrap();
     } catch (error) {
-      console.error("Failed to Delet workspace:", error);
+      console.error("Failed to Delet space:", error);
     }
   };
 
@@ -118,7 +118,7 @@ const SpaceComponent = ({ space }) => {
       });
       handleFolderOpen();
     } catch (error) {
-      console.error("Failed to create workspace:", error);
+      console.error("Failed to create space:", error);
     }
   };
 
@@ -132,8 +132,6 @@ const SpaceComponent = ({ space }) => {
     folderError = queryResult.error || "";
     folderIsLoading = queryResult.isLoading;
   }
-  console.log(folderData);
-
   return (
     <div className={`ml-4`}>
       <Accordion
@@ -197,16 +195,16 @@ const SpaceComponent = ({ space }) => {
       <Modal
         open={spaceDetailsOpen}
         onClose={handlespaceDetailsOpen}
-        title="Edit Workspace"
+        title="Edit Space"
         confirmText="Submit"
-        onConfirm={handleUpdateWorkspace}
+        onConfirm={handleUpdateSpace}
         showDelete={true}
-        onConfirmDelete={() => handleDeletWorkspace(newSpaceData.id)}
+        onConfirmDelete={() => handleDeletSpace(newSpaceData.id)}
       >
-        <form onSubmit={handleUpdateWorkspace}>
+        <form onSubmit={handleUpdateSpace}>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Workspace Name
+              Space Name
             </Typography>
             <Input
               size="lg"
@@ -220,7 +218,7 @@ const SpaceComponent = ({ space }) => {
           </div>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Workspace discription
+              Space discription
             </Typography>
             <Textarea
               label="Description"
