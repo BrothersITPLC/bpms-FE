@@ -22,7 +22,7 @@ const Profile = () => {
   ];
 
   return (
-    <div className="flex-1 m-4">
+    <div className="flex-1 ml-64 p-6">
       <Typography variant="h5" color="blue-gray">
         Settings{" "}
       </Typography>
