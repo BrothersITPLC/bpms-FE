@@ -99,11 +99,6 @@ const Sidebar = () => {
                     </div>
                   </ListItem>
                 </Link>
-                <Link to="/monthly-plan">
-                  <ListItem className={`px-16 ${LIST_ITEM_STYLES}`}>
-                    <div className="flex gap-8">Monthly Plan</div>
-                  </ListItem>
-                </Link>
               </List>
             </AccordionBody>
           </Accordion>
