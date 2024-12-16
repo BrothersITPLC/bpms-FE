@@ -48,7 +48,7 @@ const App = () => {
           <Route element={<HomePage />}>
             <Route path="user-management" element={<UserManagement />} />
             <Route path="assigned-tasks" element={<AssignedTasks />} />
-            <Route path="tasks" element={<Tasks />} />
+            {/* <Route path="tasks" element={<Tasks />} /> */}
             <Route path="workspace" element={<Workspace />} />
             <Route path="space" element={<Space />} />
             <Route path="folder" element={<Folder />} />

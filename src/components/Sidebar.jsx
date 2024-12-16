@@ -167,11 +167,11 @@ const Sidebar = () => {
                     Assigned Tasks
                   </ListItem>
                 </Link>
-                <Link to="/tasks">
+                {/* <Link to="/tasks">
                   <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
                     Tasks
                   </ListItem>
-                </Link>
+                </Link> */}
                 <Link to="/workspace">
                   <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
                     Workspace
