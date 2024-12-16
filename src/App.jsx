@@ -78,6 +78,7 @@ const App = () => {
             <Route path="notifications" element={<Notifications />} />
             <Route path="resource-requests" element={<ResourceRequests />} />
             <Route path="/owner/:owner_id/store" element={<Store />} />
+            <Route path="/store" element={<Store />} />
             <Route
               path="/store/:store_id/products"
               element={<StoreProducts />}

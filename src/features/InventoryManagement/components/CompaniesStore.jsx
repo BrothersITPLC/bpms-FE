@@ -75,7 +75,10 @@ const CompaniesStore = () => {
             key={company.id}
             shadow={false}
             className="w-full max-w-[30rem] relative hover:cursor-pointer flex flex-col py-6 border  transition-shadow"
-            onClick={() => navigate(`/owner/${company?.id}/store`)}
+            onClick={() => {
+              localStorage.setItem("owner", company?.id);
+              navigate(`/store`);
+            }}
           >
             <CardHeader
               floated={false}

@@ -19,6 +19,7 @@ import {
   useUpdateStoreMutation,
 } from "../api/store";
 import { useParams } from "react-router-dom";
+import SelectingOwner from "./SelectingOwner";
 
 const Store = () => {
   const [formData, setFormData] = useState({ name: "", address: "" });
@@ -27,9 +28,11 @@ const Store = () => {
   const [selectedStore, setSelectedStore] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const params = useParams();
-
-  const { data: stores, refetch } = useGetStoresQuery(params?.owner_id, {
-    skip: params?.owner_id == null,
+  const getOwner = () => {
+    return localStorage.getItem("owner");
+  };
+  const { data: stores, refetch } = useGetStoresQuery(getOwner(), {
+    skip: getOwner() == null,
   });
   const [addStore] = useCreateStoreMutation();
   const [deleteStore] = useDeleteStoreMutation();
@@ -39,7 +42,7 @@ const Store = () => {
     setOpenAddModal(true);
     setFormData({ name: "", address: "" });
   };
-
+  const [selectOwnerOpen, setSelectOwnerOpen] = useState(true);
   const openEditModalHandler = (store) => {
     setSelectedStore(store);
     setFormData({ name: store.name, address: store.location });
@@ -48,6 +51,11 @@ const Store = () => {
 
   const closeAddModalHandler = () => setOpenAddModal(false);
   const closeEditModalHandler = () => setOpenEditModal(false);
+
+  const setOwner = (id) => {
+    localStorage.setItem("owner", id);
+    setSelectOwnerOpen(false);
+  };
 
   const handleAddStore = async () => {
     try {
@@ -213,6 +221,12 @@ const Store = () => {
           />
         </form>
       </Modal>
+      {!getOwner() && (
+        <SelectingOwner
+          open={selectOwnerOpen}
+          onSelected={setOwner}
+        ></SelectingOwner>
+      )}
     </div>
   );
 };
