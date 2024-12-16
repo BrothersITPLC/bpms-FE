@@ -24,7 +24,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.auth.user);
-  console.log("User data:", user);
 
   const handleLogin = async (e) => {
     e.preventDefault();

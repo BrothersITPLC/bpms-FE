@@ -30,7 +30,7 @@ import {
   useGetDetailRFPQuery,
 } from "../bidApi";
 
-import { useGetCompanyQuery } from "../../Companies/companyApi";
+import { useGetClientQuery } from "../../Clients/clientApi";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import CusstomSpinner from "../../../components/Spinner";
@@ -48,7 +48,7 @@ const Bids = () => {
   const [updateRFP] = useUpdateRFPMutation();
   const [deleteRFP] = useDeleteRFPMutation();
 
-  const { data: clients } = useGetCompanyQuery({ search: "" });
+  const { data: clients } = useGetClientQuery({ search: "" });
   const { data: RFPDetail, isLoading: detailLoading } = useGetDetailRFPQuery(
     selectedID,
     {
@@ -158,7 +158,7 @@ const Bids = () => {
                   <BidsCard
                     id={rfp?.id}
                     is_active={params?.id == rfp?.id}
-                    companyName={rfp.client_name}
+                    clientName={rfp.client_name}
                     bidTitle={rfp.name}
                     rfqNo={rfp.rfp_number}
                     url={rfp.url}

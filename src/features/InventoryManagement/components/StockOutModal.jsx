@@ -7,7 +7,7 @@ import {
   DialogFooter,
   Input,
 } from "@material-tailwind/react";
-import { useGetCompanyQuery } from "../../Companies/companyApi";
+import { useGetClientQuery } from "../../Clients/clientApi";
 import { Textarea } from "@material-tailwind/react";
 import { useCreateStockOutMutation } from "../api/stockout";
 import { toast } from "react-toastify";
@@ -20,7 +20,7 @@ const StockOutModal = ({ open, onClose, onConfirm, product }) => {
   });
   const [quantity, setQuantity] = useState("");
   const [createStockOut] = useCreateStockOutMutation();
-  const { data: clients } = useGetCompanyQuery({ search: "" });
+  const { data: clients } = useGetClientQuery({ search: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;

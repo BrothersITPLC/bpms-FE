@@ -16,11 +16,11 @@ import {
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
 import {
-  useAddCompanyMutation,
-  useGetCompanyQuery,
-  useDeleteBulkCompanyMutation,
-  useUpdateCompanyMutation,
-} from "../companyApi";
+  useAddClientMutation,
+  useGetClientQuery,
+  useDeleteBulkClientMutation,
+  useUpdateClientMutation,
+} from "../clientApi";
 
 const TABLE_HEAD = [
   {
@@ -29,11 +29,11 @@ const TABLE_HEAD = [
     field: "select",
   },
   {
-    head: "Company Name",
+    head: "Client Name",
     field: "name",
   },
   {
-    head: "Company Address",
+    head: "Client Address",
     field: "address",
   },
   {
@@ -42,53 +42,53 @@ const TABLE_HEAD = [
   },
 ];
 
-const Companies = () => {
-  const [addCompanyOpen, setAddCompanyOpen] = useState(false);
+const Clients = () => {
+  const [addClientOpen, setAddClientOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [newCompanyData, setNewCompanyData] = useState({
+  const [newClientData, setNewClientData] = useState({
     name: "",
     address: "",
   });
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-  const [selectedCompanies, setSelectedCompanies] = useState(new Set());
-  const [selectedCompany, setSelectedCompany] = useState(null);
-  const [updateCompany] = useUpdateCompanyMutation();
-  const { data, isError, refetch } = useGetCompanyQuery({
+  const [selectedClients, setSelectedClients] = useState(new Set());
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [updateClient] = useUpdateClientMutation();
+  const { data, isError, refetch } = useGetClientQuery({
     search,
     ordering: sortConfig,
   });
-  const [addCompany] = useAddCompanyMutation();
-  const [deleteBulk] = useDeleteBulkCompanyMutation();
+  const [addClient] = useAddClientMutation();
+  const [deleteBulk] = useDeleteBulkClientMutation();
 
-  const handleAddCompanyOpen = () => setAddCompanyOpen(!addCompanyOpen);
+  const handleAddClientOpen = () => setAddClientOpen(!addClientOpen);
 
-  const handleNewCompanyChange = (event) => {
+  const handleNewClientChange = (event) => {
     const { name, value } = event.target;
-    setNewCompanyData({ ...newCompanyData, [name]: value });
+    setNewClientData({ ...newClientData, [name]: value });
   };
 
-  const handleNewCompanySubmit = async (event) => {
+  const handleNewClientSubmit = async (event) => {
     setLoading(true);
     event.preventDefault();
     try {
-      if (!selectedCompany)
-        await addCompany({
-          name: newCompanyData.name,
-          address: newCompanyData.address,
+      if (!selectedClient)
+        await addClient({
+          name: newClientData.name,
+          address: newClientData.address,
         }).unwrap();
       else {
-        await updateCompany({
+        await updateClient({
           data: {
-            name: newCompanyData.name,
-            address: newCompanyData.address,
+            name: newClientData.name,
+            address: newClientData.address,
           },
-          id: selectedCompany?.id,
+          id: selectedClient?.id,
         }).unwrap();
       }
       refetch();
       setLoading(false);
-      handleAddCompanyOpen();
+      handleAddClientOpen();
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -103,37 +103,37 @@ const Companies = () => {
     setSortConfig({ key, direction });
   };
 
-  const handleSelectCompany = (companyId) => {
-    const newSelected = new Set(selectedCompanies);
-    if (newSelected.has(companyId)) {
-      newSelected.delete(companyId);
+  const handleSelectClient = (clientId) => {
+    const newSelected = new Set(selectedClients);
+    if (newSelected.has(clientId)) {
+      newSelected.delete(clientId);
     } else {
-      newSelected.add(companyId);
+      newSelected.add(clientId);
     }
-    setSelectedCompanies(newSelected);
+    setSelectedClients(newSelected);
   };
 
-  const handleSelectAllCompanies = () => {
-    if (selectedCompanies.size === data?.length) {
-      setSelectedCompanies(new Set()); // Deselect all
+  const handleSelectAllClients = () => {
+    if (selectedClients.size === data?.length) {
+      setSelectedClients(new Set()); // Deselect all
     } else {
-      const allCompanyIds = new Set(data?.map(({ id }) => id)); // Select all
-      setSelectedCompanies(allCompanyIds);
+      const allClientIds = new Set(data?.map(({ id }) => id)); // Select all
+      setSelectedClients(allClientIds);
     }
   };
 
   const handleBulkDelete = async () => {
-    if (selectedCompanies.size === 0) {
-      alert("No companies selected for deletion.");
+    if (selectedClients.size === 0) {
+      alert("No Clients selected for deletion.");
       return;
     }
 
-    const idsToDelete = Array.from(selectedCompanies);
+    const idsToDelete = Array.from(selectedClients);
     try {
       await deleteBulk({ ids: idsToDelete }).unwrap();
       refetch();
     } catch (error) {
-      console.error("Failed to delete companies:", error);
+      console.error("Failed to delete Clients:", error);
     }
   };
 
@@ -147,7 +147,7 @@ const Companies = () => {
         >
           <div className="flex justify-between flex-col-reverse gap-6 items-center">
             <Input
-              label="Search Company"
+              label="Search Client"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               icon={<MagnifyingGlassIcon className="h-5 w-5 text-gray-600" />}
@@ -157,7 +157,7 @@ const Companies = () => {
               <Button
                 className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
                 size="sm"
-                disabled={selectedCompanies?.size <= 0}
+                disabled={selectedClients?.size <= 0}
                 onClick={handleBulkDelete}
               >
                 <TrashIcon className="h-5 w-5" /> Delete Selected
@@ -166,11 +166,11 @@ const Companies = () => {
                 className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
                 size="sm"
                 onClick={() => {
-                  handleAddCompanyOpen();
-                  setSelectedCompany(null);
+                  handleAddClientOpen();
+                  setSelectedClient(null);
                 }}
               >
-                <PlusCircleIcon className="h-5 w-5" /> Add Company
+                <PlusCircleIcon className="h-5 w-5" /> Add Client
               </Button>
             </div>
           </div>
@@ -189,8 +189,8 @@ const Companies = () => {
                     <div className="flex items-center gap-1">
                       {field === "select" ? (
                         <Checkbox
-                          checked={selectedCompanies.size === data?.length}
-                          onChange={handleSelectAllCompanies}
+                          checked={selectedClients.size === data?.length}
+                          onChange={handleSelectAllClients}
                         />
                       ) : (
                         icon
@@ -214,7 +214,7 @@ const Companies = () => {
             </thead>
             <tbody>
               {data?.map(({ name, address, id }, index) => {
-                const isSelected = selectedCompanies.has(id);
+                const isSelected = selectedClients.has(id);
                 const isLast = index === data.length - 1;
                 const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
@@ -227,7 +227,7 @@ const Companies = () => {
                       <div className="flex items-center gap-1">
                         <Checkbox
                           checked={isSelected}
-                          onChange={() => handleSelectCompany(id)}
+                          onChange={() => handleSelectClient(id)}
                         />
                       </div>
                     </td>
@@ -259,9 +259,9 @@ const Companies = () => {
                         <PencilIcon
                           className="w-10 h-8 text-blue-800"
                           onClick={() => {
-                            setSelectedCompany({ name, address, id });
-                            setNewCompanyData({ name, address });
-                            handleAddCompanyOpen();
+                            setSelectedClient({ name, address, id });
+                            setNewClientData({ name, address });
+                            handleAddClientOpen();
                           }}
                         />
                       </Typography>
@@ -275,37 +275,37 @@ const Companies = () => {
       </Card>
 
       <Modal
-        open={addCompanyOpen}
-        onClose={handleAddCompanyOpen}
-        title={selectedCompany ? "Edit Company" : "Add New Company"}
+        open={addClientOpen}
+        onClose={handleAddClientOpen}
+        title={selectedClient ? "Edit Client" : "Add New Client"}
         confirmText="Submit"
-        onConfirm={handleNewCompanySubmit}
+        onConfirm={handleNewClientSubmit}
       >
-        <form onSubmit={handleNewCompanySubmit}>
+        <form onSubmit={handleNewClientSubmit}>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Company Name
+              Client Name
             </Typography>
             <Input
               size="lg"
-              placeholder="Enter Company Name"
+              placeholder="Enter Client Name"
               name="name"
-              value={newCompanyData?.name || ""}
-              onChange={handleNewCompanyChange}
+              value={newClientData?.name || ""}
+              onChange={handleNewClientChange}
               required
               className="border-gray-300 focus:border-blue-500"
             />
           </div>
           <div className="mb-6">
             <Typography variant="small" color="blue-gray" className="mb-2">
-              Company Address
+              Client Address
             </Typography>
             <Input
               size="lg"
-              placeholder="Enter Company Address"
+              placeholder="Enter Client Address"
               name="address"
-              value={newCompanyData?.address || ""}
-              onChange={handleNewCompanyChange}
+              value={newClientData?.address || ""}
+              onChange={handleNewClientChange}
               required
               className="border-gray-300 focus:border-blue-500"
             />
@@ -316,4 +316,4 @@ const Companies = () => {
   );
 };
 
-export default Companies;
+export default Clients;

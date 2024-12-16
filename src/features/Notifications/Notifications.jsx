@@ -156,7 +156,7 @@ const Notifications = () => {
   }, [selectedTab]);
 
   return (
-    <Card className="flex-1 w-full">
+    <Card className="flex-1 ml-64 p-6">
       <CardBody>
         <div className="mb-4 flex items-center justify-between">
           <Typography variant="h5" color="blue-gray">

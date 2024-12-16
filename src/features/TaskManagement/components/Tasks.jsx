@@ -16,7 +16,7 @@ import {
 } from "@material-tailwind/react";
 import Sidebar from "../../../components/Sidebar";
 import Modal from "../../../components/Modal";
-import { useCreateTaskMutation, useListTasksQuery } from "../apiSlice";
+import { useCreateTaskMutation } from "../apiSlice";
 import { Textarea } from "@material-tailwind/react";
 
 const TABLE_HEAD = [
@@ -52,7 +52,6 @@ const Tasks = () => {
   // Modal states for "Add Task" and PlusCircleIcon (task details)
   const [addTaskOpen, setAddTaskOpen] = useState(false);
   const [taskDetailsOpen, setTaskDetailsOpen] = useState(false);
-  const { data: tasks, refetch: refetchTask } = useListTasksQuery();
   const [createTask] = useCreateTaskMutation();
   // Form states
   const [newTaskData, setNewTaskData] = useState({
