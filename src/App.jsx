@@ -35,6 +35,7 @@ import "react-toastify/dist/ReactToastify.css";
 import CompaniesStore from "./features/InventoryManagement/components/CompaniesStore";
 import BidAnalytics from "./features/Bids/components/BidAnalytics";
 import StoreProducts from "./features/InventoryManagement/components/StoreProducts";
+import BidTasks from "./features/Bids/components/BidTasks";
 
 const App = () => {
   return (
@@ -61,7 +62,7 @@ const App = () => {
               <Route path=":id" element={<BidDetail />} />
             </Route>
             {/* <Route path="bids/" element={<Bids />} /> */}
-
+            <Route path="bid-tasks" element={<BidTasks />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="clients" element={<Clients />} />
             <Route path="role-management" element={<RoleLayout />}>
