@@ -45,9 +45,10 @@ export default function EnhancedLotCard({
   const getUser = useGetEmployeeQuery();
   const [formData, setFormData] = useState({ task: "", user: "" });
 
-  const { data: lotAssignment } = useGetLotAssignmentQuery(id, {
-    skip: id == null,
-  });
+  const { data: lotAssignment, refetch: refetchAssign } =
+    useGetLotAssignmentQuery(id, {
+      skip: id == null,
+    });
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -60,11 +61,12 @@ export default function EnhancedLotCard({
   const handleSave = async () => {
     try {
       await addAsign({
-        step: formData.task,
-        assigned_to: formData.user,
+        task: formData.task,
+        assigned_to: Number(formData.user),
         lot: id,
       }).unwrap();
       setAssign(false);
+      refetchAssign();
       toast.success("assigned");
     } catch (error) {
       setAssign(false);
@@ -149,35 +151,40 @@ export default function EnhancedLotCard({
             label="Validity Date"
             value={formatFriendlyDate(validity_date)}
           />
-          <div className="flex cursor-pointer  items-center ">
+          <div
+            className="flex items-center cursor-pointer w-full h-full "
+            onClick={() => {
+              setOpenDetail(true);
+              setFormData({ user: "", task: "" });
+            }}
+          >
+            {/* Button with the FaUserPlus icon */}
             <button
-              className="flex items-center justify-center "
-              onClick={() => {
-                setOpenDetail(true);
-
-                setFormData({ user: "", task: "" });
-              }}
+              className="flex items-center  justify-center mr-2" // Add margin-right for spacing
             >
-              <FaUserPlus className="text-primary1 h-full"></FaUserPlus>
+              <FaUserPlus className="text-primary1 h-full" />
             </button>
-            <div className="relative">
+
+            {/* Container for user avatars */}
+            <div className="relative flex justify-center items-center">
               {assigned_users?.map((user, index) => (
                 <div className="relative group" key={user?.id}>
-                  {" "}
+                  {/* User avatar */}
                   <span
                     className={`h-[2rem] border-[1px] border-white flex items-center absolute justify-center z-10 text-white bg-primary1 w-[2rem] rounded-[100%]`}
                     style={{
                       left: `${index * 20}px`,
+                      top: "-15px",
                       zIndex: 10 - index, // Higher z-index for earlier spans
                       overflow: "hidden",
-                    }} // Dynamically position each span with 40px spacing
+                    }}
                   >
-                    {user[0]}
+                    {user[0]}{" "}
+                    {/* Display the first letter of the user's name */}
                   </span>
-                  <div
-                    className="absolute left-1/2 -translate-x-1/2 bottom-[120%] hidden group-hover:block
-                   bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap"
-                  >
+
+                  {/* Tooltip on hover */}
+                  <div className="absolute left-1/2 -translate-x-1/2 bottom-[120%] hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
                     {user}
                   </div>
                 </div>
@@ -253,7 +260,7 @@ export default function EnhancedLotCard({
           <div className="flex flex-col gap-3  h-[30rem]">
             <div className="w-full justify-end flex">
               <button
-                className="text-primary1 sticky top-1 px-4 py-2 rounded-md border-primary1"
+                className="text-primary1 border-[1px] hover:text-white hover:bg-primary1 top-1 px-4 py-2 rounded-md border-primary1"
                 onClick={() => {
                   setAssign(true);
 
@@ -279,12 +286,12 @@ export default function EnhancedLotCard({
                 {lotAssignment?.map((assignment) => (
                   <tr key={assignment.id}>
                     <td className="px-4 py-2">
-                      {assignment.assigned_to?.username}
+                      {assignment.assigned_to_info?.username}
                     </td>
                     <td className="px-4 py-2">
-                      {assignment.assigned_to?.email}
+                      {assignment.assigned_to_info?.email}
                     </td>
-                    <td className="px-4 py-2">{assignment.step?.name}</td>
+                    <td className="px-4 py-2">{assignment.task_info?.name}</td>
                     <td className="px-4 py-2">{assignment?.status}</td>
                     <td className="px-4 py-2">
                       {new Date(assignment.assigned_at).toLocaleString()}
