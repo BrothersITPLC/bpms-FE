@@ -152,9 +152,9 @@ const Bids = () => {
                 Create RFP
               </Button>
             </div>
-            <div className="md:w-full flex flex-col   gap-5 max-h-[calc(100vh-10rem)] overflow-y-auto px-3  py-[2rem]">
+            <div className="md:w-full   flex flex-col   gap-5 max-h-[calc(100vh-10rem)] overflow-y-auto px-3  py-[2rem]">
               {rfps?.map((rfp) => (
-                <div key={rfp.id} className=" gap-4 flex flex-wrap">
+                <div key={rfp.id} className=" gap-4 flex flex-wrap w-full ">
                   <BidsCard
                     id={rfp?.id}
                     is_active={params?.id == rfp?.id}

@@ -12,7 +12,7 @@ const BidDetail = () => {
   });
 
   return (
-    <div className="flex-1 ml-64 p-6">
+    <div className="flex-1  p-6">
       <div className="w-full flex justify-end"></div>
       <div className="w-full  py-4   ">
         <div className="w-full  mx-auto bg-white  rounded-lg border-primary1/10 border overflow-hidden">
@@ -27,7 +27,7 @@ const BidDetail = () => {
               <div className="flex items-center gap-3">
                 <FaBox className="h-5 w-5 text-gray-500" />
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Vendor</dt>
+                  <dt className="text-sm font-medium text-gray-500">Name</dt>
                   <dd className="mt-1 text-lg text-gray-900">{rfp?.name}</dd>
                 </div>
               </div>
