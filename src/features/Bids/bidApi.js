@@ -13,6 +13,13 @@ export const bidApi = createApi({
         body: data,
       }),
     }),
+    addBidTask: builder.mutation({
+      query: (data) => ({
+        url: "bid-task/",
+        method: "POST",
+        body: data,
+      }),
+    }),
     updateRFP: builder.mutation({
       query: ({ id, data }) => ({
         url: `/rfp/${id}/`,
@@ -38,6 +45,12 @@ export const bidApi = createApi({
         url: `/rfp/`,
       }),
     }),
+    getBidTask: builder.query({
+      query: () => ({
+        url: `/bid-task/`,
+      }),
+    }),
+
     getDetailRFP: builder.query({
       query: (id) => ({
         url: `/rfp/${id}/`,
@@ -67,6 +80,18 @@ export const bidApi = createApi({
         url: `/lot/?rfp=${rfp}`,
       }),
     }),
+    addLottAssignment: builder.mutation({
+      query: (data) => ({
+        url: "lot-assignment/",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getLotAssignment: builder.query({
+      query: (lot) => ({
+        url: `/lot-assignment/?lot=${lot}`,
+      }),
+    }),
   }),
 });
 
@@ -81,4 +106,8 @@ export const {
   useDeleteLottMutation,
   useGetDetailLotQuery,
   useUpdateLottMutation,
+  useGetBidTaskQuery,
+  useAddBidTaskMutation,
+  useAddLottAssignmentMutation,
+  useGetLotAssignmentQuery,
 } = bidApi;

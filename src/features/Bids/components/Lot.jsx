@@ -187,6 +187,7 @@ const Lott = () => {
               submission_date={rfp?.submission_date}
               onDelete={handleDelete}
               onEdit={handleEdit}
+              assigned_users={rfp?.assigned_users}
             />
           </div>
         ))}

@@ -10,9 +10,18 @@ import {
   FaCalendarAlt,
   FaDoorOpen,
   FaFileUpload,
+  FaUserPlus,
 } from "react-icons/fa";
 
 import { formatFriendlyDate } from "../../../../helpers/formatingDateUserFreindly";
+import Modal from "../../../components/Modal";
+import {
+  useAddLottAssignmentMutation,
+  useGetBidTaskQuery,
+  useGetLotAssignmentQuery,
+} from "../bidApi";
+import { useGetEmployeeQuery } from "../../UserManagement/userAPI";
+import { toast } from "react-toastify";
 
 export default function EnhancedLotCard({
   id,
@@ -26,10 +35,43 @@ export default function EnhancedLotCard({
   created_by,
   onEdit,
   onDelete,
+  assigned_users,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
+  const [assign, setAssign] = useState(false);
+  const tasks = useGetBidTaskQuery();
+  const getUser = useGetEmployeeQuery();
+  const [formData, setFormData] = useState({ task: "", user: "" });
+
+  const { data: lotAssignment } = useGetLotAssignmentQuery(id, {
+    skip: id == null,
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  const [addAsign] = useAddLottAssignmentMutation();
+  const [openDetail, setOpenDetail] = useState(false);
+  const handleSave = async () => {
+    try {
+      await addAsign({
+        step: formData.task,
+        assigned_to: formData.user,
+        lot: id,
+      }).unwrap();
+      setAssign(false);
+      toast.success("assigned");
+    } catch (error) {
+      setAssign(false);
+      toast.error("error");
+    }
+    setFormData({ user: "", task: "" });
+  };
 
   return (
     <div className="max-w-4xl mx-auto bg-white border hover:border-primary1 border-gray-200 rounded-xl  overflow-hidden transition-all duration-300 hover:shadow-xl">
@@ -107,8 +149,159 @@ export default function EnhancedLotCard({
             label="Validity Date"
             value={formatFriendlyDate(validity_date)}
           />
+          <div className="flex cursor-pointer  items-center ">
+            <button
+              className="flex items-center justify-center "
+              onClick={() => {
+                setOpenDetail(true);
+
+                setFormData({ user: "", task: "" });
+              }}
+            >
+              <FaUserPlus className="text-primary1 h-full"></FaUserPlus>
+            </button>
+            <div className="relative">
+              {assigned_users?.map((user, index) => (
+                <div className="relative group" key={user?.id}>
+                  {" "}
+                  <span
+                    className={`h-[2rem] border-[1px] border-white flex items-center absolute justify-center z-10 text-white bg-primary1 w-[2rem] rounded-[100%]`}
+                    style={{
+                      left: `${index * 20}px`,
+                      zIndex: 10 - index, // Higher z-index for earlier spans
+                      overflow: "hidden",
+                    }} // Dynamically position each span with 40px spacing
+                  >
+                    {user[0]}
+                  </span>
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 bottom-[120%] hidden group-hover:block
+                   bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap"
+                  >
+                    {user}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </dl>
       </div>
+
+      {assign && (
+        <Modal
+          open={assign}
+          onConfirm={handleSave}
+          onClose={() => setAssign(false)}
+        >
+          <div className="space-y-6">
+            <div className="flex flex-col">
+              <label className="text-gray-700 font-semibold mb-2">
+                Select Task
+              </label>
+              <select
+                name="task"
+                value={formData.task}
+                onChange={handleChange}
+                className="p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="" disabled>
+                  Select Task
+                </option>
+                {tasks?.data?.map((task) => {
+                  return (
+                    <option key={task?.id} value={task?.id}>
+                      {task?.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-gray-700 font-semibold mb-2">
+                Select User
+              </label>
+              <select
+                name="user"
+                value={formData?.user}
+                onChange={handleChange}
+                className="p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="" disabled>
+                  Select User
+                </option>
+                {getUser?.data?.map((user) => {
+                  return (
+                    <option key={user?.id} value={user?.id}>
+                      {user?.email}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {openDetail && (
+        <Modal
+          open={openDetail}
+          size="xl"
+          onConfirm={() => setOpenDetail(false)}
+          onClose={() => setOpenDetail(false)}
+        >
+          <div className="flex flex-col gap-3  h-[30rem]">
+            <div className="w-full justify-end flex">
+              <button
+                className="text-primary1 sticky top-1 px-4 py-2 rounded-md border-primary1"
+                onClick={() => {
+                  setAssign(true);
+
+                  setFormData({ user: "", task: "" });
+                }}
+              >
+                assign
+              </button>
+            </div>
+            <table className="min-w-full text-sm text-left text-gray-500">
+              <thead className="bg-gray-100 text-gray-700">
+                <tr>
+                  <th className="px-4 py-2">name</th>
+                  <th className="px-4 py-2">email</th>
+                  <th className="px-4 py-2">task_type</th>
+                  <th className="px-4 py-2">Status</th>
+                  <th className="px-4 py-2">Assigned At</th>
+                  <th className="px-4 py-2">Completed At</th>
+                  <th className="px-4 py-2">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {lotAssignment?.map((assignment) => (
+                  <tr key={assignment.id}>
+                    <td className="px-4 py-2">
+                      {assignment.assigned_to?.username}
+                    </td>
+                    <td className="px-4 py-2">
+                      {assignment.assigned_to?.email}
+                    </td>
+                    <td className="px-4 py-2">{assignment.step?.name}</td>
+                    <td className="px-4 py-2">{assignment?.status}</td>
+                    <td className="px-4 py-2">
+                      {new Date(assignment.assigned_at).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      {assignment.completed_at
+                        ? new Date(assignment.completed_at).toLocaleString()
+                        : "N/A"}
+                    </td>
+                    <td className="px-4 py-2">{assignment.notes || "N/A"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

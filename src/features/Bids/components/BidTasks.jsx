@@ -2,6 +2,8 @@ import { useState } from "react";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Button, Card, CardHeader, Typography } from "@material-tailwind/react";
 import Modal from "../../../components/Modal";
+import { useAddBidTaskMutation, useGetBidTaskQuery } from "../bidApi";
+import { toast } from "react-toastify";
 
 const TABLE_HEAD = ["ID", "Name"];
 const INITIAL_TABLE_ROWS = [
@@ -15,20 +17,27 @@ const BidTasks = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
   const [tableRows, setTableRows] = useState(INITIAL_TABLE_ROWS); // State for bid tasks
   const [taskName, setTaskName] = useState(""); // Input state for task name
-  const [taskID, setTaskID] = useState(""); // Input state for task ID
-
+  // Input state for task ID
+  const { data: tasks, refetch: refetchTask } = useGetBidTaskQuery();
+  const [addTask] = useAddBidTaskMutation();
   // Handle opening/closing modal
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setTaskName("");
-    setTaskID("");
   };
 
   // Handle adding a new task
-  const handleSaveTask = () => {
-    if (taskID && taskName) {
-      setTableRows([...tableRows, { id: taskID, name: taskName }]);
+  const handleSaveTask = async () => {
+    if (taskName) {
+      try {
+        await addTask({ name: taskName }).unwrap();
+        await refetchTask();
+        toast.success("success");
+      } catch (error) {
+        toast.error("error Please try again");
+      }
+
       handleCloseModal();
     } else {
       alert("Please fill in both Task ID and Task Name.");
@@ -76,7 +85,7 @@ const BidTasks = () => {
             </tr>
           </thead>
           <tbody>
-            {tableRows.map(({ id, name }) => (
+            {tasks?.map(({ id, name }) => (
               <tr key={id} className="even:bg-blue-gray-50/50">
                 <td className="p-4">
                   <Typography
@@ -111,13 +120,6 @@ const BidTasks = () => {
         onConfirm={handleSaveTask}
       >
         <div className="flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="Task ID"
-            value={taskID}
-            onChange={(e) => setTaskID(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none"
-          />
           <input
             type="text"
             placeholder="Task Name"
