@@ -245,22 +245,47 @@ const Sidebar = () => {
               Role Management{" "}
             </ListItem>
           </Link>
-          <Link to="/Bids">
-            <ListItem className={LIST_ITEM_STYLES}>
+          <Accordion open={open === 4}>
+            <ListItem
+              selected={open === 4}
+              data-selected={open === 4}
+              onClick={() => handleOpen(4)}
+              className="px-3 py-[9px] select-none hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 hover:text-gray-900 focus:text-gray-900 active:text-gray-900 data-[selected=true]:text-gray-900"
+            >
               <ListItemPrefix>
-                <Square2StackIcon className="text-primary1 h-5 w-5" />
+                <RectangleGroupIcon className="text-primary1 h-5 w-5" />
               </ListItemPrefix>
-              Bids
+              <Typography className="mr-auto font-normal text-inherit">
+                Bids
+              </Typography>
+              <ChevronDownIcon
+                strokeWidth={3}
+                className={`ml-auto h-4 w-4 text-gray-500 transition-transform ${
+                  open === 4 ? "rotate-180" : ""
+                }`}
+              />
             </ListItem>
-          </Link>
-          <Link to="/bid-purchase-orders">
-            <ListItem className={LIST_ITEM_STYLES}>
-              <ListItemPrefix>
-                <TicketIcon className="text-primary1 h-5 w-5" />
-              </ListItemPrefix>
-              Orders
-            </ListItem>
-          </Link>
+            <AccordionBody className="py-1">
+              <List className="p-0">
+                <Link to="/Bids">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Bids
+                  </ListItem>
+                </Link>
+                <Link to="/bid-purchase-orders">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Orders
+                  </ListItem>
+                </Link>
+                <Link to="/bid-tasks">
+                  <ListItem className={`px-12 ${LIST_ITEM_STYLES}`}>
+                    Bid Tasks{" "}
+                  </ListItem>
+                </Link>
+              </List>
+            </AccordionBody>
+          </Accordion>
+
           <ListItem className={LIST_ITEM_STYLES}>
             <ListItemPrefix>
               <UserGroupIcon className="text-primary1 h-5 w-5" />
@@ -275,11 +300,11 @@ const Sidebar = () => {
               Work Plan
             </ListItem>
           </Link>
-          <Accordion open={open === 4}>
+          <Accordion open={open === 5}>
             <ListItem
-              selected={open === 4}
-              data-selected={open === 4}
-              onClick={() => handleOpen(4)}
+              selected={open === 5}
+              data-selected={open === 5}
+              onClick={() => handleOpen(5)}
               className="px-3 py-[9px] select-none hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 hover:text-gray-900 focus:text-gray-900 active:text-gray-900 data-[selected=true]:text-gray-900"
             >
               <ListItemPrefix>
@@ -291,7 +316,7 @@ const Sidebar = () => {
               <ChevronDownIcon
                 strokeWidth={3}
                 className={`ml-auto h-4 w-4 text-gray-500 transition-transform ${
-                  open === 4 ? "rotate-180" : ""
+                  open === 5 ? "rotate-180" : ""
                 }`}
               />
             </ListItem>
