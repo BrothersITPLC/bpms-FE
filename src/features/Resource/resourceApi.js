@@ -13,6 +13,12 @@ export const resourceApi = createApi({
         body: data,
       }),
     }),
+    getResource: builder.query({
+      query: () => ({
+        url: "resource_request/",
+        method: "GET",
+      }),
+    }),
     updateTaskStatus: builder.mutation({
       query: (data) => ({
         url: "bid-task/",
@@ -48,4 +54,5 @@ export const {
   useAddResourceMutation,
   useUpdateTaskStatusMutation,
   useUpdateResourceMutation,
+  useGetResourceQuery,
 } = resourceApi;

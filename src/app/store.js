@@ -23,6 +23,7 @@ import {
 import storage from "redux-persist/lib/storage";
 import { StockinAPI } from "../features/InventoryManagement/api/stockin";
 import { StockOutAPI } from "../features/InventoryManagement/api/stockout";
+import { resourceApi } from "../features/Resource/resourceApi";
 const persistConfig = {
   key: "auth",
   storage,
@@ -52,6 +53,7 @@ export const store = configureStore({
         ProductAPI.middleware,
         StockinAPI.middleware,
         StockOutAPI.middleware,
+        resourceApi.middleware,
       ],
       WorkspaceApiSlice.middleware
     ),

@@ -12,6 +12,7 @@ import { StoreAPI } from "../features/InventoryManagement/api/store";
 import { ProductAPI } from "../features/InventoryManagement/api/product";
 import { StockinAPI } from "../features/InventoryManagement/api/stockin";
 import { StockOutAPI } from "../features/InventoryManagement/api/stockout";
+import { resourceApi } from "../features/Resource/resourceApi";
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
   [WorkspaceApiSlice.reducerPath]: WorkspaceApiSlice.reducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   [ProductAPI.reducerPath]: ProductAPI.reducer,
   [StockinAPI.reducerPath]: StockinAPI.reducer,
   [StockOutAPI.reducerPath]: StockOutAPI.reducer,
+  [resourceApi.reducerPath]: resourceApi.reducer,
   auth: authReducer,
 });
 

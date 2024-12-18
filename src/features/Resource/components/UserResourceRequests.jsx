@@ -15,6 +15,9 @@ import {
 import Modal from "../../../components/Modal"; // Ensure Modal is imported correctly
 import DatePicker from "../../../components/DatePicker"; // Ensure DatePicker is imported correctly
 import { useGetEmployeeQuery } from "../../UserManagement/userAPI";
+import { useAddResourceMutation, useGetResourceQuery } from "../resourceApi";
+import { toast } from "react-toastify";
+import { formatFriendlyDate } from "../../../../helpers/formatingDateUserFreindly";
 
 // Tab values
 const TABS = [
@@ -70,12 +73,11 @@ const TABLE_ROWS = [
 const ResourceRequestHistory = () => {
   const [selectedTab, setSelectedTab] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newResource, setNewResource] = useState(""); // Field for the new resource name
-  const [dueDate, setDueDate] = useState(""); // Field for the due date
+
   const [formData, setFormData] = useState({
     requestName: "",
     requestDescription: "",
-    requester: "",
+    due_date: "",
     approver: "",
     quantity: 1,
   });
@@ -89,8 +91,8 @@ const ResourceRequestHistory = () => {
   };
 
   const { data: users } = useGetEmployeeQuery();
-
-  // Assuming "Alice Johnson" is the logged-in user
+  const [addRequest] = useAddResourceMutation();
+  const { data: RequestResource } = useGetResourceQuery();
   const currentUser = "Alice Johnson";
 
   // Filter rows based on selected tab and current user
@@ -103,25 +105,20 @@ const ResourceRequestHistory = () => {
 
   const handleRequestResourceClick = () => setIsModalOpen(true);
 
-  const handleConfirmRequest = () => {
-    const currentDate = new Date().toISOString().split("T")[0]; // Get the current date in YYYY-MM-DD format
-    const newRequest = {
-      user: currentUser,
-      requester: currentUser,
-      email: `${currentUser.toLowerCase().replace(" ", ".")}@example.com`,
-      resource: newResource,
-      requestDate: currentDate, // Set request date to current date
-      dueDate: dueDate, // Include due date
-      status: "Pending", // Default status
-    };
+  const handleConfirmRequest = async () => {
+    try {
+      await addRequest({
+        request_name: formData.requestName,
+        description: formData.requestDescription,
+        approver: formData.approver,
+        quantity: formData?.quantity,
+        due_date: formData?.due_date,
+      }).unwrap();
 
-    // Assuming TABLE_ROWS is mutable, push newRequest into it
-    TABLE_ROWS.push(newRequest);
-
-    console.log("New resource requested:", newRequest);
-    setIsModalOpen(false);
-    setNewResource("");
-    setDueDate(""); // Reset due date
+      toast.success("add successfully");
+    } catch (error) {
+      toast.error("error Please try Again!");
+    }
   };
 
   return (
@@ -187,60 +184,59 @@ const ResourceRequestHistory = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredRows.map(
-              ({ resource, requestDate, dueDate, status }, index) => {
-                const isLast = index === filteredRows.length - 1;
-                const classes = isLast
-                  ? "p-4"
-                  : "p-4 border-b border-blue-gray-50";
+            {RequestResource?.map((resource, index) => {
+              const isLast = index === filteredRows.length - 1;
+              const classes = isLast
+                ? "p-4"
+                : "p-4 border-b border-blue-gray-50";
 
-                return (
-                  <tr key={`${resource}-${requestDate}`}>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {resource}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        value={status}
-                        color={
-                          status === "Approved"
-                            ? "green"
-                            : status === "Pending"
-                            ? "yellow"
-                            : "red"
-                        }
-                      />
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {requestDate}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {dueDate} {/* Display the Due Date */}
-                      </Typography>
-                    </td>
-                  </tr>
-                );
-              }
-            )}
+              return (
+                <tr key={resource?.id}>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {resource?.request_name}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Chip
+                      variant="ghost"
+                      size="sm"
+                      value={resource?.latest_status?.status || "Pending"}
+                      color={
+                        resource?.latest_status?.status === "Approved"
+                          ? "green"
+                          : resource?.latest_status?.status === "Pending" ||
+                            resource?.latest_status?.status == null
+                          ? "yellow"
+                          : "red"
+                      }
+                    />
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {formatFriendlyDate(resource?.created_at)}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {resource?.due_date} {/* Display the Due Date */}
+                    </Typography>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </CardBody>
@@ -260,14 +256,14 @@ const ResourceRequestHistory = () => {
 
       {/* Modal for Requesting a Resource */}
       <Modal
-        size="xs"
+        size="md"
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Request a Resource"
         confirmText="Submit Request"
         onConfirm={handleConfirmRequest}
       >
-        <div className="max-w-lg mx-auto p-6 border rounded shadow-md">
+        <div className=" mx-auto p-6 border rounded ">
           <h2 className="text-2xl font-semibold mb-4">
             Create Resource Request
           </h2>
@@ -308,26 +304,21 @@ const ResourceRequestHistory = () => {
 
           <div className="mb-4">
             <label
-              htmlFor="requester"
+              htmlFor="due_date"
               className="block text-sm font-medium text-gray-700"
             >
-              Requester
+              Due Date
             </label>
-            <select
-              id="requester"
-              name="requester"
-              value={formData.requester}
+
+            <input
+              type="date"
+              id="due_date"
+              name="due_date"
+              value={formData.due_date}
               onChange={handleChange}
               required
               className="mt-1 p-2 w-full border border-primary1 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary1"
-            >
-              <option value="">Select Requester</option>
-              {users?.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.username}
-                </option>
-              ))}
-            </select>
+            />
           </div>
 
           <div className="mb-4">
@@ -372,13 +363,6 @@ const ResourceRequestHistory = () => {
               className="mt-1 p-2 w-full border border-primary1 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary1"
             />
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary1"
-          >
-            Submit Request
-          </button>
         </div>
       </Modal>
     </Card>
