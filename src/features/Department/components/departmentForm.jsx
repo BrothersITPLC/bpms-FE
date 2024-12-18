@@ -1,18 +1,7 @@
 import Modal from "../../../components/Modal";
-import {
-  Card,
-  Input,
-  Checkbox,
-  CardHeader,
-  Typography,
-  Button,
-  Select,
-  Option,
-} from "@material-tailwind/react";
+import { Input } from "@material-tailwind/react";
 import {
   useAddDepartmentMutation,
-  useDeleteDepartmentMutation,
-  useGetDepartmentQuery,
   useGetDetailDepartmentQuery,
   useUpdateDepartmentMutation,
 } from "../api/department";
@@ -26,7 +15,6 @@ const DepartmentForm = ({
 }) => {
   const [newDepartmentData, setNewDepartmentData] = useState({
     department_name: "",
-    manager: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const { data: department } = useGetDetailDepartmentQuery(

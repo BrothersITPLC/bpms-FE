@@ -1,21 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Typography } from "@material-tailwind/react";
 
-const ProfileImageUploader = ({ onImageChange, isSignup }) => {
+const ProfileImageUploader = ({ onImageChange, isSignup, imageUrl }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    if (imageUrl) {
+      setSelectedImage(imageUrl);
+    }
+  }, [imageUrl]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
+      const imageUrl = URL.createObjectURL(file); // For local preview
       setSelectedImage(imageUrl);
-      onImageChange(file); // Pass the file to parent component (UserInfo)
+      onImageChange(file); // Pass the File object to parent
     }
   };
 
   const handleRemoveImage = () => {
     setSelectedImage(null);
-    onImageChange(null); // Remove the image from parent component
+    onImageChange(null);
   };
 
   return (
@@ -55,7 +61,7 @@ const ProfileImageUploader = ({ onImageChange, isSignup }) => {
           size="sm"
           onClick={() => document.getElementById("profileImageInput").click()}
         >
-          {isSignup ? "Upload Image" : "CHANGE Profile PICTURE"}
+          {isSignup ? "Upload Image" : "Change Profile Picture"}
         </Button>
         {selectedImage && (
           <Button
