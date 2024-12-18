@@ -57,7 +57,7 @@ const ResourceRequestHistory = () => {
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button variant="outlined" size="sm">
+            <Button variant="outlined" size="sm" color="blue">
               Export this table
             </Button>
           </div>

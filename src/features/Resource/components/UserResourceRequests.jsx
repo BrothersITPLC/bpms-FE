@@ -114,6 +114,7 @@ const ResourceRequestHistory = () => {
             <Button
               variant="outlined"
               size="sm"
+              color="blue"
               onClick={handleRequestResourceClick}
             >
               Request a Resource
