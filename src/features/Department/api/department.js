@@ -30,6 +30,7 @@ export const departmentApi = createApi({
         { type: "DepartmentDetail", id },
       ],
     }),
+
     deleteDepartment: builder.mutation({
       query: (id) => ({
         url: `/users/department/${id}/`,
@@ -40,6 +41,7 @@ export const departmentApi = createApi({
         "Department",
       ],
     }),
+
     deleteBulkDepartment: builder.mutation({
       query: (data) => ({
         url: `/user/department/bulk-delete/`,

@@ -23,9 +23,7 @@ const DepartmentEditForm = ({
   departmentId,
   onSave,
 }) => {
-  const [newDepartmentData, setNewDepartmentData] = useState({
-    department_name: "",
-  });
+  const [newDepartmentData, setNewDepartmentData] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
   const { data: department } = useGetDetailDepartmentQuery(
@@ -82,17 +80,14 @@ const DepartmentEditForm = ({
       console.error("Error removing employee:", error);
     }
   };
+
   const handleNewDepartmentSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     try {
       await editDepartment({
-        id,
-        data: {
-          name: newDepartmentData?.department_name?.toUpperCase(),
-          manager: newDepartmentData?.manager,
-          employee: newDepartmentData?.employee,
-        },
+        id: departmentId,
+        data: { name: newDepartmentData.department_name },
       }).unwrap();
 
       setIsLoading(false);
@@ -100,23 +95,23 @@ const DepartmentEditForm = ({
       onSave();
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
 
   const handleNewDepartmentChange = (event) => {
-    const { name, value } = event.target;
-    setNewDepartmentData({ ...newDepartmentData, [name]: value });
+    const { value } = event.target;
+    setNewDepartmentData((prevData) => ({
+      ...prevData,
+      department_name: value,
+    }));
   };
 
   useEffect(() => {
     if (department) {
       setNewDepartmentData({
         department_name: department?.name,
-        manager: department?.manager || "",
-        employee: department?.employee || "",
       });
-    } else {
-      setNewDepartmentData({ department_name: "", manager: "", employee: "" });
     }
   }, [department]);
 
@@ -130,8 +125,6 @@ const DepartmentEditForm = ({
         handleEditDepartmentOpen();
         setNewDepartmentData({
           department_name: "",
-          manager: "",
-          employee: "",
         });
       }}
       title="Editing Department"
