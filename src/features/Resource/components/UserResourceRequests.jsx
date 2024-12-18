@@ -14,6 +14,7 @@ import {
 } from "@material-tailwind/react";
 import Modal from "../../../components/Modal"; // Ensure Modal is imported correctly
 import DatePicker from "../../../components/DatePicker"; // Ensure DatePicker is imported correctly
+import { useGetEmployeeQuery } from "../../UserManagement/userAPI";
 
 // Tab values
 const TABS = [
@@ -78,6 +79,17 @@ const ResourceRequestHistory = () => {
     approver: "",
     quantity: 1,
   });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const { data: users } = useGetEmployeeQuery();
+
   // Assuming "Alice Johnson" is the logged-in user
   const currentUser = "Alice Johnson";
 
@@ -255,12 +267,118 @@ const ResourceRequestHistory = () => {
         confirmText="Submit Request"
         onConfirm={handleConfirmRequest}
       >
-        <div className="flex flex-col gap-4">
-          <div></div>
-          <DatePicker
-            field={{ label: "Due Date", name: "dueDate" }} // New DatePicker for due date
-            onChange={(e) => setDueDate(e.target.value)} // Update due date on change
-          />
+        <div className="max-w-lg mx-auto p-6 border rounded shadow-md">
+          <h2 className="text-2xl font-semibold mb-4">
+            Create Resource Request
+          </h2>
+
+          <div className="mb-4">
+            <label
+              htmlFor="requestName"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Request Name
+            </label>
+            <input
+              type="text"
+              id="requestName"
+              name="requestName"
+              value={formData.requestName}
+              onChange={handleChange}
+              required
+              className="mt-1 p-2 w-full border border-primary1 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary1"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="requestDescription"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Request Description
+            </label>
+            <textarea
+              id="requestDescription"
+              name="requestDescription"
+              value={formData.requestDescription}
+              onChange={handleChange}
+              className="mt-1 p-2 w-full border border-primary1 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary1"
+            ></textarea>
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="requester"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Requester
+            </label>
+            <select
+              id="requester"
+              name="requester"
+              value={formData.requester}
+              onChange={handleChange}
+              required
+              className="mt-1 p-2 w-full border border-primary1 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary1"
+            >
+              <option value="">Select Requester</option>
+              {users?.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.username}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="approver"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Approver
+            </label>
+            <select
+              id="approver"
+              name="approver"
+              value={formData.approver}
+              onChange={handleChange}
+              required
+              className="mt-1 p-2 w-full border border-primary1 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary1"
+            >
+              <option value="">Select Approver</option>
+              {users?.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.username}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="quantity"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Quantity
+            </label>
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              value={formData.quantity}
+              onChange={handleChange}
+              min="1"
+              required
+              className="mt-1 p-2 w-full border border-primary1 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary1"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary1"
+          >
+            Submit Request
+          </button>
         </div>
       </Modal>
     </Card>
