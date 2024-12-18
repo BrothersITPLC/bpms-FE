@@ -14,8 +14,8 @@ export const resourceApi = createApi({
       }),
     }),
     getResource: builder.query({
-      query: () => ({
-        url: "resource_request/",
+      query: ({ search }) => ({
+        url: `resource_request/?search=${search}`,
         method: "GET",
       }),
     }),
@@ -46,6 +46,12 @@ export const resourceApi = createApi({
         method: "DELETE",
       }),
     }),
+    getResourceIApprove: builder.query({
+      query: (search) => ({
+        url: `/i_approve_resource/?search=${search}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -55,4 +61,5 @@ export const {
   useUpdateTaskStatusMutation,
   useUpdateResourceMutation,
   useGetResourceQuery,
+  useGetResourceIApproveQuery,
 } = resourceApi;

@@ -28,51 +28,22 @@ const TABS = [
 ];
 
 // Table headers (with Status as the second column)
-const TABLE_HEAD = ["Resource", "Status", "Request Date", "Due Date"];
+const TABLE_HEAD = [
+  "Resource",
+  "Description",
+  "Quantity",
+  "Status",
+  "Request Date",
+  "Due Date",
+  "Approver",
+];
 
 // Sample request data with added due date
-const TABLE_ROWS = [
-  {
-    user: "Alice Johnson",
-    requester: "Alice Johnson",
-    email: "alice@creative-tim.com",
-    resource: "Laptop",
-    requestDate: "2024-10-01",
-    dueDate: "2024-10-10", // Added due date
-    status: "Approved",
-  },
-  {
-    user: "Alice Johnson",
-    requester: "Alice Johnson",
-    email: "alice@creative-tim.com",
-    resource: "Projector",
-    requestDate: "2024-10-02",
-    dueDate: "2024-10-15", // Added due date
-    status: "Pending",
-  },
-  {
-    user: "Bob Smith",
-    requester: "Bob Smith",
-    email: "bob@creative-tim.com",
-    resource: "Conference Room",
-    requestDate: "2024-10-03",
-    dueDate: "2024-10-20", // Added due date
-    status: "Denied",
-  },
-  {
-    user: "Alice Johnson",
-    requester: "Alice Johnson",
-    email: "alice@creative-tim.com",
-    resource: "Paper",
-    requestDate: "2024-09-23",
-    dueDate: "2024-09-30", // Added due date
-    status: "Approved",
-  },
-];
 
 const ResourceRequestHistory = () => {
   const [selectedTab, setSelectedTab] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   const [formData, setFormData] = useState({
     requestName: "",
@@ -92,28 +63,34 @@ const ResourceRequestHistory = () => {
 
   const { data: users } = useGetEmployeeQuery();
   const [addRequest] = useAddResourceMutation();
-  const { data: RequestResource } = useGetResourceQuery();
+  const { data: RequestResource, refetch: refetchRequest } =
+    useGetResourceQuery({ search });
   const currentUser = "Alice Johnson";
 
   // Filter rows based on selected tab and current user
-  const filteredRows = TABLE_ROWS.filter((row) => {
-    const isUserMatch = row.user === currentUser;
-    const isStatusMatch =
-      selectedTab === "all" || row.status.toLowerCase() === selectedTab;
-    return isUserMatch && isStatusMatch;
-  });
 
-  const handleRequestResourceClick = () => setIsModalOpen(true);
+  const handleRequestResourceClick = () => {
+    setIsModalOpen(true);
+    setFormData({
+      requestName: "",
+      requestDescription: "",
+      due_date: "",
+      approver: "",
+      quantity: 1,
+    });
+  };
 
   const handleConfirmRequest = async () => {
     try {
       await addRequest({
         request_name: formData.requestName,
-        description: formData.requestDescription,
+        request_description: formData.requestDescription,
         approver: formData.approver,
         quantity: formData?.quantity,
         due_date: formData?.due_date,
       }).unwrap();
+      refetchRequest();
+      setIsModalOpen(false);
 
       toast.success("add successfully");
     } catch (error) {
@@ -159,6 +136,8 @@ const ResourceRequestHistory = () => {
         <div className="w-full md:w-72 mt-4">
           <Input
             label="Search Requests"
+            value={search}
+            onChange={(e) => setSearch(e.target?.value)}
             icon={<MagnifyingGlassIcon className="h-5 w-5" />}
           />
         </div>
@@ -185,7 +164,7 @@ const ResourceRequestHistory = () => {
           </thead>
           <tbody>
             {RequestResource?.map((resource, index) => {
-              const isLast = index === filteredRows.length - 1;
+              const isLast = index === RequestResource?.length - 1;
               const classes = isLast
                 ? "p-4"
                 : "p-4 border-b border-blue-gray-50";
@@ -201,6 +180,26 @@ const ResourceRequestHistory = () => {
                       {resource?.request_name}
                     </Typography>
                   </td>
+
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {resource?.request_description || "-"}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {resource?.quantity}
+                    </Typography>
+                  </td>
+
                   <td className={classes}>
                     <Chip
                       variant="ghost"
@@ -234,6 +233,17 @@ const ResourceRequestHistory = () => {
                       {resource?.due_date} {/* Display the Due Date */}
                     </Typography>
                   </td>
+
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {resource?.approver_name?.email}{" "}
+                      {/* Display the Due Date */}
+                    </Typography>
+                  </td>
                 </tr>
               );
             })}
@@ -264,10 +274,6 @@ const ResourceRequestHistory = () => {
         onConfirm={handleConfirmRequest}
       >
         <div className=" mx-auto p-6 border rounded ">
-          <h2 className="text-2xl font-semibold mb-4">
-            Create Resource Request
-          </h2>
-
           <div className="mb-4">
             <label
               htmlFor="requestName"
@@ -279,6 +285,7 @@ const ResourceRequestHistory = () => {
               type="text"
               id="requestName"
               name="requestName"
+              placeholder="Product Name"
               value={formData.requestName}
               onChange={handleChange}
               required
@@ -294,6 +301,7 @@ const ResourceRequestHistory = () => {
               Request Description
             </label>
             <textarea
+              placeholder="Product Description"
               id="requestDescription"
               name="requestDescription"
               value={formData.requestDescription}

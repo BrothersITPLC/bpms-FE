@@ -14,6 +14,8 @@ import {
   Tooltip,
   IconButton,
 } from "@material-tailwind/react";
+import { useGetResourceIApproveQuery } from "../resourceApi";
+import { formatFriendlyDate } from "../../../../helpers/formatingDateUserFreindly";
 
 const TABS = [
   { label: "All", value: "all" },
@@ -22,51 +24,22 @@ const TABS = [
   { label: "Denied", value: "denied" },
 ];
 
-const TABLE_HEAD = ["Requester", "Resource", "Request Date", "Status", ""];
-
-const TABLE_ROWS = [
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-    requester: "Seblewongel Hailu",
-    email: "seblewongelhailu@brothersitplc.com",
-    resource: "Laptop",
-    requestDate: "2024-10-01",
-    status: "Approved",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-    requester: "Fasika Getachew",
-    email: "fasikagetachew@brothersitplc.com",
-    resource: "Projector",
-    requestDate: "2024-10-02",
-    status: "Pending",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-    requester: "Firdos Fenta",
-    email: "firdosfenta@brothersitplc.com",
-    resource: "Conference Room",
-    requestDate: "2024-10-03",
-    status: "Denied",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
-    requester: "Kbruysfa Desalegn",
-    email: "kbruysfadesalegn@brothersitplc.com",
-    resource: "Paper",
-    requestDate: "2024-09-23",
-    status: "Approved",
-  },
+const TABLE_HEAD = [
+  "Requester",
+  "Resource",
+  "Description",
+  "Quantity",
+  "Request Date",
+  "Due Date",
+  "Status",
+  "",
 ];
 
 const ResourceRequestHistory = () => {
   const [selectedTab, setSelectedTab] = useState("all");
-
+  const [search, setSearch] = useState("");
+  const { data: resources } = useGetResourceIApproveQuery(search);
   // Filter TABLE_ROWS based on selected tab
-  const filteredRows = TABLE_ROWS.filter((row) => {
-    if (selectedTab === "all") return true;
-    return row.status.toLowerCase() === selectedTab;
-  });
 
   // Check if selectedTab is updating correctly
   console.log("Selected Tab:", selectedTab);
@@ -105,6 +78,8 @@ const ResourceRequestHistory = () => {
         <div className="w-full md:w-72 mt-4">
           <Input
             label="Search Requests"
+            value={search}
+            onChange={(e) => setSearch(e.target?.value)}
             icon={<MagnifyingGlassIcon className="h-5 w-5" />}
           />
         </div>
@@ -130,82 +105,106 @@ const ResourceRequestHistory = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredRows.map(
-              (
-                { img, requester, email, resource, requestDate, status },
-                index
-              ) => {
-                const isLast = index === filteredRows.length - 1;
-                const classes = isLast
-                  ? "p-4"
-                  : "p-4 border-b border-blue-gray-50";
+            {resources?.map((resource, index) => {
+              const isLast = index === resources?.length - 1;
+              const classes = isLast
+                ? "p-4"
+                : "p-4 border-b border-blue-gray-50";
 
-                return (
-                  <tr key={requester}>
-                    <td className={classes}>
-                      <div className="flex items-center gap-3">
-                        <Avatar src={img} alt={requester} size="sm" />
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {requester}
-                          </Typography>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal opacity-70"
-                          >
-                            {email}
-                          </Typography>
-                        </div>
+              return (
+                <tr key={resource?.id}>
+                  <td className={classes}>
+                    <div className="flex items-center gap-3">
+                      {/* <Avatar src={img} alt={requester} size="sm" /> */}
+                      <div className="flex flex-col">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {resource?.requester_name?.username}
+                        </Typography>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal opacity-70"
+                        >
+                          {resource?.requester_name?.email}
+                        </Typography>
                       </div>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {resource}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {requestDate}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        value={status}
-                        color={
-                          status === "Approved"
-                            ? "green"
-                            : status === "Pending"
-                            ? "yellow"
-                            : "red"
-                        }
-                      />
-                    </td>
-                    <td className={classes}>
-                      <Tooltip content="Edit Request">
-                        <IconButton variant="text">
-                          <PencilIcon className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip>
-                    </td>
-                  </tr>
-                );
-              }
-            )}
+                    </div>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {resource?.request_name}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {resource?.request_description}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {resource?.quantity}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {formatFriendlyDate(resource?.created_at)}
+                    </Typography>
+                  </td>
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {resource?.due_date}
+                    </Typography>
+                  </td>
+
+                  <td className={classes}>
+                    <Chip
+                      variant="ghost"
+                      size="sm"
+                      value={resource?.latest_status?.status || "Pending"}
+                      color={
+                        resource?.latest_status?.status === "Approved"
+                          ? "green"
+                          : resource?.latest_status?.status === "Pending" ||
+                            resource?.latest_status?.status == null
+                          ? "yellow"
+                          : "red"
+                      }
+                    />
+                  </td>
+                  <td className={classes}>
+                    <Tooltip content="Edit Request">
+                      <IconButton variant="text">
+                        <PencilIcon className="h-4 w-4" />
+                      </IconButton>
+                    </Tooltip>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </CardBody>
