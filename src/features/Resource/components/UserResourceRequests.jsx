@@ -71,7 +71,13 @@ const ResourceRequestHistory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newResource, setNewResource] = useState(""); // Field for the new resource name
   const [dueDate, setDueDate] = useState(""); // Field for the due date
-
+  const [formData, setFormData] = useState({
+    requestName: "",
+    requestDescription: "",
+    requester: "",
+    approver: "",
+    quantity: 1,
+  });
   // Assuming "Alice Johnson" is the logged-in user
   const currentUser = "Alice Johnson";
 
@@ -250,14 +256,7 @@ const ResourceRequestHistory = () => {
         onConfirm={handleConfirmRequest}
       >
         <div className="flex flex-col gap-4">
-          <div>
-            <Select label="Select Resource">
-              <Option>Cash</Option>
-              <Option>Paper</Option>
-              <Option>Tools</Option>
-              <Option>Human resource</Option>
-            </Select>
-          </div>
+          <div></div>
           <DatePicker
             field={{ label: "Due Date", name: "dueDate" }} // New DatePicker for due date
             onChange={(e) => setDueDate(e.target.value)} // Update due date on change
