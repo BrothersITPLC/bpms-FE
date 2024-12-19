@@ -23,21 +23,24 @@ import {
 } from "../api/department";
 
 import DepartmentForm from "./departmentForm";
-
+import DepartmentEditForm from "./DepartmentEditForm";
 const Departments = () => {
   const [addDepartmentOpen, setAddDepartmentOpen] = useState(false);
+  const [editDepartmentOpen, setEditDepartmentOpen] = useState(false);
+
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedID, setSelectedID] = useState(null);
 
   const { data: departments, refetch: refetchDepartment } =
     useGetDepartmentQuery({ search: search });
-
+  console.log(departments);
   const [deleteDepartment] = useDeleteDepartmentMutation();
 
   const handleAddDepartmentOpen = () =>
     setAddDepartmentOpen(!addDepartmentOpen);
-
+  const handleEditDepartmentOpen = () =>
+    setEditDepartmentOpen(!editDepartmentOpen);
   const handleDeleteDepartment = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this department?"
@@ -51,6 +54,7 @@ const Departments = () => {
   const handleOnSave = () => {
     refetchDepartment();
   };
+
   return (
     <>
       <Card className="flex-1 ml-64 p-6">
@@ -95,7 +99,7 @@ const Departments = () => {
               <tr key={department.id}>
                 <td className="p-4">{department.id}</td>
                 <td className="p-4">{department.name}</td>
-                <td className="p-4">{department.manager || "-"}</td>
+                <td className="p-4">{department.manager_name || "-"}</td>
                 <td className="p-4">
                   <div className="flex gap-2">
                     <Button
@@ -103,7 +107,7 @@ const Departments = () => {
                       className="bg-blue-500"
                       onClick={() => {
                         setSelectedID(department?.id);
-                        handleAddDepartmentOpen();
+                        handleEditDepartmentOpen();
                       }}
                     >
                       <PencilIcon className="h-4 w-4" />
@@ -129,8 +133,13 @@ const Departments = () => {
         id={selectedID}
         onSave={handleOnSave}
       />
-
-      {/* Edit Department Modal */}
+      <DepartmentEditForm
+        editDepartmentOpen={editDepartmentOpen}
+        handleEditDepartmentOpen={handleEditDepartmentOpen}
+        departmentId={selectedID}
+        onSave={handleOnSave}
+      />
+      {/* Edit Department t Modal */}
     </>
   );
 };
