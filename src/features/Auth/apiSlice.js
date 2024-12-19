@@ -26,6 +26,7 @@ export const apiSlice = createApi({
               email: userData.email,
               first_name: userData.first_name,
               last_name: userData.last_name,
+              image_url: userData.image_url,
             },
           })
         );

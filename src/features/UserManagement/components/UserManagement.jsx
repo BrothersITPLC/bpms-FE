@@ -110,7 +110,7 @@ const UserManagement = () => {
 
   const { data: employees, refetch: refetchEmployee } = useGetEmployeeQuery();
   const [updateEmployee] = useUpdateEmployeeMutation();
-
+  console.log(employees);
   const handleOpenModal = (user = null) => {
     if (user) {
       setFormData({
@@ -243,8 +243,8 @@ const UserManagement = () => {
                       <td className={classes}>
                         <div className="flex items-center gap-3">
                           <Avatar
-                            src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
-                            alt={name}
+                            src={employee?.image_url}
+                            alt={employee?.image_url}
                             size="sm"
                           />
                           <div className="flex flex-col">

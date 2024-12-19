@@ -20,6 +20,8 @@ import {
   RectangleGroupIcon,
   ChatBubbleLeftEllipsisIcon,
 } from "@heroicons/react/24/solid";
+import { useSelector } from "react-redux";
+
 import {
   ChevronDownIcon,
   ArrowLeftStartOnRectangleIcon,
@@ -30,6 +32,7 @@ const Sidebar = () => {
   const [open, setOpen] = useState(0);
   const [openAlert, setOpenAlert] = useState(true);
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
 
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
@@ -67,15 +70,12 @@ const Sidebar = () => {
               className="p-3 select-none hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100 hover:text-gray-900 focus:text-gray-900 active:text-gray-900 data-[selected=true]:text-gray-900"
             >
               <ListItemPrefix>
-                <Avatar
-                  size="sm"
-                  src="https://www.material-tailwind.com/img/avatar1.jpg"
-                />
+                <Avatar size="sm" src={user?.image_url} />
               </ListItemPrefix>
               <Typography className="mr-auto font-normal text-inherit">
-                <div className="flex gap-20">
+                <div className="flex gap-20 uppercase">
                   {" "}
-                  User <Badge content="5"></Badge>{" "}
+                  {user?.username} <Badge content="5"></Badge>{" "}
                 </div>
               </Typography>
               <ChevronDownIcon
